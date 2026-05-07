@@ -76,19 +76,19 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   const enabledCount = Object.values(privacyApps).filter(Boolean).length;
 
   const header = (title: string, showBack: boolean) => (
-    <div className="px-4 py-3 border-b border-zinc-200 dark:border-white/5 flex items-center gap-2">
+    <div className="px-4 py-3 border-b border-beige-border dark:border-white/5 flex items-center gap-2">
       {showBack && (
         <button
           onClick={() => setLevel('main')}
-          className="p-0.5 hover:bg-zinc-200/50 dark:hover:bg-white/10 rounded-lg text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors"
+          className="p-0.5 hover:bg-card/50 dark:hover:bg-white/10 rounded-lg text-brown-muted dark:text-zinc-500 hover:text-brown dark:hover:text-white transition-colors"
         >
           <ChevronLeft className="w-3.5 h-3.5" />
         </button>
       )}
-      <h3 className="text-xs font-bold text-zinc-900 dark:text-white uppercase tracking-wider flex-1">{title}</h3>
+      <h3 className="text-xs font-bold text-brown dark:text-white uppercase tracking-wider flex-1">{title}</h3>
       <button
         onClick={onClose}
-        className="p-0.5 hover:bg-zinc-200/50 dark:hover:bg-white/10 rounded-lg text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors"
+        className="p-0.5 hover:bg-card/50 dark:hover:bg-white/10 rounded-lg text-brown-muted dark:text-zinc-500 hover:text-brown dark:hover:text-white transition-colors"
       >
         <X className="w-3.5 h-3.5" />
       </button>
@@ -96,18 +96,18 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   );
 
   const rowClass = "flex items-center justify-between w-full py-1";
-  const labelClass = "text-xs text-zinc-700 dark:text-zinc-300";
+  const labelClass = "text-xs text-brown-secondary dark:text-zinc-300";
 
   // ── Level 2: Privacy Apps ──
   if (level === 'privacy') {
     return (
       <div
         ref={panelRef}
-        className="absolute right-2 top-12 z-50 w-64 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 rounded-xl shadow-lg dark:shadow-2xl overflow-hidden"
+        className="absolute right-2 top-12 z-50 w-64 bg-page dark:bg-zinc-900 border border-beige-border dark:border-white/10 rounded-xl shadow-lg dark:shadow-2xl overflow-hidden"
       >
         {header('Privacy Apps', true)}
         <div className="p-4 space-y-3">
-          <p className="text-[11px] text-zinc-400 dark:text-zinc-500">
+          <p className="text-[11px] text-brown-muted dark:text-zinc-500">
             Toggle on to exclude an app from clipboard recording.
           </p>
           <div className="space-y-0.5">
@@ -117,7 +117,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                 <button
                   onClick={() => handlePrivacyToggle(app.key, !privacyApps[app.key])}
                   className={`relative w-9 h-5 rounded-full transition-colors ${
-                    privacyApps[app.key] ? 'bg-blue-500' : 'bg-zinc-300 dark:bg-zinc-600'
+                    privacyApps[app.key] ? 'bg-orange-500' : 'bg-page-dim dark:bg-zinc-600'
                   }`}
                 >
                   <span
@@ -139,33 +139,33 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
     return (
       <div
         ref={panelRef}
-        className="absolute right-2 top-12 z-50 w-64 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 rounded-xl shadow-lg dark:shadow-2xl overflow-hidden"
+        className="absolute right-2 top-12 z-50 w-64 bg-page dark:bg-zinc-900 border border-beige-border dark:border-white/10 rounded-xl shadow-lg dark:shadow-2xl overflow-hidden"
       >
         {header('Shortcuts', true)}
         <div className="p-4 space-y-0.5">
-          <div className="flex items-center justify-between w-full py-1.5 px-2 -mx-2 rounded-md hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors group">
+          <div className="flex items-center justify-between w-full py-1.5 px-2 -mx-2 rounded-md hover:bg-card/50 dark:hover:bg-white/5 transition-colors group">
             <span className={labelClass}>Toggle window</span>
-            <span className="text-[11px] text-zinc-400 dark:text-zinc-500 font-mono group-hover:text-zinc-700 dark:group-hover:text-zinc-300 transition-colors">Alt+Shift+V</span>
+            <span className="text-[11px] text-brown-muted dark:text-zinc-500 font-mono group-hover:text-brown-secondary dark:group-hover:text-zinc-300 transition-colors">Alt+Shift+V</span>
           </div>
-          <div className="flex items-center justify-between w-full py-1.5 px-2 -mx-2 rounded-md hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors group">
+          <div className="flex items-center justify-between w-full py-1.5 px-2 -mx-2 rounded-md hover:bg-card/50 dark:hover:bg-white/5 transition-colors group">
             <span className={labelClass}>Paste as plain text</span>
-            <span className="text-[11px] text-zinc-400 dark:text-zinc-500 font-mono group-hover:text-zinc-700 dark:group-hover:text-zinc-300 transition-colors">Shift+Click</span>
+            <span className="text-[11px] text-brown-muted dark:text-zinc-500 font-mono group-hover:text-brown-secondary dark:group-hover:text-zinc-300 transition-colors">Shift+Click</span>
           </div>
-          <div className="flex items-center justify-between w-full py-1.5 px-2 -mx-2 rounded-md hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors group">
+          <div className="flex items-center justify-between w-full py-1.5 px-2 -mx-2 rounded-md hover:bg-card/50 dark:hover:bg-white/5 transition-colors group">
             <span className={labelClass}>Paste</span>
-            <span className="text-[11px] text-zinc-400 dark:text-zinc-500 font-mono group-hover:text-zinc-700 dark:group-hover:text-zinc-300 transition-colors">Double-click</span>
+            <span className="text-[11px] text-brown-muted dark:text-zinc-500 font-mono group-hover:text-brown-secondary dark:group-hover:text-zinc-300 transition-colors">Double-click</span>
           </div>
-          <div className="flex items-center justify-between w-full py-1.5 px-2 -mx-2 rounded-md hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors group">
+          <div className="flex items-center justify-between w-full py-1.5 px-2 -mx-2 rounded-md hover:bg-card/50 dark:hover:bg-white/5 transition-colors group">
             <span className={labelClass}>Context menu</span>
-            <span className="text-[11px] text-zinc-400 dark:text-zinc-500 font-mono group-hover:text-zinc-700 dark:group-hover:text-zinc-300 transition-colors">Right-click</span>
+            <span className="text-[11px] text-brown-muted dark:text-zinc-500 font-mono group-hover:text-brown-secondary dark:group-hover:text-zinc-300 transition-colors">Right-click</span>
           </div>
-          <div className="flex items-center justify-between w-full py-1.5 px-2 -mx-2 rounded-md hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors group">
+          <div className="flex items-center justify-between w-full py-1.5 px-2 -mx-2 rounded-md hover:bg-card/50 dark:hover:bg-white/5 transition-colors group">
             <span className={labelClass}>Clear filters</span>
-            <span className="text-[11px] text-zinc-400 dark:text-zinc-500 font-mono group-hover:text-zinc-700 dark:group-hover:text-zinc-300 transition-colors">Esc</span>
+            <span className="text-[11px] text-brown-muted dark:text-zinc-500 font-mono group-hover:text-brown-secondary dark:group-hover:text-zinc-300 transition-colors">Esc</span>
           </div>
-          <div className="flex items-center justify-between w-full py-1.5 px-2 -mx-2 rounded-md hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors group">
+          <div className="flex items-center justify-between w-full py-1.5 px-2 -mx-2 rounded-md hover:bg-card/50 dark:hover:bg-white/5 transition-colors group">
             <span className={labelClass}>Scroll cards</span>
-            <span className="text-[11px] text-zinc-400 dark:text-zinc-500 font-mono group-hover:text-zinc-700 dark:group-hover:text-zinc-300 transition-colors">Mouse wheel</span>
+            <span className="text-[11px] text-brown-muted dark:text-zinc-500 font-mono group-hover:text-brown-secondary dark:group-hover:text-zinc-300 transition-colors">Mouse wheel</span>
           </div>
         </div>
       </div>
@@ -176,22 +176,22 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   return (
     <div
       ref={panelRef}
-      className="absolute right-2 top-12 z-50 w-64 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 rounded-xl shadow-lg dark:shadow-2xl overflow-hidden"
+      className="absolute right-2 top-12 z-50 w-64 bg-page dark:bg-zinc-900 border border-beige-border dark:border-white/10 rounded-xl shadow-lg dark:shadow-2xl overflow-hidden"
     >
       {header('Settings', false)}
 
       {!loaded ? (
-        <div className="px-4 py-6 text-center text-zinc-400 dark:text-zinc-500 text-xs">Loading...</div>
+        <div className="px-4 py-6 text-center text-brown-muted dark:text-zinc-500 text-xs">Loading...</div>
       ) : (
         <div className="p-4 space-y-3">
           {/* Theme */}
           <div className="flex items-center justify-between">
             <span className={labelClass}>Theme</span>
-            <div className="flex bg-zinc-100 dark:bg-zinc-800 rounded-lg p-0.5 gap-0.5">
+            <div className="flex bg-card dark:bg-zinc-800 rounded-lg p-0.5 gap-0.5">
               <button
                 onClick={() => handleTheme('dark')}
                 className={`p-1.5 rounded-md transition-colors ${
-                  theme === 'dark' ? 'bg-zinc-200 dark:bg-zinc-600 text-zinc-900 dark:text-white' : 'text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+                  theme === 'dark' ? 'bg-page-dim dark:bg-zinc-600 text-brown dark:text-white' : 'text-brown-muted hover:text-brown dark:hover:text-white'
                 }`}
               >
                 <Moon className="w-3.5 h-3.5" />
@@ -199,7 +199,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
               <button
                 onClick={() => handleTheme('light')}
                 className={`p-1.5 rounded-md transition-colors ${
-                  theme === 'light' ? 'bg-zinc-200 dark:bg-zinc-600 text-zinc-900 dark:text-white' : 'text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+                  theme === 'light' ? 'bg-page-dim dark:bg-zinc-600 text-brown dark:text-white' : 'text-brown-muted hover:text-brown dark:hover:text-white'
                 }`}
               >
                 <Sun className="w-3.5 h-3.5" />
@@ -210,13 +210,13 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
           {/* History */}
           <div className="flex items-center justify-between">
             <span className={labelClass}>History</span>
-            <div className="flex bg-zinc-100 dark:bg-zinc-800 rounded-lg p-0.5 gap-0.5">
+            <div className="flex bg-card dark:bg-zinc-800 rounded-lg p-0.5 gap-0.5">
               {HISTORY_OPTIONS.map(n => (
                 <button
                   key={n}
                   onClick={() => handleHistory(n)}
                   className={`px-2.5 py-1 text-[11px] font-medium rounded-md transition-colors ${
-                    maxHistory === n ? 'bg-zinc-200 dark:bg-zinc-600 text-zinc-900 dark:text-white' : 'text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+                    maxHistory === n ? 'bg-page-dim dark:bg-zinc-600 text-brown dark:text-white' : 'text-brown-muted hover:text-brown dark:hover:text-white'
                   }`}
                 >
                   {n}
@@ -228,26 +228,26 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
           {/* Privacy Apps entry */}
           <button
             onClick={() => setLevel('privacy')}
-            className="flex items-center justify-between w-full py-1 hover:bg-zinc-50 dark:hover:bg-white/5 rounded-md px-1 -mx-1 transition-colors"
+            className="flex items-center justify-between w-full py-1 hover:bg-card/50 dark:hover:bg-white/5 rounded-md px-1 -mx-1 transition-colors"
           >
             <span className={labelClass}>Privacy Apps</span>
             <div className="flex items-center gap-1">
-              <span className="text-[10px] text-zinc-400">{enabledCount > 0 ? `${enabledCount} on` : 'Off'}</span>
-              <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
+              <span className="text-[10px] text-brown-muted dark:text-zinc-400">{enabledCount > 0 ? `${enabledCount} on` : 'Off'}</span>
+              <ChevronRight className="w-3.5 h-3.5 text-brown-muted dark:text-zinc-400" />
             </div>
           </button>
 
           {/* Shortcuts entry */}
           <button
             onClick={() => setLevel('shortcuts')}
-            className="flex items-center justify-between w-full py-1 hover:bg-zinc-50 dark:hover:bg-white/5 rounded-md px-1 -mx-1 transition-colors"
+            className="flex items-center justify-between w-full py-1 hover:bg-card/50 dark:hover:bg-white/5 rounded-md px-1 -mx-1 transition-colors"
           >
             <span className={labelClass}>Shortcuts</span>
-            <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
+            <ChevronRight className="w-3.5 h-3.5 text-brown-muted dark:text-zinc-400" />
           </button>
 
           {/* Clear all history */}
-          <div className="pt-2 border-t border-zinc-200 dark:border-white/5">
+          <div className="pt-2 border-t border-beige-border dark:border-white/5">
             <button
               onDoubleClick={async () => {
                 await ipc().invoke('db:clearAll');

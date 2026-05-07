@@ -95,10 +95,10 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
       <div
         onDoubleClick={(e) => onDoubleClick(clip, e)}
         onClick={() => setSelectedClipId(clip.id)}
-        className={`group relative w-[240px] h-[280px] bg-zinc-50 dark:bg-zinc-800/40 hover:bg-zinc-100 dark:hover:bg-zinc-700/60 border rounded-2xl transition-[background-color] duration-300 flex flex-col overflow-hidden cursor-default ${
+        className={`group relative w-[240px] h-[280px] bg-card dark:bg-zinc-800/40 hover:bg-card-hover dark:hover:bg-zinc-700/60 border rounded-2xl transition-[background-color] duration-300 flex flex-col overflow-hidden cursor-default ${
           selectedClipId === clip.id
-            ? 'border-zinc-300/30 dark:border-zinc-700'
-            : 'border-zinc-200 dark:border-white/5'
+            ? 'border-beige-border/60 dark:border-zinc-700'
+            : 'border-beige-border dark:border-white/5'
         } ${isHovering ? 'z-10' : ''}`}
       >
         <div className={`flex flex-col h-full transition-transform duration-300 ${isHovering ? 'scale-[1.02]' : ''}`}>
@@ -106,40 +106,40 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
         <div className="absolute top-3 left-3 right-3 z-20 flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 min-w-0">
             {clip.type === 4 ? (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-zinc-200/50 dark:bg-zinc-700/50 rounded-md text-[10px] font-medium text-zinc-500 dark:text-zinc-400">
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-zinc-700/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-zinc-400">
                 {(() => { const Icon = fileNames.length === 1 ? getFileIcon(fileNames[0]) : Files; return <Icon className="w-3 h-3" />; })()}
                 {fileNames.length === 1 ? getFileLabel(fileNames[0]) : 'Files'}
               </span>
             ) : clip.type === 2 ? (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-zinc-200/50 dark:bg-zinc-700/50 rounded-md text-[10px] font-medium text-zinc-500 dark:text-zinc-400">
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-zinc-700/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-zinc-400">
                 <Image className="w-3 h-3" />
                 Image
               </span>
             ) : isLink || imageUrl ? (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-zinc-200/50 dark:bg-zinc-700/50 rounded-md text-[10px] font-medium text-zinc-500 dark:text-zinc-400">
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-zinc-700/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-zinc-400">
                 <Link className="w-3 h-3" />
                 Link
               </span>
             ) : clip.has_color ? (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-zinc-200/50 dark:bg-zinc-700/50 rounded-md text-[10px] font-medium text-zinc-500 dark:text-zinc-400">
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-zinc-700/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-zinc-400">
                 <Palette className="w-3 h-3" />
                 Color
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-zinc-200/50 dark:bg-zinc-700/50 rounded-md text-[10px] font-medium text-zinc-500 dark:text-zinc-400">
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-zinc-700/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-zinc-400">
                 <FileText className="w-3 h-3" />
                 Text
               </span>
             )}
           </div>
           <div className="flex items-center gap-1.5 ml-auto">
-            <span className="text-[10px] font-normal text-zinc-400 dark:text-zinc-500 tracking-tight opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+            <span className="text-[10px] font-normal text-brown-muted dark:text-zinc-500 tracking-tight opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
               {formatTime(clip.created_at)}
             </span>
             {clip.is_pinned === 1 && (
               <button
                 onClick={handlePinClick}
-                className="text-blue-500 hover:text-blue-400 drop-shadow-md transition-colors flex-shrink-0"
+                className="text-orange-500 hover:text-orange-400 drop-shadow-md transition-colors flex-shrink-0"
                 title="Click to unpin"
               >
                 <Pin className="w-3.5 h-3.5 fill-current" />
@@ -154,18 +154,18 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
             /* File card */
             <div className="flex-1 flex flex-col pt-8 px-3 pb-3 justify-center">
               <div className="flex items-center justify-center mb-2">
-                {(() => { const Icon = fileNames[0] ? getFileIcon(fileNames[0]) : Files; return <Icon className="w-8 h-8 text-zinc-400 dark:text-zinc-500" />; })()}
+                {(() => { const Icon = fileNames[0] ? getFileIcon(fileNames[0]) : Files; return <Icon className="w-8 h-8 text-brown-muted dark:text-zinc-500" />; })()}
               </div>
               <div className="text-center space-y-0.5">
                 {fileNames.slice(0, 2).map((name, i) => (
-                  <p key={i} className="text-[12px] text-zinc-700 dark:text-zinc-300 truncate leading-tight">{name}</p>
+                  <p key={i} className="text-[12px] text-brown-secondary dark:text-zinc-300 truncate leading-tight">{name}</p>
                 ))}
                 {fileNames.length > 2 && (
-                  <p className="text-[12px] text-zinc-400 dark:text-zinc-500">+{fileNames.length - 2} more</p>
+                  <p className="text-[12px] text-brown-muted dark:text-zinc-500">+{fileNames.length - 2} more</p>
                 )}
               </div>
               <div className="mt-2 text-center">
-                <span className="text-[9px] text-zinc-400 dark:text-zinc-600">
+                <span className="text-[9px] text-brown-muted dark:text-zinc-600">
                   {filePaths.length} file{filePaths.length !== 1 ? 's' : ''}
                 </span>
               </div>
@@ -186,7 +186,7 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
                   className="max-w-full max-h-full object-contain rounded-lg"
                 />
               ) : (
-                <div className="text-zinc-400 dark:text-zinc-500 text-[10px]">No preview</div>
+                <div className="text-brown-muted dark:text-zinc-500 text-[10px]">No preview</div>
               )}
             </div>
           ) : imageUrl && !imageUrlError ? (
@@ -203,13 +203,13 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
             /* Color card */
             <div className="flex-1 flex flex-col pt-8">
               <div
-                className="flex-1 mx-3 my-2 rounded-lg border border-zinc-200 dark:border-white/5 shadow-inner"
+                className="flex-1 mx-3 my-2 rounded-lg border border-beige-border dark:border-white/5 shadow-inner"
                 style={{ backgroundColor: clip.color_hex }}
               />
               <div className="px-3 py-2 text-center">
-                <span className="text-[14px] font-mono font-bold text-zinc-700 dark:text-zinc-300">{clip.color_hex}</span>
+                <span className="text-[14px] font-mono font-bold text-brown-secondary dark:text-zinc-300">{clip.color_hex}</span>
                 {clip.color_rgb && (
-                  <span className="text-[14px] font-mono text-zinc-400 dark:text-zinc-500 ml-2">{clip.color_rgb}</span>
+                  <span className="text-[14px] font-mono text-brown-muted dark:text-zinc-500 ml-2">{clip.color_rgb}</span>
                 )}
               </div>
             </div>
@@ -225,14 +225,14 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
                 if (result.highlighted) {
                   return (
                     <div
-                      className={`flex-1 px-4 py-1.5 overflow-hidden text-[14px] leading-[1.6] ${isLink ? 'break-all' : ''}`}
+                      className={`flex-1 px-4 py-1.5 overflow-hidden text-[14px] leading-[1.6] ${isLink ? 'break-all' : 'break-words'}`}
                       dangerouslySetInnerHTML={{ __html: result.html }}
                     />
                   );
                 }
                 return (
                   <div
-                    className={`flex-1 px-4 py-1.5 overflow-hidden text-[14px] leading-[1.6] text-zinc-700 dark:text-zinc-300 whitespace-pre-wrap ${isLink ? 'break-all' : ''}`}
+                    className={`flex-1 px-4 py-1.5 overflow-hidden text-[14px] leading-[1.6] text-brown-secondary dark:text-zinc-300 whitespace-pre-wrap ${isLink ? 'break-all' : 'break-words'}`}
                   >
                     {txt}
                   </div>

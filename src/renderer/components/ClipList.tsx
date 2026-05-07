@@ -116,7 +116,7 @@ const ClipList: React.FC = () => {
       >
         {filteredClips.length === 0 ? (
           <div className="min-w-full flex flex-col items-center justify-center text-center opacity-30">
-            <div className="w-16 h-16 bg-zinc-200/50 dark:bg-white/5 rounded-full flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-page-dim/50 dark:bg-white/5 rounded-full flex items-center justify-center mb-4">
               <Clipboard className="w-8 h-8" />
             </div>
             <p className="text-sm font-bold uppercase tracking-widest">No records found</p>

@@ -90,11 +90,11 @@ const ScrollThumb: React.FC<ScrollThumbProps> = ({ containerRef, itemCount }) =>
     <div className="flex justify-center pb-2">
       <div
         ref={trackRef}
-        className="w-40 mx-auto relative h-1.5 rounded-full bg-zinc-200 dark:bg-white/5 cursor-pointer hover:h-2 transition-all"
+        className="w-40 mx-auto relative h-1.5 rounded-full bg-page-dim dark:bg-white/5 cursor-pointer hover:h-2 transition-all"
         onClick={handleTrackClick}
       >
         <div
-          className="absolute top-0 h-full rounded-full bg-zinc-300 dark:bg-white/20 hover:bg-zinc-400 dark:hover:bg-white/30 transition-colors"
+          className="absolute top-0 h-full rounded-full bg-badge dark:bg-white/20 hover:bg-brown-subtle dark:hover:bg-white/30 transition-colors"
           style={{ left: thumbLeft, width: thumbWidth }}
           onMouseDown={handleThumbMouseDown}
         />

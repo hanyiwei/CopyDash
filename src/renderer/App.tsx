@@ -106,12 +106,12 @@ const App: React.FC = () => {
           : 'ease-in',
       }}
     >
-      <div className="flex-1 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white flex flex-col overflow-hidden border border-zinc-200 dark:border-white/10 dark:shadow-2xl rounded-3xl m-2 relative">
+      <div className="flex-1 bg-page dark:bg-zinc-900 text-brown dark:text-white flex flex-col overflow-hidden border border-beige-border dark:border-white/10 dark:shadow-2xl rounded-3xl m-2 relative">
         <div className="flex-shrink-0 flex items-center relative">
           {/* Logo — opens GitHub in system default browser */}
           <button
             onClick={() => (window as any).electron.ipcRenderer.invoke('shell:openExternal', 'https://github.com/hanyiwei')}
-            className="flex-shrink-0 pl-5 pr-6 text-zinc-900 dark:text-white hover:text-orange-400 dark:hover:text-orange-400 transition-colors cursor-pointer select-none flex items-center gap-1 group"
+            className="flex-shrink-0 pl-5 pr-6 text-brown dark:text-white hover:text-orange-400 dark:hover:text-orange-400 transition-colors cursor-pointer select-none flex items-center gap-1 group"
             title="CopyDash on GitHub"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" className="group-hover:animate-spin-fast">
@@ -129,13 +129,13 @@ const App: React.FC = () => {
           <div className="flex-shrink-0 flex items-center gap-0.5 pr-2">
             <button
               onClick={() => setShowSettings(v => !v)}
-              className="p-1.5 hover:bg-zinc-200/50 dark:hover:bg-white/10 rounded-xl text-zinc-300 dark:text-zinc-600 hover:text-zinc-900 dark:hover:text-white transition-colors"
+              className="p-1.5 hover:bg-page-dim/50 dark:hover:bg-white/10 rounded-xl text-brown-faint/60 dark:text-zinc-700 hover:text-brown dark:hover:text-white transition-colors"
             >
               <Settings className="w-4 h-4" />
             </button>
             <button
               onClick={() => (window as any).electron.ipcRenderer.send('window:hide')}
-              className="p-1.5 hover:bg-zinc-200/50 dark:hover:bg-white/10 rounded-xl text-zinc-300 dark:text-zinc-600 hover:text-zinc-900 dark:hover:text-white transition-colors"
+              className="p-1.5 hover:bg-page-dim/50 dark:hover:bg-white/10 rounded-xl text-brown-faint/60 dark:text-zinc-700 hover:text-brown dark:hover:text-white transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -153,14 +153,14 @@ const App: React.FC = () => {
           </div>
         </main>
 
-        <footer className="h-8 bg-zinc-100 dark:bg-black/40 border-t border-zinc-200 dark:border-white/5 flex items-center justify-between px-4 text-[10px] text-zinc-400 dark:text-zinc-500 font-bold tracking-widest uppercase">
+        <footer className="h-8 bg-badge/30 dark:bg-black/40 border-t border-beige-border dark:border-white/5 flex items-center justify-between px-4 text-[10px] text-brown-muted dark:text-zinc-500 font-bold tracking-widest uppercase">
           <div className="flex items-center gap-4">
             <span>{clipsCount} ITEMS</span>
             <span className="opacity-40">ALT+SHIFT+V TO TOGGLE</span>
           </div>
           <button
             onClick={() => (window as any).electron.ipcRenderer.invoke('shell:openExternal', 'https://github.com/hanyiwei')}
-            className="hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer flex items-center gap-2 text-zinc-300 dark:text-zinc-600"
+            className="hover:text-brown dark:hover:text-white transition-colors cursor-pointer flex items-center gap-2 text-brown-faint/60 dark:text-zinc-700"
           >
             <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
             CopyDash built by 大花
