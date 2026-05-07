@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 240 10% 4%;
+}
+
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+}
+
+body {
+  @apply bg-transparent text-foreground antialiased overflow-hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  user-select: none;
+}
+
+#root {
+  height: 100vh;
+  background-color: transparent;
+}
+
+
+/* Hide native scrollbar — ScrollThumb provides visual indicator */
+.custom-scrollbar {
+  scrollbar-width: none;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Highlighted markup — strip theme background */
+.hljs {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+/* Card exit animation — GPU-only properties (no reflow) */
+@keyframes card-exit {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  35% {
+    opacity: 0;
+    transform: scale(0.85) translateY(-14px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.85) translateY(-14px);
+  }
+}
+
+.card-exit {
+  animation: card-exit 350ms ease-out forwards;
+  pointer-events: none;
+}
