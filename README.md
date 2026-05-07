@@ -14,6 +14,8 @@ A Windows clipboard manager for designers and developers.
 
 ## Download
 
+**Coming soon**
+
 Download the latest version from [Releases](https://github.com/hanyiwei/copydash/releases):
 
 - **`CopyDash-0.1.0-win.zip`** — unzip and run `CopyDash.exe`, no installation required.
