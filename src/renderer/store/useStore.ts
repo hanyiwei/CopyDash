@@ -26,6 +26,8 @@ interface State {
   filterPinned: boolean;
   theme: 'dark' | 'light';
   maxHistory: number;
+  toastMessage: string | null;
+  shortcut: string;
   setClips: (clips: Clip[]) => void;
   addClip: (clip: Clip) => void;
   removeClip: (id: string) => void;
@@ -36,10 +38,14 @@ interface State {
   setFilterPinned: (pinned: boolean) => void;
   setTheme: (theme: 'dark' | 'light') => void;
   setMaxHistory: (n: number) => void;
+  showToast: (message: string) => void;
+  setShortcut: (s: string) => void;
   clearClips: () => void;
 }
 
 const ipc = () => (window as any).electron.ipcRenderer;
+
+let toastTimer: ReturnType<typeof setTimeout> | null = null;
 
 export const useStore = create<State>((set) => ({
   clips: [],
@@ -49,6 +55,8 @@ export const useStore = create<State>((set) => ({
   filterPinned: false,
   theme: 'dark',
   maxHistory: 200,
+  toastMessage: null,
+  shortcut: 'Ctrl+Shift+V',
   setClips: (clips) => {
     set({ clips: [...clips] });
   },
@@ -77,5 +85,14 @@ export const useStore = create<State>((set) => ({
     ipc().invoke('db:settings:set', 'theme', theme).catch((err: unknown) => console.error('[Store] setTheme persist failed:', err));
   },
   setMaxHistory: (n) => set({ maxHistory: n }),
+  showToast: (message) => {
+    if (toastTimer) clearTimeout(toastTimer);
+    set({ toastMessage: message });
+    toastTimer = setTimeout(() => {
+      set({ toastMessage: null });
+      toastTimer = null;
+    }, 2000);
+  },
+  setShortcut: (s) => set({ shortcut: s }),
   clearClips: () => set({ clips: [] }),
 }));

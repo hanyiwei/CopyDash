@@ -84,7 +84,7 @@ const ScrollThumb: React.FC<ScrollThumbProps> = ({ containerRef, itemCount }) =>
     document.addEventListener('mouseup', onUp);
   };
 
-  if (itemCount <= 50) return null;
+  if (itemCount <= 20) return null;
 
   return (
     <div className="flex justify-center pb-2">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Moon, Sun, X, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Moon, Sun, X, ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import { useStore } from '../store/useStore';
 
 interface SettingsPanelProps {
@@ -23,11 +23,96 @@ const ipc = () => (window as any).electron.ipcRenderer;
 const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   const theme = useStore(s => s.theme);
   const setTheme = useStore(s => s.setTheme);
+  const shortcut = useStore(s => s.shortcut);
+  const setShortcut = useStore(s => s.setShortcut);
   const [level, setLevel] = useState<PanelLevel>('main');
   const [maxHistory, setMaxHistory] = useState(200);
   const [loaded, setLoaded] = useState(false);
   const [privacyApps, setPrivacyApps] = useState<Record<string, boolean>>({});
+  const [recording, setRecording] = useState(false);
+  const [capturedKeys, setCapturedKeys] = useState('');
+  const [shortcutError, setShortcutError] = useState('');
+  const [shortcutSaved, setShortcutSaved] = useState(false);
+  const recordingRef = useRef(false);
+  const capturedRef = useRef('');
+  const savedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => { recordingRef.current = recording; }, [recording]);
+  useEffect(() => { capturedRef.current = capturedKeys; }, [capturedKeys]);
+  useEffect(() => {
+    return () => { if (savedTimerRef.current) clearTimeout(savedTimerRef.current); };
+  }, []);
+
+  const confirmShortcut = async (keys: string) => {
+    const result = await ipc().invoke('shortcut:update', keys);
+    if (result.ok) {
+      setShortcut(keys);
+      setRecording(false);
+      setShortcutError('');
+      setShortcutSaved(true);
+      if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
+      savedTimerRef.current = setTimeout(() => setShortcutSaved(false), 2000);
+    } else {
+      setShortcutError(result.error || 'Failed to register');
+    }
+  };
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (!recordingRef.current) return;
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (e.key === 'Escape') {
+        setRecording(false);
+        setCapturedKeys('');
+        setShortcutError('');
+        return;
+      }
+
+      // Enter confirms the previously captured combo
+      if (e.key === 'Enter') {
+        if (capturedRef.current) {
+          confirmShortcut(capturedRef.current);
+        }
+        return;
+      }
+
+      if (['Control', 'Alt', 'Shift', 'Meta'].includes(e.key)) return;
+
+      const parts: string[] = [];
+      if (e.ctrlKey) parts.push('Ctrl');
+      if (e.altKey) parts.push('Alt');
+      if (e.shiftKey) parts.push('Shift');
+      if (e.metaKey) parts.push('Super');
+
+      const keyName = e.key === ' ' ? 'Space' : e.key.length === 1 ? e.key.toUpperCase() : e.key;
+      parts.push(keyName);
+
+      if (parts.length < 2) {
+        setShortcutError('Requires a modifier key (Ctrl, Alt, Shift, Win)');
+        return;
+      }
+
+      const combo = parts.join('+');
+      capturedRef.current = combo;
+      setCapturedKeys(combo);
+      setShortcutError('');
+    };
+
+    document.addEventListener('keydown', handler, true);
+    return () => document.removeEventListener('keydown', handler, true);
+  }, []);
+
+  // Cancel recording when navigating away from shortcuts panel
+  useEffect(() => {
+    if (level !== 'shortcuts') {
+      setRecording(false);
+      setCapturedKeys('');
+      setShortcutError('');
+    }
+  }, [level]);
 
   useEffect(() => {
     const load = async () => {
@@ -145,7 +230,28 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
         <div className="p-4 space-y-0.5">
           <div className="flex items-center justify-between w-full py-1.5 px-2 -mx-2 rounded-md hover:bg-card/50 dark:hover:bg-white/5 transition-colors group">
             <span className={labelClass}>Toggle window</span>
-            <span className="text-[11px] text-brown-muted dark:text-zinc-500 font-mono group-hover:text-brown-secondary dark:group-hover:text-zinc-300 transition-colors">Alt+Shift+V</span>
+            {recording ? (
+              <span className={`text-[11px] font-mono ${capturedKeys ? 'text-green-600 dark:text-green-400' : 'text-orange-500 animate-pulse'}`}>
+                {capturedKeys ? <>{capturedKeys} <span className="text-brown-muted dark:text-zinc-500">Enter ↵</span></> : 'Press keys...'}
+              </span>
+            ) : (
+              <button
+                onClick={() => { setRecording(true); setCapturedKeys(''); setShortcutError(''); }}
+                className="text-[11px] text-brown-muted dark:text-zinc-500 font-mono group-hover:text-brown-secondary dark:group-hover:text-zinc-300 transition-colors cursor-pointer flex items-center gap-1"
+                title="Click to change shortcut"
+              >
+                {shortcut}
+                {shortcutSaved && <Check className="w-3 h-3 text-green-500" />}
+              </button>
+            )}
+          </div>
+          {shortcutError && (
+            <p className="text-[10px] text-red-500 dark:text-red-400 px-2 pb-1">{shortcutError}</p>
+          )}
+          <div className="pt-3 mt-1 border-t border-beige-border dark:border-white/5" />
+          <div className="flex items-center justify-between w-full py-1.5 px-2 -mx-2 rounded-md hover:bg-card/50 dark:hover:bg-white/5 transition-colors group">
+            <span className={labelClass}>Cancel</span>
+            <span className="text-[11px] text-brown-muted dark:text-zinc-500 font-mono group-hover:text-brown-secondary dark:group-hover:text-zinc-300 transition-colors">Esc</span>
           </div>
           <div className="flex items-center justify-between w-full py-1.5 px-2 -mx-2 rounded-md hover:bg-card/50 dark:hover:bg-white/5 transition-colors group">
             <span className={labelClass}>Paste as plain text</span>
@@ -158,14 +264,6 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
           <div className="flex items-center justify-between w-full py-1.5 px-2 -mx-2 rounded-md hover:bg-card/50 dark:hover:bg-white/5 transition-colors group">
             <span className={labelClass}>Context menu</span>
             <span className="text-[11px] text-brown-muted dark:text-zinc-500 font-mono group-hover:text-brown-secondary dark:group-hover:text-zinc-300 transition-colors">Right-click</span>
-          </div>
-          <div className="flex items-center justify-between w-full py-1.5 px-2 -mx-2 rounded-md hover:bg-card/50 dark:hover:bg-white/5 transition-colors group">
-            <span className={labelClass}>Clear filters</span>
-            <span className="text-[11px] text-brown-muted dark:text-zinc-500 font-mono group-hover:text-brown-secondary dark:group-hover:text-zinc-300 transition-colors">Esc</span>
-          </div>
-          <div className="flex items-center justify-between w-full py-1.5 px-2 -mx-2 rounded-md hover:bg-card/50 dark:hover:bg-white/5 transition-colors group">
-            <span className={labelClass}>Scroll cards</span>
-            <span className="text-[11px] text-brown-muted dark:text-zinc-500 font-mono group-hover:text-brown-secondary dark:group-hover:text-zinc-300 transition-colors">Mouse wheel</span>
           </div>
         </div>
       </div>

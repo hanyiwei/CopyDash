@@ -15,6 +15,7 @@ const __dirname = path.dirname(__filename);
 
 let mainWindow: BrowserWindow | null = null;
 let tray: Tray | null = null;
+let registerToggleShortcut: (accelerator: string) => boolean;
 
 function safeSend(channel: string, ...args: any[]) {
   try { mainWindow?.webContents?.send(channel, ...args); } catch {}
@@ -136,32 +137,38 @@ app.whenReady().then(async () => {
   await createWindow();
   createTray();
 
-    // Global Shortcut — read from settings
-    let shortcutSetting = dbQuery.get('SELECT value FROM settings WHERE key = ?', ['shortcut_toggle']);
-    // Migrate old conflicting defaults
-    const oldDefaults = ['Ctrl+Shift+V', 'Ctrl+Alt+V'];
-    if (!shortcutSetting || oldDefaults.includes(shortcutSetting.value)) {
-      shortcutSetting = { value: 'Alt+Shift+V' };
-      dbQuery.run('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)', ['shortcut_toggle', 'Alt+Shift+V']);
+    // Global Shortcut — read from settings, default to Ctrl+Shift+V
+    const shortcutSetting = dbQuery.get('SELECT value FROM settings WHERE key = ?', ['shortcut_toggle']);
+    const defaultShortcut = 'Ctrl+Shift+V';
+    if (!shortcutSetting) {
+      dbQuery.run('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)', ['shortcut_toggle', defaultShortcut]);
     }
-    const shortcutAccelerator = shortcutSetting.value;
+    const shortcutAccelerator = shortcutSetting?.value || defaultShortcut;
 
-    const registered = globalShortcut.register(shortcutAccelerator, () => {
-      console.log('[Main] Toggle shortcut pressed');
-      if (mainWindow?.isVisible()) {
-        safeSend('window-hide-start');
-      } else {
-        mainWindow?.showInactive();
-        safeSend('window-shown');
-        // Capture foreground HWND for paste-after-hide; run async to avoid blocking show
-        captureForeground();
+    registerToggleShortcut = (accelerator: string): boolean => {
+      globalShortcut.unregisterAll();
+      try {
+        const ok = globalShortcut.register(accelerator, () => {
+          console.log('[Main] Toggle shortcut pressed');
+          if (mainWindow?.isVisible()) {
+            safeSend('window-hide-start');
+          } else {
+            mainWindow?.showInactive();
+            safeSend('window-shown');
+            captureForeground();
+          }
+        });
+        if (ok) {
+          console.log(`[Main] Shortcut registered: ${accelerator}`);
+        }
+        return ok;
+      } catch {
+        return false;
       }
-    });
+    }
 
-    if (!registered) {
+    if (!registerToggleShortcut(shortcutAccelerator)) {
       console.error(`[Main] Failed to register shortcut: ${shortcutAccelerator}. It may be in use by another app.`);
-    } else {
-      console.log(`[Main] Shortcut registered: ${shortcutAccelerator}`);
     }
 
   // Tray click
@@ -195,6 +202,22 @@ ipcMain.handle('db:settings:get', (_, key: string) => {
 
 ipcMain.handle('db:settings:set', (_, key: string, value: string) => {
   dbQuery.run('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)', [key, value]);
+});
+
+ipcMain.handle('shortcut:update', (_, accelerator: string) => {
+  if (!accelerator || typeof accelerator !== 'string') {
+    return { ok: false, error: 'Invalid shortcut' };
+  }
+  const ok = registerToggleShortcut(accelerator);
+  if (ok) {
+    dbQuery.run('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)', ['shortcut_toggle', accelerator]);
+    safeSend('shortcut-changed', accelerator);
+    return { ok: true };
+  }
+  // Re-register the old shortcut on failure
+  const old = dbQuery.get('SELECT value FROM settings WHERE key = ?', ['shortcut_toggle']);
+  if (old?.value) registerToggleShortcut(old.value);
+  return { ok: false, error: 'Shortcut in use by another app' };
 });
 
 app.on('window-all-closed', () => {
@@ -309,8 +332,10 @@ ipcMain.handle('clipboard:writeText', (_, text: string) => {
         if (error) console.error('Paste execution error:', error);
       });
     }
+    return true;
   } catch (err) {
     console.error('Paste handler error:', err);
+    return false;
   }
 });
 

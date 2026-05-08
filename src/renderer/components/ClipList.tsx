@@ -11,6 +11,7 @@ const ClipList: React.FC = () => {
   const filterType = useStore(state => state.filterType);
   const filterPinned = useStore(state => state.filterPinned);
   const togglePin = useStore(state => state.togglePin);
+  const showToast = useStore(state => state.showToast);
   const removeClip = useStore(state => state.removeClip);
   const selectedClipId = useStore(state => state.selectedClipId);
   const setSelectedClipId = useStore(state => state.setSelectedClipId);
@@ -27,10 +28,12 @@ const ClipList: React.FC = () => {
   useEffect(() => {
     const handleAction = async ({ action, clip }: any) => {
       if (action === 'paste') {
-        await (window as any).electron.ipcRenderer.invoke('clipboard:writeAndPaste', clip, false);
+        const ok = await (window as any).electron.ipcRenderer.invoke('clipboard:writeAndPaste', clip, false);
+        if (!ok) showToast('粘贴失败');
       }
       if (action === 'paste-plain') {
-        await (window as any).electron.ipcRenderer.invoke('clipboard:writeAndPaste', clip, true);
+        const ok = await (window as any).electron.ipcRenderer.invoke('clipboard:writeAndPaste', clip, true);
+        if (!ok) showToast('粘贴失败');
       }
       if (action === 'copy') {
         let copyText = clip.content_text;
@@ -77,9 +80,17 @@ const ClipList: React.FC = () => {
     return true;
   });
 
-  const handleDoubleClick = (clip: any, e: React.MouseEvent) => {
+  // Clear type filter when no clips match
+  useEffect(() => {
+    if (filterType && clips.length > 0 && filteredClips.length === 0) {
+      useStore.getState().setFilterType(null);
+    }
+  }, [clips, filterType, filteredClips.length]);
+
+  const handleDoubleClick = async (clip: any, e: React.MouseEvent) => {
     const isShiftPressed = e.shiftKey;
-    (window as any).electron.ipcRenderer.invoke('clipboard:writeAndPaste', clip, isShiftPressed);
+    const ok = await (window as any).electron.ipcRenderer.invoke('clipboard:writeAndPaste', clip, isShiftPressed);
+    if (!ok) showToast('粘贴失败');
   };
 
   const handleContextMenu = (clip: any) => {

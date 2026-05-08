@@ -9,7 +9,10 @@ const App: React.FC = () => {
   const setClips = useStore(state => state.setClips);
   const addClip = useStore(state => state.addClip);
   const clipsCount = useStore(state => state.clips.length);
+  const toastMessage = useStore(state => state.toastMessage);
+  const shortcut = useStore(state => state.shortcut);
   const setTheme = useStore(state => state.setTheme);
+  const setShortcut = useStore(state => state.setShortcut);
   const [isVisible, setIsVisible] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -47,6 +50,9 @@ const App: React.FC = () => {
         if (mh) {
           useStore.getState().setMaxHistory(parseInt(mh, 10) || 200);
         }
+        // Load shortcut
+        const sc = await ipcRenderer.invoke('db:settings:get', 'shortcut_toggle');
+        if (sc) setShortcut(sc);
       } catch (err) {
         console.error('[App] Fetch error:', err);
       }
@@ -78,10 +84,13 @@ const App: React.FC = () => {
       if (mountedRef.current) setIsVisible(true);
     };
 
+    const handleShortcutChanged = (sc: string) => setShortcut(sc);
+
     const unsubNew = (window as any).electron.ipcRenderer.on('new-clip', handleNewClip);
     const unsubShown = (window as any).electron.ipcRenderer.on('window-shown', handleWindowShown);
     const unsubHide = (window as any).electron.ipcRenderer.on('window-hide-start', handleWindowHideStart);
     const unsubFocus = (window as any).electron.ipcRenderer.on('window-focus', handleWindowFocus);
+    const unsubSc = (window as any).electron.ipcRenderer.on('shortcut-changed', handleShortcutChanged);
 
     return () => {
       mountedRef.current = false;
@@ -90,6 +99,7 @@ const App: React.FC = () => {
       unsubShown();
       unsubHide();
       unsubFocus();
+      unsubSc();
     };
   }, []);
 
@@ -156,7 +166,11 @@ const App: React.FC = () => {
         <footer className="h-8 bg-badge/30 dark:bg-black/40 border-t border-beige-border dark:border-white/5 flex items-center justify-between px-4 text-[10px] text-brown-muted dark:text-zinc-500 font-bold tracking-widest uppercase">
           <div className="flex items-center gap-4">
             <span>{clipsCount} ITEMS</span>
-            <span className="opacity-40">ALT+SHIFT+V TO TOGGLE</span>
+            {toastMessage ? (
+              <span className="text-red-500 dark:text-red-400 animate-pulse">{toastMessage}</span>
+            ) : (
+              <span className="opacity-40">{shortcut.toUpperCase()} TO TOGGLE</span>
+            )}
           </div>
           <button
             onClick={() => (window as any).electron.ipcRenderer.invoke('shell:openExternal', 'https://github.com/hanyiwei')}

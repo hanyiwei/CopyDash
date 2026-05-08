@@ -310,8 +310,13 @@ export async function startMonitoring(onNewClip: (clip: any) => void) {
       // File copy detection: text/uri-list = Windows CF_HDROP.
       // Electron exposes the format name but read() returns empty and
       // readBuffer() is unavailable in v30, so we use PowerShell.
+      // Paths are collected but type is deferred — if the clipboard also
+      // carries image data and all paths are image files, the clip is
+      // classified as type 2 (image) so it pastes as a bitmap instead of
+      // a bare file path into non-Explorer targets.
+      let filePathsFromUriList: string[] = [];
       const hasUriList = formats.some(f => f === 'text/uri-list' || f.includes('uri-list'));
-      if (type === 0 && hasUriList) {
+      if (hasUriList) {
         try {
           const psScript = `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Add-Type -AssemblyName System.Windows.Forms; $files = [System.Windows.Forms.Clipboard]::GetFileDropList(); if ($files -and $files.Count -gt 0) { $files -join [char]0x1E }`;
           const psEncoded = Buffer.from(psScript, 'utf16le').toString('base64');
@@ -323,12 +328,8 @@ export async function startMonitoring(onNewClip: (clip: any) => void) {
           if (trimmed) {
             const paths = trimmed.split('\x1E').filter(p => p.length > 0);
             if (paths.length > 0) {
-              content_text = JSON.stringify(paths);
-              hash = crypto.createHash('md5').update(content_text).digest('hex');
-              if (hash !== lastHash) {
-                console.log('[Monitor] File copy detected:', paths.length, 'files');
-                type = 4;
-              }
+              filePathsFromUriList = paths;
+              console.log('[Monitor] File copy detected:', paths.length, 'files');
             }
           }
         } catch (e) {
@@ -340,15 +341,59 @@ export async function startMonitoring(onNewClip: (clip: any) => void) {
       const hasImage = formats.some(f => f.includes('image'));
       const hasText = formats.some(f => f.includes('text') || f.includes('plain'));
 
+      // When Explorer copies an image file, both the file path (uri-list) and
+      // the bitmap are on the clipboard.  Detect this case and classify as
+      // type 2 so the image pastes as a bitmap into non-Explorer targets
+      // (chat apps, design tools, browsers) instead of as a bare file path.
+      const IMG_EXTS = new Set(['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp', '.svg', '.ico']);
+      const singleImageFile = filePathsFromUriList.length === 1 &&
+        IMG_EXTS.has(path.extname(filePathsFromUriList[0]).toLowerCase());
+
       if (type === 0 && hasImage) {
         const image = clipboard.readImage();
         if (!image.isEmpty()) {
           const buffer = image.toPNG();
-          hash = crypto.createHash('md5').update(buffer).digest('hex');
-          if (hash !== lastHash) {
-            console.log('[Monitor] New image detected, hash:', hash);
-            type = 2;
+          if (singleImageFile) {
+            hash = crypto.createHash('md5').update(buffer).digest('hex');
+            if (hash !== lastHash) {
+              console.log('[Monitor] Image file from Explorer:', filePathsFromUriList[0]);
+              type = 2;
+              content_text = JSON.stringify(filePathsFromUriList);
+            } else {
+              setTimeout(poll, pollInterval);
+              return;
+            }
+          } else if (filePathsFromUriList.length === 0) {
+            hash = crypto.createHash('md5').update(buffer).digest('hex');
+            if (hash !== lastHash) {
+              console.log('[Monitor] New image detected, hash:', hash);
+              type = 2;
+            }
           }
+        }
+      }
+
+      // Single image file path without bitmap on clipboard (Explorer
+      // only puts CF_HDROP, not CF_BITMAP) — read the image from disk.
+      if (type === 0 && singleImageFile && !hasImage) {
+        hash = crypto.createHash('md5').update(JSON.stringify(filePathsFromUriList)).digest('hex');
+        if (hash !== lastHash) {
+          console.log('[Monitor] Image file from Explorer (disk):', filePathsFromUriList[0]);
+          type = 2;
+          content_text = JSON.stringify(filePathsFromUriList);
+        } else {
+          setTimeout(poll, pollInterval);
+          return;
+        }
+      }
+
+      // Remaining file paths without usable image data → type 4
+      if (type === 0 && filePathsFromUriList.length > 0) {
+        content_text = JSON.stringify(filePathsFromUriList);
+        hash = crypto.createHash('md5').update(content_text).digest('hex');
+        if (hash !== lastHash) {
+          console.log('[Monitor] File copy stored as type 4:', filePathsFromUriList.length, 'files');
+          type = 4;
         }
       }
 
@@ -453,6 +498,35 @@ export async function startMonitoring(onNewClip: (clip: any) => void) {
               thumbnail = `data:image/jpeg;base64,${thumbBuffer.toString('base64')}`;
             } catch (err) {
               console.error('Thumbnail generation failed:', err);
+            }
+          } else {
+            // No bitmap on clipboard — read image file from disk
+            // (Explorer file copy only puts CF_HDROP, not CF_BITMAP)
+            try {
+              const paths: string[] = JSON.parse(content_text || '[]');
+              if (paths.length > 0 && fs.existsSync(paths[0])) {
+                const srcPath = paths[0];
+                const buffer = fs.readFileSync(srcPath);
+                const ext = path.extname(srcPath).toLowerCase();
+                const fmtMap: Record<string, string> = { '.jpg': 'jpg', '.jpeg': 'jpg', '.gif': 'gif', '.bmp': 'bmp', '.webp': 'webp' };
+                const fmt = fmtMap[ext] || 'png';
+                const fileName = `${Date.now()}.${fmt}`;
+                image_path = path.join(imagesPath, fileName);
+                fs.writeFileSync(image_path, buffer);
+
+                try {
+                  const jimpImage = await Jimp.read(buffer);
+                  const thumbBuffer = await jimpImage
+                    .scaleToFit(200, 200)
+                    .quality(80)
+                    .getBufferAsync(Jimp.MIME_JPEG);
+                  thumbnail = `data:image/jpeg;base64,${thumbBuffer.toString('base64')}`;
+                } catch (err) {
+                  console.error('Thumbnail generation failed:', err);
+                }
+              }
+            } catch (err) {
+              console.error('[Monitor] Disk image read failed:', err);
             }
           }
         }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Pin, FileText, Palette, Image, Link, Files, FileAudio, FileVideo, FileImage, FileArchive, FileCode, File } from 'lucide-react';
+import { Pin, FileText, Folder, Palette, Image, Link, Files, FileAudio, FileVideo, FileImage, FileArchive, FileCode, File } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { isImageUrl, isUrl } from '../utils/urlDetect';
 import { maybeHighlight } from '../utils/highlight';
@@ -81,9 +81,14 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
 
   let filePaths: string[] = [];
   let fileNames: string[] = [];
+  let isAllFolders = false;
   if (clip.type === 4 && clip.content_text) {
     try { filePaths = JSON.parse(clip.content_text); } catch {}
     fileNames = filePaths.map(p => p.split(/[\\/]/).pop() || p);
+    isAllFolders = filePaths.length > 0 && filePaths.every(p => {
+      const last = (p.split(/[\\/]/).pop() || '');
+      return !last.includes('.');
+    });
   }
 
   return (
@@ -106,10 +111,17 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
         <div className="absolute top-3 left-3 right-3 z-20 flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 min-w-0">
             {clip.type === 4 ? (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-zinc-700/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-zinc-400">
-                {(() => { const Icon = fileNames.length === 1 ? getFileIcon(fileNames[0]) : Files; return <Icon className="w-3 h-3" />; })()}
-                {fileNames.length === 1 ? getFileLabel(fileNames[0]) : 'Files'}
-              </span>
+              isAllFolders ? (
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-zinc-700/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-zinc-400">
+                  <Folder className="w-3 h-3" />
+                  Folder
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-zinc-700/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-zinc-400">
+                  {(() => { const Icon = fileNames.length === 1 ? getFileIcon(fileNames[0]) : Files; return <Icon className="w-3 h-3" />; })()}
+                  {fileNames.length === 1 ? getFileLabel(fileNames[0]) : 'Files'}
+                </span>
+              )
             ) : clip.type === 2 ? (
               <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-zinc-700/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-zinc-400">
                 <Image className="w-3 h-3" />
@@ -151,25 +163,59 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
         {/* Main content area — all types use px-3 for uniform side padding */}
         <div className="flex-1 flex flex-col min-h-0">
           {clip.type === 4 ? (
-            /* File card */
-            <div className="flex-1 flex flex-col pt-8 px-3 pb-3 justify-center">
-              <div className="flex items-center justify-center mb-2">
-                {(() => { const Icon = fileNames[0] ? getFileIcon(fileNames[0]) : Files; return <Icon className="w-8 h-8 text-brown-muted dark:text-zinc-500" />; })()}
+            isAllFolders ? (
+              /* Folder card */
+              <div className="flex-1 flex flex-col pt-8 px-3 pb-3 justify-center">
+                <div className="flex items-center justify-center mb-2">
+                  <Folder className="w-8 h-8 text-amber-500/80" />
+                </div>
+                <div className="text-center space-y-0.5">
+                  {fileNames.slice(0, 2).map((name, i) => (
+                    <p key={i} className="text-[12px] text-brown-secondary dark:text-zinc-300 truncate leading-tight">{name}</p>
+                  ))}
+                  {fileNames.length > 2 && (
+                    <p className="text-[12px] text-brown-muted dark:text-zinc-500">+{fileNames.length - 2} more</p>
+                  )}
+                </div>
+                <div className="mt-1.5 text-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="text-[10px] text-brown-muted dark:text-zinc-500">
+                    Pastes as path (use in File Explorer)
+                  </span>
+                </div>
+                <div className="mt-2 text-center">
+                  <span className="text-[9px] text-brown-muted dark:text-zinc-600">
+                    {filePaths.length} folder{filePaths.length !== 1 ? 's' : ''}
+                  </span>
+                </div>
               </div>
-              <div className="text-center space-y-0.5">
-                {fileNames.slice(0, 2).map((name, i) => (
-                  <p key={i} className="text-[12px] text-brown-secondary dark:text-zinc-300 truncate leading-tight">{name}</p>
-                ))}
-                {fileNames.length > 2 && (
-                  <p className="text-[12px] text-brown-muted dark:text-zinc-500">+{fileNames.length - 2} more</p>
+            ) : (
+              /* File card */
+              <div className="flex-1 flex flex-col pt-8 px-3 pb-3 justify-center">
+                <div className="flex items-center justify-center mb-2">
+                  {(() => { const Icon = fileNames[0] ? getFileIcon(fileNames[0]) : Files; return <Icon className="w-8 h-8 text-brown-muted dark:text-zinc-500" />; })()}
+                </div>
+                <div className="text-center space-y-0.5">
+                  {fileNames.slice(0, 2).map((name, i) => (
+                    <p key={i} className="text-[12px] text-brown-secondary dark:text-zinc-300 truncate leading-tight">{name}</p>
+                  ))}
+                  {fileNames.length > 2 && (
+                    <p className="text-[12px] text-brown-muted dark:text-zinc-500">+{fileNames.length - 2} more</p>
+                  )}
+                </div>
+                {filePaths.length === 1 && (
+                  <div className="mt-1.5 text-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <p className="text-[10px] text-brown-muted dark:text-zinc-500 truncate leading-tight" title={filePaths[0]}>
+                      {filePaths[0]}
+                    </p>
+                  </div>
                 )}
+                <div className="mt-2 text-center">
+                  <span className="text-[9px] text-brown-muted dark:text-zinc-600">
+                    {filePaths.length} file{filePaths.length !== 1 ? 's' : ''}
+                  </span>
+                </div>
               </div>
-              <div className="mt-2 text-center">
-                <span className="text-[9px] text-brown-muted dark:text-zinc-600">
-                  {filePaths.length} file{filePaths.length !== 1 ? 's' : ''}
-                </span>
-              </div>
-            </div>
+            )
           ) : clip.type === 2 ? (
             /* Image card */
             <div className="flex-1 flex items-center justify-center p-3 pt-8">
