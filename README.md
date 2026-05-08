@@ -14,7 +14,7 @@ A Windows clipboard manager for designers and developers.
 
 ## Download
 
-**Coming soon**
+**Windows clipboard manager**
 
 Download the latest version from [Releases](https://github.com/hanyiwei/copydash/releases):
 
