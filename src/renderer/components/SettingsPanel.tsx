@@ -25,6 +25,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   const setTheme = useStore(s => s.setTheme);
   const shortcut = useStore(s => s.shortcut);
   const setShortcut = useStore(s => s.setShortcut);
+  const autoLaunch = useStore(s => s.autoLaunch);
+  const setAutoLaunch = useStore(s => s.setAutoLaunch);
   const [level, setLevel] = useState<PanelLevel>('main');
   const [maxHistory, setMaxHistory] = useState(200);
   const [loaded, setLoaded] = useState(false);
@@ -121,6 +123,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
       const t = await ipc().invoke('db:settings:get', 'theme');
       if (t && t !== theme) setTheme(t as 'dark' | 'light');
       const pv = await ipc().invoke('db:settings:get', 'privacy_apps');
+      const al = await ipc().invoke('db:settings:get', 'auto_launch');
+      if (al !== null) setAutoLaunch(al === '1');
       const defaults: Record<string, boolean> = {};
       PRIVACY_APPS.forEach(a => { defaults[a.key] = false; });
       if (pv) {
@@ -343,6 +347,27 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
             <span className={labelClass}>Shortcuts</span>
             <ChevronRight className="w-3.5 h-3.5 text-brown-muted dark:text-zinc-400" />
           </button>
+
+          {/* Auto-launch on startup */}
+          <div className={rowClass}>
+            <span className={labelClass}>Auto Launch</span>
+            <button
+              onClick={async () => {
+                const next = !autoLaunch;
+                setAutoLaunch(next);
+                await ipc().invoke('setting:setAutoLaunch', next);
+              }}
+              className={`relative w-9 h-5 rounded-full transition-colors ${
+                autoLaunch ? 'bg-orange-500' : 'bg-page-dim dark:bg-zinc-600'
+              }`}
+            >
+              <span
+                className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${
+                  autoLaunch ? 'translate-x-4' : 'translate-x-0'
+                }`}
+              />
+            </button>
+          </div>
 
           {/* Clear all history */}
           <div className="pt-2 border-t border-beige-border dark:border-white/5">

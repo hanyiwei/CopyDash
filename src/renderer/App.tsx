@@ -120,7 +120,7 @@ const App: React.FC = () => {
         <div className="flex-shrink-0 flex items-center relative">
           {/* Logo — opens GitHub in system default browser */}
           <button
-            onClick={() => (window as any).electron.ipcRenderer.invoke('shell:openExternal', 'https://github.com/hanyiwei')}
+            onClick={() => (window as any).electron.ipcRenderer.invoke('shell:openExternal', 'https://github.com/hanyiwei/CopyDash')}
             className="flex-shrink-0 pl-5 pr-6 text-brown dark:text-white hover:text-orange-400 dark:hover:text-orange-400 transition-colors cursor-pointer select-none flex items-center gap-1 group"
             title="CopyDash on GitHub"
           >
@@ -173,7 +173,7 @@ const App: React.FC = () => {
             )}
           </div>
           <button
-            onClick={() => (window as any).electron.ipcRenderer.invoke('shell:openExternal', 'https://github.com/hanyiwei')}
+            onClick={() => (window as any).electron.ipcRenderer.invoke('shell:openExternal', 'https://github.com/hanyiwei/CopyDash')}
             className="hover:text-brown dark:hover:text-white transition-colors cursor-pointer flex items-center gap-2 text-brown-faint/60 dark:text-zinc-700"
           >
             <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>

@@ -28,6 +28,7 @@ interface State {
   maxHistory: number;
   toastMessage: string | null;
   shortcut: string;
+  autoLaunch: boolean;
   setClips: (clips: Clip[]) => void;
   addClip: (clip: Clip) => void;
   removeClip: (id: string) => void;
@@ -40,6 +41,7 @@ interface State {
   setMaxHistory: (n: number) => void;
   showToast: (message: string) => void;
   setShortcut: (s: string) => void;
+  setAutoLaunch: (v: boolean) => void;
   clearClips: () => void;
 }
 
@@ -57,6 +59,7 @@ export const useStore = create<State>((set) => ({
   maxHistory: 200,
   toastMessage: null,
   shortcut: 'Ctrl+Shift+V',
+  autoLaunch: false,
   setClips: (clips) => {
     set({ clips: [...clips] });
   },
@@ -94,5 +97,6 @@ export const useStore = create<State>((set) => ({
     }, 2000);
   },
   setShortcut: (s) => set({ shortcut: s }),
+  setAutoLaunch: (v) => set({ autoLaunch: v }),
   clearClips: () => set({ clips: [] }),
 }));

@@ -134,6 +134,12 @@ app.whenReady().then(async () => {
   });
 
   await initDB();
+
+  // Auto-launch on startup
+  const autoLaunchRow = dbQuery.get("SELECT value FROM settings WHERE key = ?", ['auto_launch']);
+  const openAtLogin = autoLaunchRow?.value === '1';
+  app.setLoginItemSettings({ openAtLogin, path: process.execPath, args: [] });
+
   await createWindow();
   createTray();
 
@@ -218,6 +224,12 @@ ipcMain.handle('shortcut:update', (_, accelerator: string) => {
   const old = dbQuery.get('SELECT value FROM settings WHERE key = ?', ['shortcut_toggle']);
   if (old?.value) registerToggleShortcut(old.value);
   return { ok: false, error: 'Shortcut in use by another app' };
+});
+
+ipcMain.handle('setting:setAutoLaunch', (_, enable: boolean) => {
+  app.setLoginItemSettings({ openAtLogin: enable, path: process.execPath, args: [] });
+  dbQuery.run('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)', ['auto_launch', enable ? '1' : '0']);
+  return enable;
 });
 
 app.on('window-all-closed', () => {
