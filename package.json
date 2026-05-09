@@ -1,6 +1,6 @@
 {
   "name": "copydash",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Windows clipboard manager for designers and developers.",
   "main": "./out/main/index.js",
   "type": "module",
