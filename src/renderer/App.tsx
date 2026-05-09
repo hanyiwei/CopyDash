@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Settings, X, ArrowDownToLine, CheckCircle2 } from 'lucide-react';
+import { Settings, X, ArrowDownToLine, CheckCircle2, ExternalLink } from 'lucide-react';
 import { useStore, type UpdateStatus } from './store/useStore';
 import SearchBar from './components/SearchBar';
 import ClipList from './components/ClipList';
@@ -98,6 +98,11 @@ const App: React.FC = () => {
     const unsubSc = (window as any).electron.ipcRenderer.on('shortcut-changed', handleShortcutChanged);
     const unsubUpdate = (window as any).electron.ipcRenderer.on('update:status', handleUpdateStatus);
 
+    // Replay any status that arrived before the listener was attached
+    (window as any).electron.ipcRenderer.invoke('update:getStatus').then((s: any) => {
+      if (s && mountedRef.current) setUpdateStatus(s);
+    });
+
     return () => {
       mountedRef.current = false;
       cancelHide();
@@ -143,17 +148,35 @@ const App: React.FC = () => {
           </div>
 
           {/* Update prompt */}
-          {updateStatus && updateStatus.status !== 'error' && (
+          {updateStatus && (
             <button
               onClick={() => {
                 if (updateStatus.status === 'downloaded') {
                   (window as any).electron.ipcRenderer.invoke('update:quit-and-install');
+                } else if (updateStatus.status === 'available') {
+                  (window as any).electron.ipcRenderer.invoke('update:download');
+                } else if (updateStatus.status === 'error') {
+                  (window as any).electron.ipcRenderer.invoke('update:check');
+                } else if (updateStatus.status === 'fallback') {
+                  (window as any).electron.ipcRenderer.invoke('shell:openExternal', 'https://github.com/hanyiwei/CopyDash/releases');
                 }
               }}
-              className="flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold transition-all bg-orange-500/20 text-orange-600 dark:text-orange-400"
+              className={`flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold transition-all ${
+                updateStatus.status === 'error'
+                  ? 'bg-red-500/20 text-red-600 dark:text-red-400 cursor-pointer'
+                  : updateStatus.status === 'downloaded'
+                    ? 'bg-green-500/20 text-green-600 dark:text-green-400 cursor-pointer'
+                    : updateStatus.status === 'fallback'
+                      ? 'bg-amber-500/20 text-amber-600 dark:text-amber-400 cursor-pointer'
+                      : 'bg-orange-500/20 text-orange-600 dark:text-orange-400 cursor-pointer'
+              }`}
             >
               {updateStatus.status === 'downloaded' ? (
                 <CheckCircle2 className="w-3.5 h-3.5" />
+              ) : updateStatus.status === 'error' ? (
+                <X className="w-3.5 h-3.5" />
+              ) : updateStatus.status === 'fallback' ? (
+                <ExternalLink className="w-3.5 h-3.5" />
               ) : (
                 <ArrowDownToLine className="w-3.5 h-3.5" />
               )}
@@ -162,7 +185,11 @@ const App: React.FC = () => {
                   ? `${locale === 'zh' ? '下载中' : 'Downloading'} ${updateStatus.percent ?? 0}%`
                   : updateStatus.status === 'downloaded'
                     ? locale === 'zh' ? '已就绪 · 点击重启' : 'Ready · Click to restart'
-                    : locale === 'zh' ? '新版本可用 · 点击更新' : 'New version · Click to update'}
+                    : updateStatus.status === 'error'
+                      ? locale === 'zh' ? '更新检查失败 · 点击重试' : 'Update check failed · Click to retry'
+                    : updateStatus.status === 'fallback'
+                      ? locale === 'zh' ? '更新持续失败 · 去官网下载' : 'Update keeps failing · Download manually'
+                      : locale === 'zh' ? '新版本可用 · 点击更新' : 'New version · Click to update'}
               </span>
             </button>
           )}

@@ -59,6 +59,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   const setShortcut = useStore(s => s.setShortcut);
   const autoLaunch = useStore(s => s.autoLaunch);
   const setAutoLaunch = useStore(s => s.setAutoLaunch);
+  const setUpdateStatus = useStore(s => s.setUpdateStatus);
   const clipsCount = useStore(s => s.clips.length);
   const [tab, setTab] = useState<TabType>('general');
   const [subView, setSubView] = useState<SubView>(null);
@@ -209,13 +210,17 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
       const result = await ipc().invoke('update:check');
       if (result?.updateAvailable) {
         flashUpdateResult('updateAvailable');
-        setCheckingUpdate(false);
+      } else if (result?.error) {
+        console.error('[Settings] Update check error:', result.error);
+        flashUpdateResult('updateFailed');
       } else {
         flashUpdateResult('upToDate');
-        setCheckingUpdate(false);
+        // Clear any lingering error badge from the title bar
+        setUpdateStatus(null);
       }
     } catch {
       flashUpdateResult('updateFailed');
+    } finally {
       setCheckingUpdate(false);
     }
   };
@@ -355,7 +360,12 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
               {/* Version */}
               {appVersion && (
                 <div className={rowClass}>
-                  <span className={labelClass}>{t('version')} v{appVersion}</span>
+                  <button
+                    onClick={() => ipc().invoke('shell:openExternal', 'https://github.com/hanyiwei/CopyDash/releases')}
+                    className={`${labelClass} cursor-pointer`}
+                  >
+                    {t('version')} v{appVersion}
+                  </button>
                   <button
                     onClick={doCheckUpdate}
                     disabled={checkingUpdate}

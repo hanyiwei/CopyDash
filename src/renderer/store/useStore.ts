@@ -19,9 +19,10 @@ interface Clip {
 export type FilterType = 'text' | 'image' | 'link' | 'color' | 'file' | null;
 
 export interface UpdateStatus {
-  status: 'available' | 'downloading' | 'downloaded' | 'error';
+  status: 'available' | 'downloading' | 'downloaded' | 'error' | 'fallback';
   version?: string;
   percent?: number;
+  message?: string;
 }
 
 interface State {
