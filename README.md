@@ -19,7 +19,6 @@ A Windows clipboard manager.
 Download the latest version from [Releases](https://github.com/hanyiwei/copydash/releases):
 
 - **`CopyDash-Setup-x.x.x.exe`** — NSIS installer, choose your install directory.
-- **`CopyDash-x.x.x-win.zip`** — portable, unzip and run `CopyDash.exe`.
 
 ## Features
 
@@ -67,39 +66,7 @@ Download the latest version from [Releases](https://github.com/hanyiwei/copydash
 | Build | electron-vite |
 | Auto-update | electron-updater |
 
-## Development
 
-```bash
-# Install dependencies
-npm install
-
-# Start dev server
-npm run dev
-
-# Build for production
-npm run build
-
-# Package for distribution
-npm run dist
-```
-
-## Project Structure
-
-```
-src/
-├── main/            # Electron main process
-│   ├── index.ts     # Window management, IPC, tray, global shortcuts
-│   ├── monitor.ts   # Clipboard polling, format detection, content hashing
-│   ├── updater.ts   # Auto-update via GitHub releases
-│   └── db/          # SQLite database layer
-├── preload/         # Context bridge (contextBridge)
-└── renderer/        # React UI
-    ├── App.tsx      # Root layout
-    ├── components/  # ClipItem, ClipList, SearchBar, SettingsPanel
-    ├── store/       # Zustand state management
-    ├── utils/       # Syntax highlighting, URL detection, type matching
-    └── styles/      # Tailwind + custom CSS
-```
 
 ## License
 
@@ -114,7 +81,7 @@ MIT
 从 [Releases](https://github.com/hanyiwei/copydash/releases) 下载最新版本：
 
 - **`CopyDash-Setup-x.x.x.exe`** — NSIS 安装包，可自定义安装路径
-- **`CopyDash-x.x.x-win.zip`** — 绿色便携版，解压即用
+
 
 ## 功能
 
