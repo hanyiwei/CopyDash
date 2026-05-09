@@ -4,7 +4,7 @@
 
 # CopyDash
 
-A Windows clipboard manager for designers and developers.
+A Windows clipboard manager.
 
 [![Platform](https://img.shields.io/badge/platform-Windows-blue?logo=windows)](https://github.com/hanyiwei/copydash)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -98,3 +98,7 @@ src/
 ## License
 
 MIT
+
+
+---
+Built by [大花](https://github.com/hanyiwei) with Claude Code.
