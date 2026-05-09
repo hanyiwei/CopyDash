@@ -35,15 +35,6 @@ const ClipList: React.FC = () => {
         const ok = await (window as any).electron.ipcRenderer.invoke('clipboard:writeAndPaste', clip, true);
         if (!ok) showToast('粘贴失败');
       }
-      if (action === 'copy') {
-        let copyText = clip.content_text;
-        if (clip.type === 4) {
-          try {
-            copyText = (JSON.parse(clip.content_text || '[]') as string[]).join('\r\n');
-          } catch { /* keep raw content_text */ }
-        }
-        await (window as any).electron.ipcRenderer.invoke('clipboard:writeText', copyText);
-      }
       if (action === 'toggle-pin') {
         const newPinStatus = clip.is_pinned ? 0 : 1;
         await (window as any).electron.ipcRenderer.invoke('db:updatePin', clip.id, newPinStatus);
@@ -94,7 +85,8 @@ const ClipList: React.FC = () => {
   };
 
   const handleContextMenu = (clip: any) => {
-    (window as any).electron.ipcRenderer.invoke('menu:showContext', clip);
+    const { locale } = useStore.getState();
+    (window as any).electron.ipcRenderer.invoke('menu:showContext', clip, locale);
   };
 
   const handleAnimationEnd = (clipId: string) => {

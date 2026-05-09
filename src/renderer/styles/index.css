@@ -39,6 +39,27 @@ body {
   padding: 0 !important;
 }
 
+/* Thin scrollbar for settings panel */
+.thin-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background: #bfb8a880;
+  border-radius: 2px;
+}
+.thin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #a0988580;
+}
+.dark .thin-scrollbar::-webkit-scrollbar-thumb {
+  background: #52525b80;
+}
+.dark .thin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #71717a80;
+}
+
 /* Card exit animation — GPU-only properties (no reflow) */
 @keyframes card-exit {
   0% {

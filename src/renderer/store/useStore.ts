@@ -18,6 +18,12 @@ interface Clip {
 
 export type FilterType = 'text' | 'image' | 'link' | 'color' | 'file' | null;
 
+export interface UpdateStatus {
+  status: 'available' | 'downloading' | 'downloaded' | 'error';
+  version?: string;
+  percent?: number;
+}
+
 interface State {
   clips: Clip[];
   selectedClipId: string | null;
@@ -25,8 +31,10 @@ interface State {
   filterType: FilterType;
   filterPinned: boolean;
   theme: 'dark' | 'light';
+  locale: 'en' | 'zh';
   maxHistory: number;
   toastMessage: string | null;
+  updateStatus: UpdateStatus | null;
   shortcut: string;
   autoLaunch: boolean;
   setClips: (clips: Clip[]) => void;
@@ -38,8 +46,10 @@ interface State {
   setFilterType: (type: FilterType) => void;
   setFilterPinned: (pinned: boolean) => void;
   setTheme: (theme: 'dark' | 'light') => void;
+  setLocale: (locale: 'en' | 'zh') => void;
   setMaxHistory: (n: number) => void;
   showToast: (message: string) => void;
+  setUpdateStatus: (s: UpdateStatus | null) => void;
   setShortcut: (s: string) => void;
   setAutoLaunch: (v: boolean) => void;
   clearClips: () => void;
@@ -56,10 +66,12 @@ export const useStore = create<State>((set) => ({
   filterType: null,
   filterPinned: false,
   theme: 'dark',
+  locale: 'en',
   maxHistory: 200,
   toastMessage: null,
+  updateStatus: null,
   shortcut: 'Ctrl+Shift+V',
-  autoLaunch: false,
+  autoLaunch: true,
   setClips: (clips) => {
     set({ clips: [...clips] });
   },
@@ -87,6 +99,10 @@ export const useStore = create<State>((set) => ({
     set({ theme });
     ipc().invoke('db:settings:set', 'theme', theme).catch((err: unknown) => console.error('[Store] setTheme persist failed:', err));
   },
+  setLocale: (locale) => {
+    set({ locale });
+    ipc().invoke('db:settings:set', 'locale', locale).catch((err: unknown) => console.error('[Store] setLocale persist failed:', err));
+  },
   setMaxHistory: (n) => set({ maxHistory: n }),
   showToast: (message) => {
     if (toastTimer) clearTimeout(toastTimer);
@@ -96,6 +112,7 @@ export const useStore = create<State>((set) => ({
       toastTimer = null;
     }, 2000);
   },
+  setUpdateStatus: (s) => set({ updateStatus: s }),
   setShortcut: (s) => set({ shortcut: s }),
   setAutoLaunch: (v) => set({ autoLaunch: v }),
   clearClips: () => set({ clips: [] }),

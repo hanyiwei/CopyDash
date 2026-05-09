@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Settings, X } from 'lucide-react';
-import { useStore } from './store/useStore';
+import { Settings, X, ArrowDownToLine, CheckCircle2 } from 'lucide-react';
+import { useStore, type UpdateStatus } from './store/useStore';
 import SearchBar from './components/SearchBar';
 import ClipList from './components/ClipList';
 import SettingsPanel from './components/SettingsPanel';
@@ -13,6 +13,9 @@ const App: React.FC = () => {
   const shortcut = useStore(state => state.shortcut);
   const setTheme = useStore(state => state.setTheme);
   const setShortcut = useStore(state => state.setShortcut);
+  const updateStatus = useStore(state => state.updateStatus);
+  const setUpdateStatus = useStore(state => state.setUpdateStatus);
+  const locale = useStore(state => state.locale);
   const [isVisible, setIsVisible] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -86,11 +89,14 @@ const App: React.FC = () => {
 
     const handleShortcutChanged = (sc: string) => setShortcut(sc);
 
+    const handleUpdateStatus = (payload: UpdateStatus) => setUpdateStatus(payload);
+
     const unsubNew = (window as any).electron.ipcRenderer.on('new-clip', handleNewClip);
     const unsubShown = (window as any).electron.ipcRenderer.on('window-shown', handleWindowShown);
     const unsubHide = (window as any).electron.ipcRenderer.on('window-hide-start', handleWindowHideStart);
     const unsubFocus = (window as any).electron.ipcRenderer.on('window-focus', handleWindowFocus);
     const unsubSc = (window as any).electron.ipcRenderer.on('shortcut-changed', handleShortcutChanged);
+    const unsubUpdate = (window as any).electron.ipcRenderer.on('update:status', handleUpdateStatus);
 
     return () => {
       mountedRef.current = false;
@@ -100,6 +106,7 @@ const App: React.FC = () => {
       unsubHide();
       unsubFocus();
       unsubSc();
+      unsubUpdate();
     };
   }, []);
 
@@ -134,6 +141,31 @@ const App: React.FC = () => {
           <div className="flex-1">
             <SearchBar />
           </div>
+
+          {/* Update prompt */}
+          {updateStatus && updateStatus.status !== 'error' && (
+            <button
+              onClick={() => {
+                if (updateStatus.status === 'downloaded') {
+                  (window as any).electron.ipcRenderer.invoke('update:quit-and-install');
+                }
+              }}
+              className="flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold transition-all bg-orange-500/20 text-orange-600 dark:text-orange-400"
+            >
+              {updateStatus.status === 'downloaded' ? (
+                <CheckCircle2 className="w-3.5 h-3.5" />
+              ) : (
+                <ArrowDownToLine className="w-3.5 h-3.5" />
+              )}
+              <span>
+                {updateStatus.status === 'downloading'
+                  ? `${locale === 'zh' ? '下载中' : 'Downloading'} ${updateStatus.percent ?? 0}%`
+                  : updateStatus.status === 'downloaded'
+                    ? locale === 'zh' ? '已就绪 · 点击重启' : 'Ready · Click to restart'
+                    : locale === 'zh' ? '新版本可用 · 点击更新' : 'New version · Click to update'}
+              </span>
+            </button>
+          )}
 
           {/* Settings + close on the right */}
           <div className="flex-shrink-0 flex items-center gap-0.5 pr-2">

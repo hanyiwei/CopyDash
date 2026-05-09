@@ -261,7 +261,7 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
             </div>
           ) : (
             /* Text/Code/Link card */
-            <div className="flex-1 flex flex-col pt-8 overflow-hidden">
+            <div className="flex-1 flex flex-col pt-8 pb-3 overflow-hidden">
               {(() => {
                 const raw = clip.content_text || '';
                 const txt = raw.length > 500

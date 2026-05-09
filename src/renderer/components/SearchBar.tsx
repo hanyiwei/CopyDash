@@ -110,15 +110,15 @@ const SearchBar: React.FC = () => {
               <button
                 key={key}
                 onClick={() => handleTypeClick(key)}
-                className={`group flex items-center gap-1.5 px-2 py-1.5 rounded-xl transition-all duration-300 ${
-                  active ? 'bg-badge/50 dark:bg-white/10' : 'hover:bg-page-dim/50 dark:hover:bg-white/10'
+                className={`group flex items-center px-2 py-1.5 rounded-xl transition-all duration-300 ${
+                  active ? 'bg-beige-active dark:bg-white/20' : 'hover:bg-page-dim/50 dark:hover:bg-white/10'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 flex-shrink-0 transition-colors ${
-                  active ? 'text-brown-subtle dark:text-white' : 'text-brown-muted dark:text-zinc-500 group-hover:text-brown dark:group-hover:text-white'
+                <Icon className={`w-3.5 h-3.5 flex-shrink-0 transition-all duration-300 ${
+                  active ? 'text-orange-500 dark:text-orange-400 mr-0 group-hover:mr-1.5' : 'text-brown-muted dark:text-zinc-500 group-hover:text-brown dark:group-hover:text-white mr-1.5'
                 }`} />
                 <span className={`text-xs font-medium whitespace-nowrap overflow-hidden transition-all duration-300 max-w-0 group-hover:max-w-20 opacity-0 group-hover:opacity-100 ${
-                  active ? 'text-brown-subtle dark:text-white' : 'text-brown-muted dark:text-zinc-500 group-hover:text-brown dark:group-hover:text-white'
+                  active ? 'text-orange-500 dark:text-orange-400' : 'text-brown-muted dark:text-zinc-500 group-hover:text-brown dark:group-hover:text-white'
                 }`}>{label}</span>
               </button>
             );
@@ -130,34 +130,21 @@ const SearchBar: React.FC = () => {
       {hasPinned && (
         <button
           onClick={() => setFilterPinned(!filterPinned)}
-          className={`group flex items-center gap-1.5 px-2 py-1.5 rounded-xl transition-all duration-300 ${
-            filterPinned ? 'bg-badge/50 dark:bg-white/10' : 'hover:bg-page-dim/50 dark:hover:bg-white/10'
+          className={`group flex items-center px-2 py-1.5 rounded-xl transition-all duration-300 ${
+            filterPinned ? 'bg-beige-active dark:bg-white/20' : 'hover:bg-page-dim/50 dark:hover:bg-white/10'
           }`}
         >
-          <Pin className={`w-3.5 h-3.5 flex-shrink-0 transition-colors ${
-            filterPinned ? 'text-brown-subtle dark:text-white' : 'text-brown-muted dark:text-zinc-500 group-hover:text-brown dark:group-hover:text-white'
+          <Pin className={`w-3.5 h-3.5 flex-shrink-0 transition-all duration-300 ${
+            filterPinned ? 'text-orange-500 dark:text-orange-400 mr-0 group-hover:mr-1.5' : 'text-brown-muted dark:text-zinc-500 group-hover:text-brown dark:group-hover:text-white mr-1.5'
           }`} />
           <span className={`text-xs font-medium whitespace-nowrap overflow-hidden transition-all duration-300 max-w-0 group-hover:max-w-20 opacity-0 group-hover:opacity-100 ${
-            filterPinned ? 'text-brown-subtle dark:text-white' : 'text-brown-muted dark:text-zinc-500 group-hover:text-brown dark:group-hover:text-white'
+            filterPinned ? 'text-orange-500 dark:text-orange-400' : 'text-brown-muted dark:text-zinc-500 group-hover:text-brown dark:group-hover:text-white'
           }`}>Pinned</span>
         </button>
       )}
 
       {/* Spacer */}
       <div className="flex-1" />
-
-      {/* Active filter badge */}
-      {(filterType || filterPinned || searchQuery) && (
-        <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-badge/30 dark:bg-white/5 border border-beige-border dark:border-white/10 text-[10px] font-bold text-brown-subtle dark:text-zinc-400">
-          <span className="opacity-50">FILTER</span>
-          <button
-            onClick={() => { setFilterType(null); setFilterPinned(false); setSearchQuery(''); setIsSearchOpen(false); }}
-            className="hover:text-brown dark:hover:text-white transition-colors"
-          >
-            <X className="w-2.5 h-2.5" />
-          </button>
-        </div>
-      )}
     </div>
   );
 };

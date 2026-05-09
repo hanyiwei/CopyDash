@@ -3,6 +3,7 @@ import path from 'path';
 import { is } from '@electron-toolkit/utils';
 import { startMonitoring, markContentHash } from './monitor';
 import { initDB, dbQuery } from './db/database';
+import { initAutoUpdater } from './updater';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { fileURLToPath } from 'url';
@@ -137,10 +138,11 @@ app.whenReady().then(async () => {
 
   // Auto-launch on startup
   const autoLaunchRow = dbQuery.get("SELECT value FROM settings WHERE key = ?", ['auto_launch']);
-  const openAtLogin = autoLaunchRow?.value === '1';
+  const openAtLogin = autoLaunchRow ? autoLaunchRow.value === '1' : true;
   app.setLoginItemSettings({ openAtLogin, path: process.execPath, args: [] });
 
   await createWindow();
+  initAutoUpdater(mainWindow!);
   createTray();
 
     // Global Shortcut — read from settings, default to Ctrl+Shift+V
@@ -351,42 +353,35 @@ ipcMain.handle('clipboard:writeText', (_, text: string) => {
   }
 });
 
-ipcMain.handle('menu:showContext', (event, clip: any) => {
+ipcMain.handle('menu:showContext', (event, clip: any, locale: string = 'en') => {
+  const zh = locale === 'zh';
   const items: Electron.MenuItemConstructorOptions[] = [];
-
-  // Copy (text + file types)
-  if (clip.type === 1 || clip.type === 4) {
-    items.push({
-      label: 'Copy',
-      click: () => event.sender.send('menu-action', { action: 'copy', clip })
-    });
-  }
 
   // Pin / Unpin (all types)
   items.push({
-    label: clip.is_pinned ? 'Unpin' : 'Pin',
+    label: clip.is_pinned ? (zh ? '取消钉选' : 'Unpin') : (zh ? '钉选' : 'Pin'),
     click: () => event.sender.send('menu-action', { action: 'toggle-pin', clip })
   });
 
   // Paste as Plain Text (text type only)
   if (clip.type === 1) {
     items.push({
-      label: 'Paste as Plain Text',
+      label: zh ? '粘贴为纯文本' : 'Paste as Plain Text',
       click: () => event.sender.send('menu-action', { action: 'paste-plain', clip })
     });
   }
 
   // Paste (all types)
   items.push({
-    label: 'Paste',
+    label: zh ? '粘贴' : 'Paste',
     click: () => event.sender.send('menu-action', { action: 'paste', clip })
   });
 
   items.push({ type: 'separator' });
 
-  // Delete — visually distinct label
+  // Delete
   items.push({
-    label: 'Delete',
+    label: zh ? '删除' : 'Delete',
     click: () => event.sender.send('menu-action', { action: 'delete', clip })
   });
 

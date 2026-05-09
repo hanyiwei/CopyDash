@@ -6,12 +6,21 @@ directories:
 files:
   - out/**/*
   - resources/**/*
+  - "!node_modules/**/*.map"
+  - "!node_modules/**/*.md"
+  - "!node_modules/**/LICENSE*"
+  - "!node_modules/**/changelog*"
 win:
   target:
-    - target: zip
+    - target: nsis
       arch: [x64]
   icon: resources/icon.png
   signAndEditExecutable: false
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
+
+publish:
+  provider: github
+  owner: hanyiwei
+  repo: CopyDash
