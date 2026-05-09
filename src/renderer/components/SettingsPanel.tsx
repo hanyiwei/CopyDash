@@ -44,6 +44,7 @@ const L: Record<string, Record<Locale, string>> = {
   checkUpdate:    { en: 'Check for updates', zh: '检查更新' },
   checkingUpdate: { en: 'Checking...', zh: '检查中…' },
   upToDate:       { en: 'Up to date', zh: '已是最新' },
+  updateAvailable:{ en: 'Update found!', zh: '发现更新！' },
   updateFailed:   { en: 'Check failed', zh: '检查失败' },
 };
 
@@ -207,7 +208,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
     try {
       const result = await ipc().invoke('update:check');
       if (result?.updateAvailable) {
-        // update prompt will appear in top bar via IPC
+        flashUpdateResult('updateAvailable');
         setCheckingUpdate(false);
       } else {
         flashUpdateResult('upToDate');
@@ -219,7 +220,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
     }
   };
 
-  const rowClass = "flex items-center justify-between w-full min-h-[30px]";
+  const rowClass = "flex items-center justify-between w-full min-h-[30px] px-2";
   const labelClass = "text-xs text-brown-secondary dark:text-zinc-300";
   const mutedClass = "text-[11px] text-brown-muted dark:text-zinc-500";
 
@@ -391,29 +392,27 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
           {/* Tab: Shortcuts */}
           {tab === 'shortcuts' && (
             <div className="space-y-3">
-              <div className="group">
-                <div className={`${rowClass} rounded-md hover:bg-card/50 dark:hover:bg-white/5 transition-colors`}>
-                  <span className={labelClass}>{t('toggleWindow')}</span>
-                  <div className="flex items-center gap-1.5">
-                    {!recording && !hasModifiedShortcut.current && (
-                      <span className="text-[10px] text-brown-muted/60 dark:text-zinc-600 opacity-0 group-hover:opacity-100 transition-opacity">{t('shortcutHint')}</span>
-                    )}
-                    {recording ? (
-                      <span className="text-[11px] font-mono text-orange-500 animate-pulse">{t('pressKeys')}</span>
-                    ) : (
-                      <button
-                        onClick={() => { setRecording(true); setShortcutError(''); }}
-                        className={`text-[11px] font-mono transition-colors cursor-pointer flex items-center gap-1 ${
-                          shortcutSaved
-                            ? 'text-green-500 dark:text-green-400'
-                            : 'text-brown-muted dark:text-zinc-500 group-hover:text-brown-secondary dark:group-hover:text-zinc-300'
-                        }`}
-                        title="Click to change shortcut"
-                      >
-                        {shortcut}
-                      </button>
-                    )}
-                  </div>
+              <div className={`${rowClass} group rounded-md hover:bg-card/50 dark:hover:bg-white/5 transition-colors`}>
+                <span className={labelClass}>{t('toggleWindow')}</span>
+                <div className="flex items-center gap-1.5">
+                  {!recording && !hasModifiedShortcut.current && (
+                    <span className="text-[10px] text-brown-muted/60 dark:text-zinc-600 opacity-0 group-hover:opacity-100 transition-opacity">{t('shortcutHint')}</span>
+                  )}
+                  {recording ? (
+                    <span className="text-[11px] font-mono text-orange-500 animate-pulse">{t('pressKeys')}</span>
+                  ) : (
+                    <button
+                      onClick={() => { setRecording(true); setShortcutError(''); }}
+                      className={`text-[11px] font-mono transition-colors cursor-pointer flex items-center gap-1 ${
+                        shortcutSaved
+                          ? 'text-green-500 dark:text-green-400'
+                          : 'text-brown-muted dark:text-zinc-500 group-hover:text-brown-secondary dark:group-hover:text-zinc-300'
+                      }`}
+                      title="Click to change shortcut"
+                    >
+                      {shortcut}
+                    </button>
+                  )}
                 </div>
               </div>
               {shortcutError && <p className="text-[10px] text-red-500 dark:text-red-400 pb-1">{shortcutError}</p>}

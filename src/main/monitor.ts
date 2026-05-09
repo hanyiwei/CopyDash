@@ -364,10 +364,28 @@ export async function startMonitoring(onNewClip: (clip: any) => void) {
               return;
             }
           } else if (filePathsFromUriList.length === 0) {
-            hash = crypto.createHash('md5').update(buffer).digest('hex');
+            // When the clipboard has both image and text (e.g. browser
+            // "Copy Image"), extract the URL from HTML so the hash is
+            // URL-based.  This prevents a duplicate clip when the image
+            // format is dropped and the remaining text URL is picked up
+            // in the next poll cycle.
+            let extractedUrl = '';
+            if (hasText) {
+              const text = clipboard.readText();
+              const html = clipboard.readHTML();
+              const url = extractRemoteImageUrl(text, html);
+              if (url) extractedUrl = url;
+            }
+            hash = extractedUrl
+              ? crypto.createHash('md5').update(extractedUrl).digest('hex')
+              : crypto.createHash('md5').update(buffer).digest('hex');
             if (hash !== lastHash) {
               console.log('[Monitor] New image detected, hash:', hash);
               type = 2;
+              if (extractedUrl) {
+                content_text = extractedUrl;
+                content_html = '';
+              }
             }
           }
         }
@@ -477,59 +495,58 @@ export async function startMonitoring(onNewClip: (clip: any) => void) {
 
       // If it's an image, save it and generate thumbnail
       if (type === 2) {
-        const isRemoteImage = content_text && /^https?:\/\//i.test(content_text.trim());
-        if (isRemoteImage) {
-          // Remote image — no local bitmap, download in background
-          // content_text carries the URL for immediate preview in the renderer
-        } else {
-          const image = clipboard.readImage();
-          if (!image.isEmpty()) {
-            const buffer = image.toPNG();
-            const fileName = `${Date.now()}.png`;
-            image_path = path.join(imagesPath, fileName);
-            fs.writeFileSync(image_path, buffer);
+        const isRemoteUrl = content_text && /^https?:\/\//i.test(content_text.trim());
 
-            try {
-              const jimpImage = await Jimp.read(buffer);
-              const thumbBuffer = await jimpImage
-                .scaleToFit(200, 200)
-                .quality(80)
-                .getBufferAsync(Jimp.MIME_JPEG);
-              thumbnail = `data:image/jpeg;base64,${thumbBuffer.toString('base64')}`;
-            } catch (err) {
-              console.error('Thumbnail generation failed:', err);
-            }
-          } else {
-            // No bitmap on clipboard — read image file from disk
-            // (Explorer file copy only puts CF_HDROP, not CF_BITMAP)
-            try {
-              const paths: string[] = JSON.parse(content_text || '[]');
-              if (paths.length > 0 && fs.existsSync(paths[0])) {
-                const srcPath = paths[0];
-                const buffer = fs.readFileSync(srcPath);
-                const ext = path.extname(srcPath).toLowerCase();
-                const fmtMap: Record<string, string> = { '.jpg': 'jpg', '.jpeg': 'jpg', '.gif': 'gif', '.bmp': 'bmp', '.webp': 'webp' };
-                const fmt = fmtMap[ext] || 'png';
-                const fileName = `${Date.now()}.${fmt}`;
-                image_path = path.join(imagesPath, fileName);
-                fs.writeFileSync(image_path, buffer);
+        // Always try clipboard bitmap first — browsers put both bitmap
+        // and HTML URL on the clipboard for "Copy Image".
+        const image = clipboard.readImage();
+        if (!image.isEmpty()) {
+          const buffer = image.toPNG();
+          const fileName = `${Date.now()}.png`;
+          image_path = path.join(imagesPath, fileName);
+          fs.writeFileSync(image_path, buffer);
 
-                try {
-                  const jimpImage = await Jimp.read(buffer);
-                  const thumbBuffer = await jimpImage
-                    .scaleToFit(200, 200)
-                    .quality(80)
-                    .getBufferAsync(Jimp.MIME_JPEG);
-                  thumbnail = `data:image/jpeg;base64,${thumbBuffer.toString('base64')}`;
-                } catch (err) {
-                  console.error('Thumbnail generation failed:', err);
-                }
+          try {
+            const jimpImage = await Jimp.read(buffer);
+            const thumbBuffer = await jimpImage
+              .scaleToFit(200, 200)
+              .quality(80)
+              .getBufferAsync(Jimp.MIME_JPEG);
+            thumbnail = `data:image/jpeg;base64,${thumbBuffer.toString('base64')}`;
+          } catch (err) {
+            console.error('Thumbnail generation failed:', err);
+          }
+        } else if (!isRemoteUrl) {
+          // No bitmap, not a URL → read image file from disk
+          // (Explorer file copy only puts CF_HDROP, not CF_BITMAP)
+          try {
+            const paths: string[] = JSON.parse(content_text || '[]');
+            if (paths.length > 0 && fs.existsSync(paths[0])) {
+              const srcPath = paths[0];
+              const buffer = fs.readFileSync(srcPath);
+              const ext = path.extname(srcPath).toLowerCase();
+              const fmtMap: Record<string, string> = { '.jpg': 'jpg', '.jpeg': 'jpg', '.gif': 'gif', '.bmp': 'bmp', '.webp': 'webp' };
+              const fmt = fmtMap[ext] || 'png';
+              const fileName = `${Date.now()}.${fmt}`;
+              image_path = path.join(imagesPath, fileName);
+              fs.writeFileSync(image_path, buffer);
+
+              try {
+                const jimpImage = await Jimp.read(buffer);
+                const thumbBuffer = await jimpImage
+                  .scaleToFit(200, 200)
+                  .quality(80)
+                  .getBufferAsync(Jimp.MIME_JPEG);
+                thumbnail = `data:image/jpeg;base64,${thumbBuffer.toString('base64')}`;
+              } catch (err) {
+                console.error('Thumbnail generation failed:', err);
               }
-            } catch (err) {
-              console.error('[Monitor] Disk image read failed:', err);
             }
+          } catch (err) {
+            console.error('[Monitor] Disk image read failed:', err);
           }
         }
+        // Pure remote URL (no bitmap): downloadRemoteImage handles it later
       } else {
         // Check for colors embedded in text
         if (content_text) {
@@ -587,8 +604,9 @@ export async function startMonitoring(onNewClip: (clip: any) => void) {
         // to avoid blocking the clipboard poll on the slow PowerShell call
         onNewClip(clip);
 
-        // Download remote image in background → local copy
-        if (clip.type === 2 && clip.content_text && /^https?:\/\//i.test(clip.content_text.trim())) {
+        // Download remote image in background → local copy.
+        // Skip if we already saved the bitmap locally (e.g. browser "Copy Image").
+        if (clip.type === 2 && clip.content_text && /^https?:\/\//i.test(clip.content_text.trim()) && !clip.image_path) {
           downloadRemoteImage(clip).then(updated => {
             console.log('[Monitor] Remote image downloaded:', updated.id);
             onNewClip(updated);

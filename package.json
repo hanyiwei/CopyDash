@@ -10,8 +10,9 @@
     "build": "electron-vite build",
     "postinstall": "electron-builder install-app-deps",
     "preview": "electron-vite preview",
-    "pack": "electron-vite build && electron-builder --dir",
-    "dist": "electron-vite build && electron-builder"
+    "ico": "node scripts/generate-ico.js",
+    "pack": "npm run ico && electron-vite build && electron-builder --dir",
+    "dist": "npm run ico && electron-vite build && electron-builder"
   },
   "dependencies": {
     "highlight.js": "^11.9.0",

@@ -64,6 +64,7 @@ async function createWindow() {
     resizable: false,
     movable: false,
     backgroundColor: '#00000000', // Fully transparent
+    icon: path.join(__dirname, '../../resources/icon.png'),
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.mjs'),
       sandbox: false,
