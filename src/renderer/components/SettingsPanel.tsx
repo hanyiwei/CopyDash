@@ -44,8 +44,8 @@ const L: Record<string, Record<Locale, string>> = {
   paste:          { en: 'Paste', zh: '粘贴' },
   color:          { en: 'Color', zh: '配色' },
   colorWarm:      { en: 'Warm', zh: '暖棕' },
-  colorCool:      { en: 'Cool', zh: '冷灰' },
-  colorForest:    { en: 'Forest', zh: '森绿' },
+  colorMUJI:      { en: 'MUJI', zh: '无印' },
+  colorMorandi:   { en: 'Morandi', zh: '莫兰迪' },
   colorMauve:     { en: 'Mauve', zh: '淡紫' },
   colorRec:       { en: 'Recommended', zh: '推荐' },
   version:        { en: 'Version', zh: '版本' },
@@ -322,13 +322,13 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
             <div className="space-y-1">
               {[
                 { key: 'warm', label: 'colorWarm', swatch: 'bg-amber-500', rec: true },
-                { key: 'cool', label: 'colorCool', swatch: 'bg-sky-400', rec: false },
-                { key: 'forest', label: 'colorForest', swatch: 'bg-emerald-500', rec: false },
+                { key: 'muji', label: 'colorMUJI', swatch: 'bg-stone-400', rec: false },
+                { key: 'morandi', label: 'colorMorandi', swatch: 'bg-rose-300', rec: false },
                 { key: 'mauve', label: 'colorMauve', swatch: 'bg-purple-400', rec: false },
               ].map(({ key, label, swatch, rec }) => (
                 <button
                   key={key}
-                  onClick={() => setColorScheme(key as 'warm' | 'cool' | 'forest' | 'mauve')}
+                  onClick={() => setColorScheme(key as 'warm' | 'muji' | 'morandi' | 'mauve')}
                   className="flex items-center justify-between w-full py-2 px-3 rounded-md hover:bg-card/50 dark:hover:bg-d-white/5 transition-colors"
                 >
                   <div className="flex items-center gap-2">

@@ -55,71 +55,105 @@
 }
 
 
-/* ── Cool — blue-gray, crisp  ───────────────────────────────── */
+/* ── MUJI — natural earth, unbleached kraft  ──────────────────── */
 
-[data-theme="cool"] {
-  --accent: 14 165 233;
-  --accent-hover: 56 189 248;
+[data-theme="muji"] {
+  --accent: 185 120 70;
+  --accent-hover: 210 148 98;
 
-  --l-page:      215 225 238;
-  --l-page-dim:  198 210 225;
-  --l-card:      248 251 254;
-  --l-card-hover: 255 255 255;
-  --l-badge:     186 205 222;
-  --l-text:      12 28 48;
-  --l-text-secondary: 42 62 90;
-  --l-text-subtle:    65 90 120;
-  --l-text-muted:     92 120 150;
-  --l-text-faint:     140 165 190;
-  --l-border:         195 215 230;
-  --l-border-active:  152 180 205;
+  --l-page:      218 205 182;
+  --l-page-dim:  202 188 164;
+  --l-card:      245 238 228;
+  --l-card-hover: 252 248 242;
+  --l-badge:     198 180 155;
+  --l-text:      55 42 28;
+  --l-text-secondary: 90 72 52;
+  --l-text-subtle:    128 105 80;
+  --l-text-muted:     165 145 122;
+  --l-text-faint:     200 185 168;
+  --l-border:         205 188 165;
+  --l-border-active:  185 165 140;
 
-  --d-page:       3 10 22;
-  --d-container:  12 24 42;
-  --d-card:       20 38 62;
-  --d-card-hover: 32 52 82;
-  --d-seg:        52 75 110;
-  --d-text-secondary:  190 215 235;
-  --d-text-subtle:     148 178 205;
-  --d-text-muted:      100 130 160;
-  --d-text-faint:      52 72 98;
-  --d-border-selected: 52 72 98;
-  --d-scrollbar-thumb:      52 75 110;
-  --d-scrollbar-thumb-hover: 100 130 160;
+  --d-page:       22 16 12;
+  --d-container:  35 26 20;
+  --d-card:       48 36 28;
+  --d-card-hover: 62 48 38;
+  --d-seg:        85 65 50;
+  --d-text-secondary:  215 200 180;
+  --d-text-subtle:     180 162 140;
+  --d-text-muted:      145 125 105;
+  --d-text-faint:      70 55 42;
+  --d-border-selected: 70 55 42;
+  --d-scrollbar-thumb:      85 65 50;
+  --d-scrollbar-thumb-hover: 145 125 105;
 }
 
 
-/* ── Forest — green-gray, calm  ──────────────────────────────── */
+/* ── Morandi — dusty sage green-gray  ─────────────────────────── */
 
-[data-theme="forest"] {
-  --accent: 16 185 129;
-  --accent-hover: 52 211 153;
+[data-theme="morandi"] {
+  --accent: 140 155 135;
+  --accent-hover: 165 178 158;
 
-  --l-page:      210 228 214;
-  --l-page-dim:  192 214 198;
-  --l-card:      246 252 247;
+  --l-page:      225 228 222;
+  --l-page-dim:  210 215 208;
+  --l-card:      238 240 236;
+  --l-card-hover: 248 250 247;
+  --l-badge:     200 208 198;
+  --l-text:      55 60 52;
+  --l-text-secondary: 85 92 80;
+  --l-text-subtle:    120 128 115;
+  --l-text-muted:     155 162 150;
+  --l-text-faint:     195 200 190;
+  --l-border:         210 216 205;
+  --l-border-active:  188 195 182;
+
+  --d-page:       16 20 16;
+  --d-container:  26 32 26;
+  --d-card:       36 44 36;
+  --d-card-hover: 48 58 48;
+  --d-seg:        68 80 68;
+  --d-text-secondary:  195 205 190;
+  --d-text-subtle:     158 170 152;
+  --d-text-muted:      120 135 115;
+  --d-text-faint:      55 68 55;
+  --d-border-selected: 55 68 55;
+  --d-scrollbar-thumb:      68 80 68;
+  --d-scrollbar-thumb-hover: 120 135 115;
+}
+
+
+/* ── Mauve — deep purple-gray  ────────────────────────────────── */
+
+[data-theme="mauve"] {
+  --accent: 155 100 210;
+  --accent-hover: 180 135 228;
+
+  --l-page:      238 232 245;
+  --l-page-dim:  225 216 235;
+  --l-card:      248 245 252;
   --l-card-hover: 255 255 255;
-  --l-badge:     178 212 182;
-  --l-text:      20 42 28;
-  --l-text-secondary: 38 62 48;
-  --l-text-subtle:    55 82 65;
-  --l-text-muted:     80 112 92;
-  --l-text-faint:     135 168 145;
-  --l-border:         195 222 198;
-  --l-border-active:  155 195 162;
+  --l-badge:     210 196 228;
+  --l-text:      42 30 58;
+  --l-text-secondary: 65 48 85;
+  --l-text-subtle:    90 68 112;
+  --l-text-muted:     132 105 152;
+  --l-text-faint:     175 160 192;
+  --l-border:         222 210 235;
+  --l-border-active:  198 180 218;
 
-  --d-page:       6 14 10;
-  --d-container:  12 26 18;
-  --d-card:       20 38 28;
-  --d-card-hover: 30 52 40;
-  --d-seg:        48 72 58;
-  --d-text-secondary:  185 212 190;
-  --d-text-subtle:     138 172 145;
-  --d-text-muted:      90 125 100;
-  --d-text-faint:      45 62 50;
-  --d-border-selected: 45 62 50;
-  --d-scrollbar-thumb:      48 72 58;
-  --d-scrollbar-thumb-hover: 90 125 100;
+  --d-page:       16 8 24;
+  --d-container:  28 16 40;
+  --d-card:       40 24 56;
+  --d-card-hover: 55 34 75;
+  --d-seg:        78 52 105;
+  --d-text-secondary:  218 202 235;
+  --d-text-subtle:     178 155 202;
+  --d-text-muted:      135 110 162;
+  --d-text-faint:      68 48 95;
+  --d-border-selected: 68 48 95;
+  --d-scrollbar-thumb:      78 52 105;
+  --d-scrollbar-thumb-hover: 135 110 162;
 }
 
 
