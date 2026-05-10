@@ -119,6 +119,8 @@ function createTray() {
   }
 }
 
+app.setAppUserModelId('com.copydash.app');
+
 app.whenReady().then(async () => {
   // Protocol handler
   protocol.handle('cd-file', (request) => {
