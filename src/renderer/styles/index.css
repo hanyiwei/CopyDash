@@ -20,18 +20,18 @@
   --accent: 0 229 255;
   --accent-hover: 100 245 255;
 
-  --l-page:      240 238 230;
-  --l-page-dim:  227 218 204;
-  --l-card:      250 249 245;
+  --l-page:      238 238 232;
+  --l-page-dim:  225 218 206;
+  --l-card:      248 249 247;
   --l-card-hover: 255 255 255;
-  --l-badge:     213 205 184;
-  --l-text:      45 41 32;
-  --l-text-secondary: 92 85 69;
-  --l-text-subtle:    122 114 99;
-  --l-text-muted:     160 152 133;
-  --l-text-faint:     191 184 168;
-  --l-border:         224 219 205;
-  --l-border-active:  237 230 213;
+  --l-badge:     211 205 186;
+  --l-text:      43 41 34;
+  --l-text-secondary: 90 85 71;
+  --l-text-subtle:    120 114 101;
+  --l-text-muted:     158 152 135;
+  --l-text-faint:     189 184 170;
+  --l-border:         222 219 207;
+  --l-border-active:  235 230 215;
 
   --d-page:       0 0 0;
   --d-container:  12 14 22;
