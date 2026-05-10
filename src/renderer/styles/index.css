@@ -108,18 +108,18 @@
   --l-border:         210 216 205;
   --l-border-active:  188 195 182;
 
-  --d-page:       16 20 16;
-  --d-container:  26 32 26;
-  --d-card:       36 44 36;
-  --d-card-hover: 48 58 48;
-  --d-seg:        68 80 68;
-  --d-text-secondary:  195 205 190;
-  --d-text-subtle:     158 170 152;
-  --d-text-muted:      120 135 115;
-  --d-text-faint:      55 68 55;
-  --d-border-selected: 55 68 55;
-  --d-scrollbar-thumb:      68 80 68;
-  --d-scrollbar-thumb-hover: 120 135 115;
+  --d-page:       6 14 8;
+  --d-container:  14 24 16;
+  --d-card:       22 34 24;
+  --d-card-hover: 32 46 34;
+  --d-seg:        55 75 55;
+  --d-text-secondary:  195 215 190;
+  --d-text-subtle:     155 180 148;
+  --d-text-muted:      115 140 108;
+  --d-text-faint:      52 72 50;
+  --d-border-selected: 52 72 50;
+  --d-scrollbar-thumb:      55 75 55;
+  --d-scrollbar-thumb-hover: 115 140 108;
 }
 
 
@@ -188,40 +188,6 @@
   --d-border-selected: 62 42 88;
   --d-scrollbar-thumb:      72 48 95;
   --d-scrollbar-thumb-hover: 135 110 162;
-}
-
-
-/* ── Matcha — solid green + cream cards  ─────────────────────── */
-
-[data-theme="matcha"] {
-  --accent: 139 195 74;
-  --accent-hover: 165 215 105;
-
-  --l-page:      74 90 56;
-  --l-page-dim:  62 78 46;
-  --l-card:      245 240 232;
-  --l-card-hover: 255 252 248;
-  --l-badge:     140 160 115;
-  --l-text:      40 50 30;
-  --l-text-secondary: 65 78 50;
-  --l-text-subtle:    95 110 75;
-  --l-text-muted:     130 145 110;
-  --l-text-faint:     165 178 148;
-  --l-border:         130 150 105;
-  --l-border-active:  155 175 130;
-
-  --d-page:       6 14 8;
-  --d-container:  14 24 16;
-  --d-card:       22 34 24;
-  --d-card-hover: 32 46 34;
-  --d-seg:        55 75 55;
-  --d-text-secondary:  195 215 190;
-  --d-text-subtle:     155 180 148;
-  --d-text-muted:      115 140 108;
-  --d-text-faint:      52 72 50;
-  --d-border-selected: 52 72 50;
-  --d-scrollbar-thumb:      55 75 55;
-  --d-scrollbar-thumb-hover: 115 140 108;
 }
 
 
