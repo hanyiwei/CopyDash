@@ -3,29 +3,47 @@
 @tailwind utilities;
 
 
+/* ═══════════════════════════════════════════════════════════════
+   Theme tokens — pure RGB, no baked alpha.
+   Opacity applied in components via Tailwind's /XX modifier.
+
+   Naming: --l-* = light mode, --d-* = dark mode.
+   Default = Warm scheme.  [data-theme="..."] overrides below.
+   ═══════════════════════════════════════════════════════════════ */
+
 :root {
   --background: 48 25% 92%;
   --foreground: 42 17% 15%;
-}
 
-/* Dark-mode semantic tokens — pure RGB, no baked alpha.
-   Opacity is applied in components via Tailwind's /XX modifier.
-   To swap themes, only change the values below. */
-:root {
-  --d-page: 9 9 11;                /* zinc-950 */
-  --d-container: 24 24 27;         /* zinc-900 */
-  --d-card: 39 39 42;              /* zinc-800 */
-  --d-card-hover: 63 63 70;        /* zinc-700 */
-  --d-seg: 82 82 91;               /* zinc-600 */
-  --d-footer: 0 0 0;               /* black */
-  --d-white: 255 255 255;          /* white */
-  --d-text-secondary: 212 212 216; /* zinc-300 */
-  --d-text-subtle: 161 161 170;    /* zinc-400 */
-  --d-text-muted: 113 113 122;     /* zinc-500 */
-  --d-text-faint: 63 63 70;        /* zinc-700 */
-  --d-border-selected: 63 63 70;   /* zinc-700 */
-  --d-scrollbar-thumb: 82 82 91;   /* zinc-600 */
-  --d-scrollbar-thumb-hover: 113 113 122; /* zinc-500 */
+  /* Light-mode palette */
+  --l-page:      240 238 230;
+  --l-page-dim:  227 218 204;
+  --l-card:      250 249 245;
+  --l-card-hover: 255 255 255;
+  --l-badge:     213 205 184;
+  --l-text:      45 41 32;
+  --l-text-secondary: 92 85 69;
+  --l-text-subtle:    122 114 99;
+  --l-text-muted:     160 152 133;
+  --l-text-faint:     191 184 168;
+  --l-border:         224 219 205;
+  --l-border-active:  237 230 213;
+
+  /* Dark-mode palette (default = Warm / zinc scale) */
+  --d-page:       9 9 11;
+  --d-container:  24 24 27;
+  --d-card:       39 39 42;
+  --d-card-hover: 63 63 70;
+  --d-seg:        82 82 91;
+  --d-footer:     0 0 0;
+  --d-white:      255 255 255;
+  --d-text-secondary:  212 212 216;
+  --d-text-subtle:     161 161 170;
+  --d-text-muted:      113 113 122;
+  --d-text-faint:      63 63 70;
+  --d-border-selected: 63 63 70;
+  --d-scrollbar-thumb:      82 82 91;
+  --d-scrollbar-thumb-hover: 113 113 122;
 }
 
 .dark {
@@ -33,70 +51,136 @@
   --foreground: 0 0% 98%;
 }
 
+
+/* ═══════════════════════════════════════════
+   Cool — slate blue-gray
+   ═══════════════════════════════════════════ */
+
+[data-theme="cool"] {
+  --l-page:      241 245 249;
+  --l-page-dim:  226 232 240;
+  --l-card:      248 250 252;
+  --l-card-hover: 255 255 255;
+  --l-badge:     203 213 225;
+  --l-text:      15 23 42;
+  --l-text-secondary: 51 65 85;
+  --l-text-subtle:    71 85 105;
+  --l-text-muted:     100 116 139;
+  --l-text-faint:     148 163 184;
+  --l-border:         203 213 225;
+  --l-border-active:  148 163 184;
+
+  --d-page:       2 6 23;
+  --d-container:  15 23 42;
+  --d-card:       30 41 59;
+  --d-card-hover: 51 65 85;
+  --d-seg:        71 85 105;
+  --d-text-secondary:  203 213 225;
+  --d-text-subtle:     148 163 184;
+  --d-text-muted:      100 116 139;
+  --d-text-faint:      51 65 85;
+  --d-border-selected: 51 65 85;
+  --d-scrollbar-thumb:      71 85 105;
+  --d-scrollbar-thumb-hover: 100 116 139;
+}
+
+
+/* ═══════════════════════════════════════════
+   Forest — muted green-gray
+   ═══════════════════════════════════════════ */
+
+[data-theme="forest"] {
+  --l-page:      240 246 240;
+  --l-page-dim:  222 234 222;
+  --l-card:      248 252 248;
+  --l-card-hover: 255 255 255;
+  --l-badge:     196 220 196;
+  --l-text:      28 48 34;
+  --l-text-secondary: 48 68 54;
+  --l-text-subtle:    68 88 74;
+  --l-text-muted:     108 128 114;
+  --l-text-faint:     158 174 160;
+  --l-border:         208 224 208;
+  --l-border-active:  176 198 176;
+
+  --d-page:       8 16 12;
+  --d-container:  15 28 22;
+  --d-card:       24 40 32;
+  --d-card-hover: 35 55 45;
+  --d-seg:        50 72 60;
+  --d-text-secondary:  195 215 200;
+  --d-text-subtle:     145 170 150;
+  --d-text-muted:      100 125 108;
+  --d-text-faint:      48 64 54;
+  --d-border-selected: 48 64 54;
+  --d-scrollbar-thumb:      50 72 60;
+  --d-scrollbar-thumb-hover: 100 125 108;
+}
+
+
+/* ═══════════════════════════════════════════
+   Mauve — muted purple-gray
+   ═══════════════════════════════════════════ */
+
+[data-theme="mauve"] {
+  --l-page:      246 243 248;
+  --l-page-dim:  234 228 240;
+  --l-card:      250 249 252;
+  --l-card-hover: 255 255 255;
+  --l-badge:     216 208 230;
+  --l-text:      44 34 54;
+  --l-text-secondary: 64 48 80;
+  --l-text-subtle:    88 68 104;
+  --l-text-muted:     130 114 146;
+  --l-text-faint:     176 164 186;
+  --l-border:         226 218 236;
+  --l-border-active:  200 188 216;
+
+  --d-page:       14 10 20;
+  --d-container:  22 16 32;
+  --d-card:       34 25 48;
+  --d-card-hover: 48 36 64;
+  --d-seg:        66 50 88;
+  --d-text-secondary:  216 206 230;
+  --d-text-subtle:     176 158 196;
+  --d-text-muted:      130 114 156;
+  --d-text-faint:      64 48 86;
+  --d-border-selected: 64 48 86;
+  --d-scrollbar-thumb:      66 50 88;
+  --d-scrollbar-thumb-hover: 130 114 156;
+}
+
+
+/* ═══════════════════════════════════════════
+   Base styles
+   ═══════════════════════════════════════════ */
+
 body {
   @apply bg-transparent text-foreground antialiased overflow-hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   user-select: none;
 }
 
-#root {
-  height: 100vh;
-  background-color: transparent;
-}
+#root { height: 100vh; background-color: transparent; }
 
+.custom-scrollbar { scrollbar-width: none; }
+.custom-scrollbar::-webkit-scrollbar { display: none; }
 
-/* Hide native scrollbar — ScrollThumb provides visual indicator */
-.custom-scrollbar {
-  scrollbar-width: none;
-}
-.custom-scrollbar::-webkit-scrollbar {
-  display: none;
-}
+.hljs { background: transparent !important; padding: 0 !important; }
 
-/* Highlighted markup — strip theme background */
-.hljs {
-  background: transparent !important;
-  padding: 0 !important;
-}
-
-/* Thin scrollbar for settings panel */
-.thin-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-.thin-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
+.thin-scrollbar::-webkit-scrollbar { width: 4px; }
+.thin-scrollbar::-webkit-scrollbar-track { background: transparent; }
 .thin-scrollbar::-webkit-scrollbar-thumb {
-  background: #bfb8a880;
+  background: rgb(var(--d-scrollbar-thumb) / 0.5);
   border-radius: 2px;
 }
 .thin-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #a0988580;
-}
-.dark .thin-scrollbar::-webkit-scrollbar-thumb {
-  background: rgb(var(--d-scrollbar-thumb) / 0.5);
-}
-.dark .thin-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgb(var(--d-scrollbar-thumb-hover) / 0.5);
 }
 
-/* Card exit animation — GPU-only properties (no reflow) */
 @keyframes card-exit {
-  0% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-  35% {
-    opacity: 0;
-    transform: scale(0.85) translateY(-14px);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.85) translateY(-14px);
-  }
+  0%   { opacity: 1; transform: scale(1) translateY(0); }
+  35%  { opacity: 0; transform: scale(0.85) translateY(-14px); }
+  100% { opacity: 0; transform: scale(0.85) translateY(-14px); }
 }
-
-.card-exit {
-  animation: card-exit 350ms ease-out forwards;
-  pointer-events: none;
-}
+.card-exit { animation: card-exit 350ms ease-out forwards; pointer-events: none; }
