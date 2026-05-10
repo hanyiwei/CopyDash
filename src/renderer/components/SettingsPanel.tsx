@@ -53,10 +53,8 @@ const L: Record<string, Record<Locale, string>> = {
   checkingUpdate: { en: 'Checking...', zh: '检查中…' },
   upToDate:       { en: 'Up to date', zh: '已是最新' },
   updateAvailable:{ en: 'Update found!', zh: '发现更新！' },
-  updateFailed:   { en: 'Check failed', zh: '检查失败' },
   updateDownloading: { en: 'Downloading', zh: '下载中' },
   updateReady:    { en: 'Click to restart', zh: '点击重启' },
-  updateRetry:    { en: 'Check failed · Retry', zh: '检查失败 · 重试' },
   updateManual:   { en: 'Download manually', zh: '去官网下载' },
 };
 
@@ -221,13 +219,6 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
     } else if (updateStatus?.status === 'downloaded') {
       api().invoke('update:quit-and-install');
     } else if (updateStatus?.status === 'error') {
-      setChecking(true);
-      try {
-        await api().invoke('update:check');
-      } finally {
-        setChecking(false);
-      }
-    } else if (updateStatus?.status === 'fallback') {
       api().invoke('shell:openExternal', 'https://github.com/hanyiwei/CopyDash/releases');
     } else {
       setChecking(true);
@@ -425,12 +416,10 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                         : !updateStatus && updateCheckedAt
                           ? 'text-brown-muted dark:text-d-text-muted cursor-default'
                           : updateStatus?.status === 'error'
-                            ? 'text-red-600 dark:text-red-400 cursor-pointer'
-                            : updateStatus?.status === 'fallback'
-                              ? 'text-amber-600 dark:text-amber-400 cursor-pointer'
-                              : updateStatus?.status === 'downloaded' || updateStatus?.status === 'available'
-                                ? 'text-green-600 dark:text-green-400 cursor-pointer'
-                                : 'text-brown-muted dark:text-d-text-muted hover:text-brown dark:hover:text-d-text-secondary cursor-pointer'
+                            ? 'text-amber-600 dark:text-amber-400 cursor-pointer'
+                            : updateStatus?.status === 'downloaded' || updateStatus?.status === 'available'
+                              ? 'text-green-600 dark:text-green-400 cursor-pointer'
+                              : 'text-brown-muted dark:text-d-text-muted hover:text-brown dark:hover:text-d-text-secondary cursor-pointer'
                     }`}
                   >
                     {checking
@@ -440,14 +429,12 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                         : updateStatus?.status === 'downloaded'
                           ? t('updateReady')
                           : updateStatus?.status === 'error'
-                            ? t('updateRetry')
-                            : updateStatus?.status === 'fallback'
-                              ? t('updateManual')
-                              : updateStatus?.status === 'available'
-                                ? t('updateAvailable')
-                                : updateCheckedAt
-                                  ? t('upToDate')
-                                  : t('checkUpdate')
+                            ? t('updateManual')
+                            : updateStatus?.status === 'available'
+                              ? t('updateAvailable')
+                              : updateCheckedAt
+                                ? t('upToDate')
+                                : t('checkUpdate')
                     }
                   </button>
                 </div>

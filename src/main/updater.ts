@@ -2,7 +2,7 @@ import { autoUpdater } from 'electron-updater';
 import { app, BrowserWindow, ipcMain } from 'electron';
 
 export interface UpdateStatus {
-  status: 'available' | 'downloading' | 'downloaded' | 'error' | 'fallback';
+  status: 'available' | 'downloading' | 'downloaded' | 'error';
   version?: string;
   percent?: number;
   message?: string;
@@ -11,11 +11,10 @@ export interface UpdateStatus {
 let mainWindow: BrowserWindow | null = null;
 let lastStatus: UpdateStatus | null = null;
 let checkError: string | null = null;
-let failCount = 0;
 
 function sendStatus(s: UpdateStatus) {
   lastStatus = s;
-  if (s.status === 'error' || s.status === 'fallback') checkError = s.message || null;
+  if (s.status === 'error') checkError = s.message || null;
   mainWindow?.webContents.send('update:status', s);
 }
 
@@ -26,7 +25,6 @@ export function initAutoUpdater(win: BrowserWindow) {
   autoUpdater.allowDowngrade = false;
 
   autoUpdater.on('update-available', (info) => {
-    failCount = 0;
     sendStatus({ status: 'available', version: info.version });
   });
 
@@ -40,12 +38,7 @@ export function initAutoUpdater(win: BrowserWindow) {
 
   autoUpdater.on('error', (err) => {
     console.error('[Updater]', err.message);
-    failCount++;
-    if (failCount >= 5) {
-      sendStatus({ status: 'fallback', message: err.message });
-    } else {
-      sendStatus({ status: 'error', message: err.message });
-    }
+    sendStatus({ status: 'error', message: err.message });
   });
 
   // Initial check — 3s delay so renderer has time to mount its listener.
@@ -80,17 +73,12 @@ function registerIPC() {
     checkError = null;
     try {
       const result = await autoUpdater.checkForUpdates();
-      failCount = 0;
       const version = result?.updateInfo?.version;
       return { updateAvailable: !!version, version: version ?? null };
     } catch (err: any) {
       if (checkError) {
-        // Real error (network, missing yml, etc.) — the 'error' event already
-        // set lastStatus and sent IPC to the renderer
         return { updateAvailable: false, error: checkError };
       }
-      // "No update" — clear any lingering error badge from a prior failure
-      failCount = 0;
       lastStatus = null;
       mainWindow?.webContents.send('update:status', null);
       return { updateAvailable: false, error: null };
