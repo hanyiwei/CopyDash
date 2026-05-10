@@ -11,7 +11,7 @@
    --accent / --accent-hover = per-theme accent color
    ═══════════════════════════════════════════════════════════════ */
 
-/* ── Warm (default) ─────────────────────────────────────────── */
+/* ── Default — cyan accent, pure black dark  ───────────────── */
 
 :root {
   --background: 48 25% 92%;
@@ -55,9 +55,9 @@
 }
 
 
-/* ── MUJI — natural earth, unbleached kraft  ──────────────────── */
+/* ── Earth — warm terracotta, natural kraft  ────────────────── */
 
-[data-theme="muji"] {
+[data-theme="earth"] {
   --accent: 185 120 70;
   --accent-hover: 210 148 98;
 
@@ -89,9 +89,9 @@
 }
 
 
-/* ── Morandi — dusty sage green-gray  ─────────────────────────── */
+/* ── Sage — dusty green-gray, matcha dark  ──────────────────── */
 
-[data-theme="morandi"] {
+[data-theme="sage"] {
   --accent: 140 155 135;
   --accent-hover: 165 178 158;
 
@@ -123,9 +123,9 @@
 }
 
 
-/* ── Mauve — deep purple-gray  ────────────────────────────────── */
+/* ── Violet — deep purple-gray, rich saturation ─────────────── */
 
-[data-theme="mauve"] {
+[data-theme="violet"] {
   --accent: 155 100 210;
   --accent-hover: 180 135 228;
 
@@ -159,7 +159,7 @@
 
 /* ── Mauve — purple-gray, elegant  ───────────────────────────── */
 
-[data-theme="mauve"] {
+[data-theme="violet"] {
   --accent: 139 92 246;
   --accent-hover: 167 139 250;
 

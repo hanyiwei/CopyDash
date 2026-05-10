@@ -56,7 +56,7 @@ const App: React.FC = () => {
         }
         // Load color scheme
         const cs = await ipcRenderer.invoke('db:settings:get', 'color_scheme');
-        if (cs) setColorScheme(cs as 'warm' | 'muji' | 'morandi' | 'mauve');
+        if (cs) setColorScheme(cs as 'default' | 'earth' | 'sage' | 'violet');
         // Load shortcut
         const sc = await ipcRenderer.invoke('db:settings:get', 'shortcut_toggle');
         if (sc) setShortcut(sc);

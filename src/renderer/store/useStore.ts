@@ -36,7 +36,7 @@ interface State {
   filterType: FilterType;
   filterPinned: boolean;
   theme: 'dark' | 'light';
-  colorScheme: 'warm' | 'muji' | 'morandi' | 'mauve';
+  colorScheme: 'default' | 'earth' | 'sage' | 'violet';
   locale: 'en' | 'zh';
   maxHistory: number;
   toastMessage: string | null;
@@ -53,7 +53,7 @@ interface State {
   setFilterType: (type: FilterType) => void;
   setFilterPinned: (pinned: boolean) => void;
   setTheme: (theme: 'dark' | 'light') => void;
-  setColorScheme: (scheme: 'warm' | 'muji' | 'morandi' | 'mauve') => void;
+  setColorScheme: (scheme: 'default' | 'earth' | 'sage' | 'violet') => void;
   setLocale: (locale: 'en' | 'zh') => void;
   setMaxHistory: (n: number) => void;
   showToast: (message: string) => void;
@@ -75,7 +75,7 @@ export const useStore = create<State>((set) => ({
   filterType: null,
   filterPinned: false,
   theme: 'dark',
-  colorScheme: 'warm',
+  colorScheme: 'default',
   locale: 'en',
   maxHistory: 200,
   toastMessage: null,

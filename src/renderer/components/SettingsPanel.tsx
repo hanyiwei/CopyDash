@@ -43,10 +43,10 @@ const L: Record<string, Record<Locale, string>> = {
   pastePlain:     { en: 'Paste as plain text', zh: '粘贴为纯文本' },
   paste:          { en: 'Paste', zh: '粘贴' },
   color:          { en: 'Color', zh: '配色' },
-  colorWarm:      { en: 'Warm', zh: '暖棕' },
-  colorMUJI:      { en: 'MUJI', zh: '无印' },
-  colorMorandi:   { en: 'Morandi', zh: '莫兰迪' },
-  colorMauve:     { en: 'Mauve', zh: '淡紫' },
+  colorDefault:   { en: 'Default', zh: '默认' },
+  colorEarth:     { en: 'Earth', zh: '大地' },
+  colorSage:      { en: 'Sage', zh: '鼠尾草' },
+  colorViolet:    { en: 'Violet', zh: '紫罗兰' },
   colorRec:       { en: 'Recommended', zh: '推荐' },
   version:        { en: 'Version', zh: '版本' },
   checkUpdate:    { en: 'Check for updates', zh: '检查更新' },
@@ -321,14 +321,14 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
           ) : subView === 'color' ? (
             <div className="space-y-1">
               {[
-                { key: 'warm', label: 'colorWarm', swatch: 'bg-amber-500', rec: true },
-                { key: 'muji', label: 'colorMUJI', swatch: 'bg-stone-400', rec: false },
-                { key: 'morandi', label: 'colorMorandi', swatch: 'bg-rose-300', rec: false },
-                { key: 'mauve', label: 'colorMauve', swatch: 'bg-purple-400', rec: false },
+                { key: 'default', label: 'colorDefault', swatch: 'bg-cyan-400', rec: true },
+                { key: 'earth', label: 'colorEarth', swatch: 'bg-stone-400', rec: false },
+                { key: 'sage', label: 'colorSage', swatch: 'bg-emerald-400', rec: false },
+                { key: 'violet', label: 'colorViolet', swatch: 'bg-purple-400', rec: false },
               ].map(({ key, label, swatch, rec }) => (
                 <button
                   key={key}
-                  onClick={() => setColorScheme(key as 'warm' | 'muji' | 'morandi' | 'mauve')}
+                  onClick={() => setColorScheme(key as 'default' | 'earth' | 'sage' | 'violet')}
                   className="flex items-center justify-between w-full py-2 px-3 rounded-md hover:bg-card/50 dark:hover:bg-d-white/5 transition-colors"
                 >
                   <div className="flex items-center gap-2">
