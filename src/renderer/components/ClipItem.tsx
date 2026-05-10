@@ -100,10 +100,10 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
       <div
         onDoubleClick={(e) => onDoubleClick(clip, e)}
         onClick={() => setSelectedClipId(clip.id)}
-        className={`group relative w-[240px] h-[280px] bg-card dark:bg-zinc-800/40 hover:bg-card-hover dark:hover:bg-zinc-700/60 border rounded-2xl transition-[background-color] duration-300 flex flex-col overflow-hidden cursor-default ${
+        className={`group relative w-[240px] h-[280px] bg-card dark:bg-zinc-800/90 hover:bg-card-hover dark:hover:bg-zinc-700/90 rounded-2xl transition-[background-color] duration-300 flex flex-col overflow-hidden cursor-default ${
           selectedClipId === clip.id
-            ? 'border-beige-border/60 dark:border-zinc-700'
-            : 'border-beige-border dark:border-white/5'
+            ? 'border-2 border-brown-muted/50 dark:border-zinc-700'
+            : 'border border-beige-border dark:border-white/5'
         } ${isHovering ? 'z-10' : ''}`}
       >
         <div className={`flex flex-col h-full transition-transform duration-300 ${isHovering ? 'scale-[1.02]' : ''}`}>

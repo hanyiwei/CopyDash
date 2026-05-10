@@ -128,7 +128,7 @@ const App: React.FC = () => {
           : 'ease-in',
       }}
     >
-      <div className="flex-1 bg-page dark:bg-zinc-900 text-brown dark:text-white flex flex-col overflow-hidden border border-beige-border dark:border-white/10 dark:shadow-2xl rounded-3xl m-2 relative">
+      <div className="flex-1 bg-page dark:bg-zinc-950 text-brown dark:text-white flex flex-col overflow-hidden border border-beige-border dark:border-white/10 dark:shadow-2xl rounded-3xl m-2 relative">
         <div className="flex-shrink-0 flex items-center relative">
           {/* Logo — opens GitHub in system default browser */}
           <button

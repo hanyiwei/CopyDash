@@ -37,7 +37,7 @@ const L: Record<string, Record<Locale, string>> = {
   historyDesc:    { en: 'Max items to keep. Excess is auto-removed', zh: '最大记录条数，超出自动清除' },
   toggleWindow:   { en: 'Toggle window', zh: '唤醒主页' },
   pressKeys:      { en: 'Press keys...', zh: '输入新按键...' },
-  shortcutHint:   { en: 'Click to change', zh: '点击修改' },
+  shortcutHint:   { en: 'Edit', zh: '修改' },
   pastePlain:     { en: 'Paste as plain text', zh: '粘贴为纯文本' },
   paste:          { en: 'Paste', zh: '粘贴' },
   version:        { en: 'Version', zh: '版本' },
@@ -226,7 +226,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   };
 
   const rowClass = "flex items-center justify-between w-full min-h-[30px] px-2";
-  const labelClass = "text-xs text-brown-secondary dark:text-zinc-300";
+  const labelClass = "text-xs font-bold text-brown-secondary dark:text-zinc-300";
   const mutedClass = "text-[11px] text-brown-muted dark:text-zinc-500";
 
   const tabs: { key: TabType; label: string }[] = [
@@ -271,7 +271,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   );
 
   const segBtn = (active: boolean) =>
-    `flex-1 py-1 text-[10px] font-medium rounded-md transition-colors ${
+    `flex-1 py-1 text-[10px] font-bold rounded-md transition-colors ${
       active ? 'bg-page-dim dark:bg-zinc-600 text-brown dark:text-white' : 'text-brown-muted dark:text-zinc-500 hover:text-brown dark:hover:text-zinc-300'
     }`;
 
@@ -279,7 +279,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   return (
     <div
       ref={panelRef}
-      className="absolute right-2 top-12 z-50 w-72 bg-page dark:bg-zinc-900 border border-beige-border dark:border-white/10 rounded-xl shadow-lg dark:shadow-2xl overflow-hidden overflow-y-auto max-h-[calc(100vh-4rem)] custom-scrollbar"
+      className="absolute right-2 top-12 z-50 w-72 bg-page dark:bg-zinc-800 border border-beige-border dark:border-white/10 rounded-xl shadow-lg dark:shadow-2xl overflow-hidden overflow-y-auto max-h-[calc(100vh-4rem)] custom-scrollbar"
     >
       {header}
 
@@ -306,7 +306,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
       ) : (
         <div className="px-5 py-4">
           {/* Tab bar — hidden in sub-view, but we don't reach here when showSubView */}
-          <div className="flex bg-card dark:bg-zinc-800 rounded-lg p-0.5 mb-4">
+          <div className="flex bg-card dark:bg-zinc-900 rounded-lg p-0.5 mb-4">
             {tabs.map(({ key, label }) => (
               <button key={key} onClick={() => setTab(key)} className={segBtn(tab === key)}>{label}</button>
             ))}
@@ -329,7 +329,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
               {/* Theme */}
               <div className={rowClass}>
                 <span className={labelClass}>{t('theme')}</span>
-                <div className="flex bg-card dark:bg-zinc-800 rounded-lg p-0.5 gap-0.5">
+                <div className="flex bg-card dark:bg-zinc-900 rounded-lg p-0.5 gap-0.5">
                   <button onClick={() => handleTheme('dark')} className={`p-1 rounded-md transition-colors ${theme === 'dark' ? 'bg-page-dim dark:bg-zinc-600 text-brown dark:text-white' : 'text-brown-muted dark:text-zinc-500 hover:text-brown dark:hover:text-zinc-300'}`}>
                     <Moon className="w-3 h-3" />
                   </button>
@@ -342,7 +342,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
               {/* Language */}
               <div className={rowClass}>
                 <span className={labelClass}>{t('language')}</span>
-                <div className="flex bg-card dark:bg-zinc-800 rounded-lg p-0.5 gap-0.5">
+                <div className="flex bg-card dark:bg-zinc-900 rounded-lg p-0.5 gap-0.5">
                   <button onClick={() => setLocale('en')} className={`w-5 h-5 p-1 rounded-md transition-colors flex items-center justify-center text-[10px] font-medium ${locale === 'en' ? 'bg-page-dim dark:bg-zinc-600 text-brown dark:text-white' : 'text-brown-muted dark:text-zinc-500 hover:text-brown dark:hover:text-zinc-300'}`}>EN</button>
                   <button onClick={() => setLocale('zh')} className={`w-5 h-5 p-1 rounded-md transition-colors flex items-center justify-center text-[10px] font-medium ${locale === 'zh' ? 'bg-page-dim dark:bg-zinc-600 text-brown dark:text-white' : 'text-brown-muted dark:text-zinc-500 hover:text-brown dark:hover:text-zinc-300'}`}>中</button>
                 </div>
@@ -352,7 +352,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
               <button onClick={() => setSubView('history')} className={`${rowClass} group`}>
                 <span className={labelClass}>{t('history')}</span>
                 <div className="flex items-center gap-0.5 text-brown-muted dark:text-zinc-500 group-hover:text-brown-secondary dark:group-hover:text-zinc-300 transition-colors">
-                  <span className={mutedClass}>{clipsCount}/{maxHistory}</span>
+                  <span className={`${mutedClass} group-hover:text-brown-secondary dark:group-hover:text-zinc-300 transition-colors`}>{clipsCount}/{maxHistory}</span>
                   <ChevronRight className="w-3 h-3" />
                 </div>
               </button>
@@ -406,7 +406,12 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                 <span className={labelClass}>{t('toggleWindow')}</span>
                 <div className="flex items-center gap-1.5">
                   {!recording && !hasModifiedShortcut.current && (
-                    <span className="text-[10px] text-brown-muted/60 dark:text-zinc-600 opacity-0 group-hover:opacity-100 transition-opacity">{t('shortcutHint')}</span>
+                    <button
+                      onClick={() => { setRecording(true); setShortcutError(''); }}
+                      className="text-[10px] text-brown-secondary dark:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                    >
+                      {t('shortcutHint')}
+                    </button>
                   )}
                   {recording ? (
                     <span className="text-[11px] font-mono text-orange-500 animate-pulse">{t('pressKeys')}</span>
