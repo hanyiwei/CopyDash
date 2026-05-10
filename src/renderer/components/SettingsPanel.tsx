@@ -321,7 +321,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
           ) : subView === 'color' ? (
             <div className="space-y-1">
               {[
-                { key: 'default', label: 'colorDefault', swatch: 'bg-cyan-400', rec: true },
+                { key: 'default', label: 'colorDefault', swatch: 'bg-blue-400', rec: true },
                 { key: 'earth', label: 'colorEarth', swatch: 'bg-stone-400', rec: false },
                 { key: 'sage', label: 'colorSage', swatch: 'bg-emerald-400', rec: false },
                 { key: 'violet', label: 'colorViolet', swatch: 'bg-purple-400', rec: false },
