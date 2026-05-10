@@ -38,6 +38,8 @@ const L: Record<string, Record<Locale, string>> = {
   toggleWindow:   { en: 'Toggle window', zh: '唤醒主页' },
   pressKeys:      { en: 'Press keys...', zh: '输入新按键...' },
   shortcutHint:   { en: 'Edit', zh: '修改' },
+  shortcutNoMod:  { en: 'Requires a modifier key (Ctrl, Alt, Shift, Win)', zh: '需要组合键（Ctrl、Alt、Shift、Win）' },
+  shortcutFailed: { en: 'Failed to register', zh: '注册快捷键失败' },
   pastePlain:     { en: 'Paste as plain text', zh: '粘贴为纯文本' },
   paste:          { en: 'Paste', zh: '粘贴' },
   version:        { en: 'Version', zh: '版本' },
@@ -102,7 +104,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
       if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
       savedTimerRef.current = setTimeout(() => setShortcutSaved(false), 2000);
     } else {
-      setShortcutError(result.error || 'Failed to register');
+      setShortcutError(result.error || t('shortcutFailed'));
     }
   };
 
@@ -130,7 +132,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
       parts.push(keyName);
 
       if (parts.length < 2) {
-        setShortcutError('Requires a modifier key (Ctrl, Alt, Shift, Win)');
+        setShortcutError(t('shortcutNoMod'));
         return;
       }
 
