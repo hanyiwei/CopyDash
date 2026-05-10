@@ -12,6 +12,7 @@ const App: React.FC = () => {
   const toastMessage = useStore(state => state.toastMessage);
   const shortcut = useStore(state => state.shortcut);
   const setTheme = useStore(state => state.setTheme);
+  const setColorScheme = useStore(state => state.setColorScheme);
   const setShortcut = useStore(state => state.setShortcut);
   const updateStatus = useStore(state => state.updateStatus);
   const setUpdateStatus = useStore(state => state.setUpdateStatus);
@@ -53,6 +54,9 @@ const App: React.FC = () => {
         if (mh) {
           useStore.getState().setMaxHistory(parseInt(mh, 10) || 200);
         }
+        // Load color scheme
+        const cs = await ipcRenderer.invoke('db:settings:get', 'color_scheme');
+        if (cs) setColorScheme(cs as 'warm' | 'cool' | 'forest' | 'mauve');
         // Load shortcut
         const sc = await ipcRenderer.invoke('db:settings:get', 'shortcut_toggle');
         if (sc) setShortcut(sc);

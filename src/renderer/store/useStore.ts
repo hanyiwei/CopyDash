@@ -36,6 +36,7 @@ interface State {
   filterType: FilterType;
   filterPinned: boolean;
   theme: 'dark' | 'light';
+  colorScheme: 'warm' | 'cool' | 'forest' | 'mauve';
   locale: 'en' | 'zh';
   maxHistory: number;
   toastMessage: string | null;
@@ -52,6 +53,7 @@ interface State {
   setFilterType: (type: FilterType) => void;
   setFilterPinned: (pinned: boolean) => void;
   setTheme: (theme: 'dark' | 'light') => void;
+  setColorScheme: (scheme: 'warm' | 'cool' | 'forest' | 'mauve') => void;
   setLocale: (locale: 'en' | 'zh') => void;
   setMaxHistory: (n: number) => void;
   showToast: (message: string) => void;
@@ -73,6 +75,7 @@ export const useStore = create<State>((set) => ({
   filterType: null,
   filterPinned: false,
   theme: 'dark',
+  colorScheme: 'warm',
   locale: 'en',
   maxHistory: 200,
   toastMessage: null,
@@ -106,6 +109,11 @@ export const useStore = create<State>((set) => ({
     document.documentElement.classList.toggle('dark', theme === 'dark');
     set({ theme });
     ipc().invoke('db:settings:set', 'theme', theme).catch((err: unknown) => console.error('[Store] setTheme persist failed:', err));
+  },
+  setColorScheme: (scheme) => {
+    document.documentElement.setAttribute('data-theme', scheme);
+    set({ colorScheme: scheme });
+    ipc().invoke('db:settings:set', 'color_scheme', scheme).catch((err: unknown) => console.error('[Store] setColorScheme persist failed:', err));
   },
   setLocale: (locale) => {
     set({ locale });

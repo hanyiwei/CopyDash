@@ -7,7 +7,7 @@ interface SettingsPanelProps {
 }
 
 type TabType = 'general' | 'privacy' | 'shortcuts';
-type SubView = null | 'history';
+type SubView = null | 'history' | 'color';
 type Locale = 'en' | 'zh';
 
 const HISTORY_OPTIONS = [100, 200, 300];
@@ -42,6 +42,12 @@ const L: Record<string, Record<Locale, string>> = {
   shortcutFailed: { en: 'Failed to register', zh: '注册快捷键失败' },
   pastePlain:     { en: 'Paste as plain text', zh: '粘贴为纯文本' },
   paste:          { en: 'Paste', zh: '粘贴' },
+  color:          { en: 'Color', zh: '配色' },
+  colorWarm:      { en: 'Warm', zh: '暖棕' },
+  colorCool:      { en: 'Cool', zh: '冷灰' },
+  colorForest:    { en: 'Forest', zh: '森绿' },
+  colorMauve:     { en: 'Mauve', zh: '淡紫' },
+  colorRec:       { en: 'Recommended', zh: '推荐' },
   version:        { en: 'Version', zh: '版本' },
   checkUpdate:    { en: 'Check for updates', zh: '检查更新' },
   checkingUpdate: { en: 'Checking...', zh: '检查中…' },
@@ -59,6 +65,8 @@ const ipc = () => (window as any).electron.ipcRenderer;
 const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   const theme = useStore(s => s.theme);
   const setTheme = useStore(s => s.setTheme);
+  const colorScheme = useStore(s => s.colorScheme);
+  const setColorScheme = useStore(s => s.setColorScheme);
   const locale = useStore(s => s.locale);
   const setLocale = useStore(s => s.setLocale);
   const shortcut = useStore(s => s.shortcut);
@@ -234,7 +242,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
     }
   };
 
-  const rowClass = "flex items-center justify-between w-full min-h-[30px] px-2";
+  const rowClass = "flex items-center justify-between w-full min-h-[26px] px-2";
   const labelClass = "text-xs font-bold text-brown-secondary dark:text-d-text-secondary";
   const mutedClass = "text-[11px] text-brown-muted dark:text-d-text-muted";
 
@@ -298,7 +306,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
         /* ── Sub-view: Language / History ── */
         <div className="px-5 py-4 space-y-1">
           {subView === 'history' ? (
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               <p className="text-[10px] text-brown-muted dark:text-d-text-muted">{t('historyDesc')}</p>
               <div className="space-y-1">
               {HISTORY_OPTIONS.map(n => (
@@ -309,6 +317,30 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
               ))}
               </div>
               {clearButton}
+            </div>
+          ) : subView === 'color' ? (
+            <div className="space-y-1">
+              {[
+                { key: 'warm', label: 'colorWarm', swatch: 'bg-amber-500', rec: true },
+                { key: 'cool', label: 'colorCool', swatch: 'bg-sky-400', rec: false },
+                { key: 'forest', label: 'colorForest', swatch: 'bg-emerald-500', rec: false },
+                { key: 'mauve', label: 'colorMauve', swatch: 'bg-purple-400', rec: false },
+              ].map(({ key, label, swatch, rec }) => (
+                <button
+                  key={key}
+                  onClick={() => setColorScheme(key as 'warm' | 'cool' | 'forest' | 'mauve')}
+                  className="flex items-center justify-between w-full py-2 px-3 rounded-md hover:bg-card/50 dark:hover:bg-d-white/5 transition-colors"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className={`w-3 h-3 rounded-full ${swatch}`} />
+                    <span className={labelClass}>{t(label)}</span>
+                    {rec && (
+                      <span className="text-[9px] text-orange-500 font-medium">{t('colorRec')}</span>
+                    )}
+                  </div>
+                  {colorScheme === key && <Check className="w-3.5 h-3.5 text-orange-500" />}
+                </button>
+              ))}
             </div>
           ) : null}
         </div>
@@ -323,7 +355,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
 
           {/* Tab: General */}
           {tab === 'general' && (
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {/* Auto Launch */}
               <div className={rowClass}>
                 <span className={labelClass}>{t('autoLaunch')}</span>
@@ -333,6 +365,15 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                 >
                   <span className={`absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${autoLaunch ? 'translate-x-3' : 'translate-x-0'}`} />
                 </button>
+              </div>
+
+              {/* Language */}
+              <div className={rowClass}>
+                <span className={labelClass}>{t('language')}</span>
+                <div className="flex bg-card dark:bg-d-container rounded-lg p-0.5 gap-0.5">
+                  <button onClick={() => setLocale('en')} className={`w-5 h-5 p-1 rounded-md transition-colors flex items-center justify-center text-[10px] font-medium ${locale === 'en' ? 'bg-page-dim dark:bg-d-seg text-brown dark:text-d-white' : 'text-brown-muted dark:text-d-text-muted hover:text-brown dark:hover:text-d-text-secondary'}`}>EN</button>
+                  <button onClick={() => setLocale('zh')} className={`w-5 h-5 p-1 rounded-md transition-colors flex items-center justify-center text-[10px] font-medium ${locale === 'zh' ? 'bg-page-dim dark:bg-d-seg text-brown dark:text-d-white' : 'text-brown-muted dark:text-d-text-muted hover:text-brown dark:hover:text-d-text-secondary'}`}>中</button>
+                </div>
               </div>
 
               {/* Theme */}
@@ -348,14 +389,14 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                 </div>
               </div>
 
-              {/* Language */}
-              <div className={rowClass}>
-                <span className={labelClass}>{t('language')}</span>
-                <div className="flex bg-card dark:bg-d-container rounded-lg p-0.5 gap-0.5">
-                  <button onClick={() => setLocale('en')} className={`w-5 h-5 p-1 rounded-md transition-colors flex items-center justify-center text-[10px] font-medium ${locale === 'en' ? 'bg-page-dim dark:bg-d-seg text-brown dark:text-d-white' : 'text-brown-muted dark:text-d-text-muted hover:text-brown dark:hover:text-d-text-secondary'}`}>EN</button>
-                  <button onClick={() => setLocale('zh')} className={`w-5 h-5 p-1 rounded-md transition-colors flex items-center justify-center text-[10px] font-medium ${locale === 'zh' ? 'bg-page-dim dark:bg-d-seg text-brown dark:text-d-white' : 'text-brown-muted dark:text-d-text-muted hover:text-brown dark:hover:text-d-text-secondary'}`}>中</button>
+              {/* Color Scheme */}
+              <button onClick={() => setSubView('color')} className={`${rowClass} group`}>
+                <span className={labelClass}>{t('color')}</span>
+                <div className="flex items-center gap-0.5 text-brown-muted dark:text-d-text-muted group-hover:text-brown-secondary dark:group-hover:text-d-text-secondary transition-colors">
+                  <span className={mutedClass}>{t(`color${colorScheme.charAt(0).toUpperCase() + colorScheme.slice(1)}` as any)}</span>
+                  <ChevronRight className="w-3 h-3" />
                 </div>
-              </div>
+              </button>
 
               {/* History */}
               <button onClick={() => setSubView('history')} className={`${rowClass} group`}>
@@ -417,7 +458,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
 
           {/* Tab: Privacy */}
           {tab === 'privacy' && (
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               <p className="text-[10px] text-brown-muted dark:text-d-text-muted">{t('privacyDesc')}</p>
               <div className="space-y-0.5">
                 {PRIVACY_APPS.map(app => (
@@ -437,7 +478,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
 
           {/* Tab: Shortcuts */}
           {tab === 'shortcuts' && (
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               <div className={`${rowClass} group rounded-md hover:bg-card/50 dark:hover:bg-d-white/5 transition-colors`}>
                 <span className={labelClass}>{t('toggleWindow')}</span>
                 <div className="flex items-center gap-1.5">
