@@ -46,6 +46,8 @@ const L: Record<string, Record<Locale, string>> = {
   colorWarm:      { en: 'Warm', zh: '暖棕' },
   colorMUJI:      { en: 'MUJI', zh: '无印' },
   colorMorandi:   { en: 'Morandi', zh: '莫兰迪' },
+  colorMatcha:    { en: 'Matcha', zh: '抹茶' },
+  colorNoir:      { en: 'Noir', zh: '暗金' },
   colorMauve:     { en: 'Mauve', zh: '淡紫' },
   colorRec:       { en: 'Recommended', zh: '推荐' },
   version:        { en: 'Version', zh: '版本' },
@@ -325,10 +327,12 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                 { key: 'muji', label: 'colorMUJI', swatch: 'bg-stone-400', rec: false },
                 { key: 'morandi', label: 'colorMorandi', swatch: 'bg-rose-300', rec: false },
                 { key: 'mauve', label: 'colorMauve', swatch: 'bg-purple-400', rec: false },
+                { key: 'matcha', label: 'colorMatcha', swatch: 'bg-lime-500', rec: false },
+                { key: 'noir', label: 'colorNoir', swatch: 'bg-yellow-600', rec: false },
               ].map(({ key, label, swatch, rec }) => (
                 <button
                   key={key}
-                  onClick={() => setColorScheme(key as 'warm' | 'muji' | 'morandi' | 'mauve')}
+                  onClick={() => setColorScheme(key as 'warm' | 'muji' | 'morandi' | 'mauve' | 'matcha' | 'noir')}
                   className="flex items-center justify-between w-full py-2 px-3 rounded-md hover:bg-card/50 dark:hover:bg-d-white/5 transition-colors"
                 >
                   <div className="flex items-center gap-2">

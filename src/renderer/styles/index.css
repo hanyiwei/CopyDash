@@ -17,8 +17,8 @@
   --background: 48 25% 92%;
   --foreground: 42 17% 15%;
 
-  --accent: 249 115 22;
-  --accent-hover: 251 146 60;
+  --accent: 0 229 255;
+  --accent-hover: 100 245 255;
 
   --l-page:      240 238 230;
   --l-page-dim:  227 218 204;
@@ -33,20 +33,20 @@
   --l-border:         224 219 205;
   --l-border-active:  237 230 213;
 
-  --d-page:       9 9 11;
-  --d-container:  24 24 27;
-  --d-card:       39 39 42;
-  --d-card-hover: 63 63 70;
-  --d-seg:        82 82 91;
+  --d-page:       0 0 0;
+  --d-container:  12 14 22;
+  --d-card:       18 22 34;
+  --d-card-hover: 26 32 48;
+  --d-seg:        50 60 88;
   --d-footer:     0 0 0;
   --d-white:      255 255 255;
-  --d-text-secondary:  212 212 216;
-  --d-text-subtle:     161 161 170;
-  --d-text-muted:      113 113 122;
-  --d-text-faint:      63 63 70;
-  --d-border-selected: 63 63 70;
-  --d-scrollbar-thumb:      82 82 91;
-  --d-scrollbar-thumb-hover: 113 113 122;
+  --d-text-secondary:  200 215 240;
+  --d-text-subtle:     155 175 210;
+  --d-text-muted:      110 130 170;
+  --d-text-faint:      55 68 100;
+  --d-border-selected: 55 68 100;
+  --d-scrollbar-thumb:      50 60 88;
+  --d-scrollbar-thumb-hover: 110 130 170;
 }
 
 .dark {
@@ -187,7 +187,75 @@
   --d-text-faint:      62 42 88;
   --d-border-selected: 62 42 88;
   --d-scrollbar-thumb:      72 48 95;
-  --d-scrollbar-thumb-hover: 125 105 155;
+  --d-scrollbar-thumb-hover: 135 110 162;
+}
+
+
+/* ── Matcha — solid green + cream cards  ─────────────────────── */
+
+[data-theme="matcha"] {
+  --accent: 139 195 74;
+  --accent-hover: 165 215 105;
+
+  --l-page:      74 90 56;
+  --l-page-dim:  62 78 46;
+  --l-card:      245 240 232;
+  --l-card-hover: 255 252 248;
+  --l-badge:     140 160 115;
+  --l-text:      40 50 30;
+  --l-text-secondary: 65 78 50;
+  --l-text-subtle:    95 110 75;
+  --l-text-muted:     130 145 110;
+  --l-text-faint:     165 178 148;
+  --l-border:         130 150 105;
+  --l-border-active:  155 175 130;
+
+  --d-page:       6 14 8;
+  --d-container:  14 24 16;
+  --d-card:       22 34 24;
+  --d-card-hover: 32 46 34;
+  --d-seg:        55 75 55;
+  --d-text-secondary:  195 215 190;
+  --d-text-subtle:     155 180 148;
+  --d-text-muted:      115 140 108;
+  --d-text-faint:      52 72 50;
+  --d-border-selected: 52 72 50;
+  --d-scrollbar-thumb:      55 75 55;
+  --d-scrollbar-thumb-hover: 115 140 108;
+}
+
+
+/* ── Noir — warm charcoal + gold  ─────────────────────────────── */
+
+[data-theme="noir"] {
+  --accent: 212 168 83;
+  --accent-hover: 235 195 115;
+
+  --l-page:      56 50 40;
+  --l-page-dim:  46 40 32;
+  --l-card:      245 240 232;
+  --l-card-hover: 252 250 246;
+  --l-badge:     120 110 95;
+  --l-text:      240 235 225;
+  --l-text-secondary: 200 192 178;
+  --l-text-subtle:    165 155 140;
+  --l-text-muted:     130 120 105;
+  --l-text-faint:     95 85 72;
+  --l-border:         100 90 75;
+  --l-border-active:  140 125 105;
+
+  --d-page:       16 14 10;
+  --d-container:  28 24 18;
+  --d-card:       40 34 26;
+  --d-card-hover: 54 46 36;
+  --d-seg:        80 68 52;
+  --d-text-secondary:  215 205 185;
+  --d-text-subtle:     180 168 145;
+  --d-text-muted:      140 128 108;
+  --d-text-faint:      72 62 48;
+  --d-border-selected: 72 62 48;
+  --d-scrollbar-thumb:      80 68 52;
+  --d-scrollbar-thumb-hover: 140 128 108;
 }
 
 
