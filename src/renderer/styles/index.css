@@ -74,18 +74,18 @@
   --l-border:         205 188 165;
   --l-border-active:  185 165 140;
 
-  --d-page:       16 14 10;
-  --d-container:  28 24 18;
-  --d-card:       40 34 26;
-  --d-card-hover: 54 46 36;
-  --d-seg:        80 68 52;
-  --d-text-secondary:  215 205 185;
-  --d-text-subtle:     180 168 145;
-  --d-text-muted:      140 128 108;
-  --d-text-faint:      72 62 48;
-  --d-border-selected: 72 62 48;
-  --d-scrollbar-thumb:      80 68 52;
-  --d-scrollbar-thumb-hover: 140 128 108;
+  --d-page:       14 14 14;
+  --d-container:  26 26 26;
+  --d-card:       38 37 34;
+  --d-card-hover: 52 50 46;
+  --d-seg:        78 76 70;
+  --d-text-secondary:  210 210 205;
+  --d-text-subtle:     175 175 170;
+  --d-text-muted:      138 138 135;
+  --d-text-faint:      70 70 68;
+  --d-border-selected: 70 70 68;
+  --d-scrollbar-thumb:      80 78 72;
+  --d-scrollbar-thumb-hover: 140 140 135;
 }
 
 
