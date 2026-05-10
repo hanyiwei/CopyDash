@@ -63,6 +63,12 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
     }
   };
 
+  const formatSize = (bytes: number): string => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+
   const formatTime = (dateStr: string) => {
     if (!dateStr) return '';
     const date = new Date(dateStr);
@@ -239,7 +245,7 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
               {clip.image_width && clip.image_height && (
                 <div className="px-3 pb-2 text-center">
                   <span className="text-[11px] font-mono text-brown-muted dark:text-zinc-500">
-                    {clip.image_width} × {clip.image_height}
+                    {clip.image_width} × {clip.image_height}{clip.image_format ? ` · ${clip.image_format}` : ''}{clip.image_size ? ` · ${formatSize(clip.image_size)}` : ''}
                   </span>
                 </div>
               )}
@@ -258,7 +264,7 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
               {clip.image_width && clip.image_height && (
                 <div className="px-3 pb-2 text-center">
                   <span className="text-[11px] font-mono text-brown-muted dark:text-zinc-500">
-                    {clip.image_width} × {clip.image_height}
+                    {clip.image_width} × {clip.image_height}{clip.image_format ? ` · ${clip.image_format}` : ''}{clip.image_size ? ` · ${formatSize(clip.image_size)}` : ''}
                   </span>
                 </div>
               )}

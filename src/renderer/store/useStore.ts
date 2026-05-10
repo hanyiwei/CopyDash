@@ -16,6 +16,8 @@ interface Clip {
   color_rgb: string;
   image_width: number | null;
   image_height: number | null;
+  image_size: number | null;
+  image_format: string | null;
 }
 
 export type FilterType = 'text' | 'image' | 'link' | 'color' | 'file' | null;

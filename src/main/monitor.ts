@@ -208,6 +208,8 @@ async function downloadRemoteImage(clip: any): Promise<any> {
   const fileName = `${Date.now()}.${ext}`;
   const filePath = path.join(imagesPath, fileName);
   fs.writeFileSync(filePath, buffer);
+  const image_size = buffer.length;
+  const image_format = ext.toUpperCase();
 
   let thumbnail = '';
   let image_width: number | null = null;
@@ -226,11 +228,11 @@ async function downloadRemoteImage(clip: any): Promise<any> {
   }
 
   dbQuery.run(
-    'UPDATE clip_history SET image_path = ?, thumbnail = ?, image_width = ?, image_height = ? WHERE id = ?',
-    [filePath, thumbnail, image_width, image_height, clip.id]
+    'UPDATE clip_history SET image_path = ?, thumbnail = ?, image_width = ?, image_height = ?, image_size = ?, image_format = ? WHERE id = ?',
+    [filePath, thumbnail, image_width, image_height, image_size, image_format, clip.id]
   );
 
-  return { ...clip, image_path: filePath, thumbnail, image_width, image_height };
+  return { ...clip, image_path: filePath, thumbnail, image_width, image_height, image_size, image_format };
 }
 
 // Dynamic sensitive-app filter read from settings DB (privacy_apps JSON)
@@ -311,6 +313,8 @@ export async function startMonitoring(onNewClip: (clip: any) => void) {
       let color_rgb = '';
       let image_width: number | null = null;
       let image_height: number | null = null;
+      let image_size: number | null = null;
+      let image_format: string | null = null;
       let hash = '';
 
       // File copy detection: text/uri-list = Windows CF_HDROP.
@@ -511,6 +515,8 @@ export async function startMonitoring(onNewClip: (clip: any) => void) {
           const fileName = `${Date.now()}.png`;
           image_path = path.join(imagesPath, fileName);
           fs.writeFileSync(image_path, buffer);
+          image_size = buffer.length;
+          image_format = 'PNG';
 
           try {
             const jimpImage = await Jimp.read(buffer);
@@ -538,6 +544,8 @@ export async function startMonitoring(onNewClip: (clip: any) => void) {
               const fileName = `${Date.now()}.${fmt}`;
               image_path = path.join(imagesPath, fileName);
               fs.writeFileSync(image_path, buffer);
+              image_size = buffer.length;
+              image_format = fmt.toUpperCase();
 
               try {
                 const jimpImage = await Jimp.read(buffer);
@@ -590,6 +598,8 @@ export async function startMonitoring(onNewClip: (clip: any) => void) {
         color_rgb,
         image_width,
         image_height,
+        image_size,
+        image_format,
         content_hash: hash
       };
 
@@ -603,10 +613,10 @@ export async function startMonitoring(onNewClip: (clip: any) => void) {
           console.log(`DB Updated: ${clip.id}`);
         } else {
           dbQuery.run(`
-            INSERT INTO clip_history (id, type, content_text, content_html, image_path, thumbnail, source_app, source_icon, created_at, is_pinned, has_color, color_hex, color_rgb, image_width, image_height, content_hash)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO clip_history (id, type, content_text, content_html, image_path, thumbnail, source_app, source_icon, created_at, is_pinned, has_color, color_hex, color_rgb, image_width, image_height, image_size, image_format, content_hash)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
           `, [
-            clip.id, clip.type, clip.content_text, clip.content_html, clip.image_path, clip.thumbnail, clip.source_app, clip.source_icon, clip.created_at, clip.is_pinned, clip.has_color, clip.color_hex, clip.color_rgb, clip.image_width, clip.image_height, clip.content_hash
+            clip.id, clip.type, clip.content_text, clip.content_html, clip.image_path, clip.thumbnail, clip.source_app, clip.source_icon, clip.created_at, clip.is_pinned, clip.has_color, clip.color_hex, clip.color_rgb, clip.image_width, clip.image_height, clip.image_size, clip.image_format, clip.content_hash
           ]);
           console.log(`DB Inserted: ${clip.id}`);
         }

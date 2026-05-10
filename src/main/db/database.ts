@@ -18,6 +18,8 @@ function migrateAddColumn(column: string, definition: string) {
 function migrateSchema() {
   migrateAddColumn('image_width', 'INTEGER DEFAULT NULL');
   migrateAddColumn('image_height', 'INTEGER DEFAULT NULL');
+  migrateAddColumn('image_size', 'INTEGER DEFAULT NULL');
+  migrateAddColumn('image_format', 'TEXT DEFAULT NULL');
 }
 
 function updatePaths() {
@@ -72,6 +74,8 @@ function initSchema() {
         color_rgb     TEXT,
         image_width   INTEGER DEFAULT NULL,
         image_height  INTEGER DEFAULT NULL,
+        image_size    INTEGER DEFAULT NULL,
+        image_format  TEXT DEFAULT NULL,
         is_pinned     INTEGER DEFAULT 0,        
         created_at    TEXT NOT NULL,            
         content_hash  TEXT NOT NULL UNIQUE      
