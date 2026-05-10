@@ -36,7 +36,7 @@ interface State {
   filterType: FilterType;
   filterPinned: boolean;
   theme: 'dark' | 'light';
-  colorScheme: 'warm' | 'muji' | 'morandi' | 'mauve' | 'matcha' | 'noir';
+  colorScheme: 'warm' | 'muji' | 'morandi' | 'mauve' | 'matcha';
   locale: 'en' | 'zh';
   maxHistory: number;
   toastMessage: string | null;
@@ -53,7 +53,7 @@ interface State {
   setFilterType: (type: FilterType) => void;
   setFilterPinned: (pinned: boolean) => void;
   setTheme: (theme: 'dark' | 'light') => void;
-  setColorScheme: (scheme: 'warm' | 'muji' | 'morandi' | 'mauve' | 'matcha' | 'noir') => void;
+  setColorScheme: (scheme: 'warm' | 'muji' | 'morandi' | 'mauve' | 'matcha') => void;
   setLocale: (locale: 'en' | 'zh') => void;
   setMaxHistory: (n: number) => void;
   showToast: (message: string) => void;
