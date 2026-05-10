@@ -157,40 +157,6 @@
 }
 
 
-/* ── Mauve — purple-gray, elegant  ───────────────────────────── */
-
-[data-theme="violet"] {
-  --accent: 139 92 246;
-  --accent-hover: 167 139 250;
-
-  --l-page:      220 214 230;
-  --l-page-dim:  205 196 218;
-  --l-card:      250 248 253;
-  --l-card-hover: 255 255 255;
-  --l-badge:     210 198 228;
-  --l-text:      38 28 52;
-  --l-text-secondary: 58 42 78;
-  --l-text-subtle:    80 60 105;
-  --l-text-muted:     118 98 142;
-  --l-text-faint:     165 148 185;
-  --l-border:         222 212 238;
-  --l-border-active:  190 175 215;
-
-  --d-page:       16 8 22;
-  --d-container:  26 14 36;
-  --d-card:       38 22 52;
-  --d-card-hover: 52 32 70;
-  --d-seg:        72 48 95;
-  --d-text-secondary:  210 198 228;
-  --d-text-subtle:     170 150 198;
-  --d-text-muted:      125 105 155;
-  --d-text-faint:      62 42 88;
-  --d-border-selected: 62 42 88;
-  --d-scrollbar-thumb:      72 48 95;
-  --d-scrollbar-thumb-hover: 135 110 162;
-}
-
-
 /* ═══════════════════════════════════════════════════════════════
    Base styles
    ═══════════════════════════════════════════════════════════════ */
