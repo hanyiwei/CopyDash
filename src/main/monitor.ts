@@ -210,8 +210,12 @@ async function downloadRemoteImage(clip: any): Promise<any> {
   fs.writeFileSync(filePath, buffer);
 
   let thumbnail = '';
+  let image_width: number | null = null;
+  let image_height: number | null = null;
   try {
     const jimpImage = await Jimp.read(buffer);
+    image_width = jimpImage.bitmap.width;
+    image_height = jimpImage.bitmap.height;
     const thumbBuffer = await jimpImage
       .scaleToFit(200, 200)
       .quality(80)
@@ -222,11 +226,11 @@ async function downloadRemoteImage(clip: any): Promise<any> {
   }
 
   dbQuery.run(
-    'UPDATE clip_history SET image_path = ?, thumbnail = ? WHERE id = ?',
-    [filePath, thumbnail, clip.id]
+    'UPDATE clip_history SET image_path = ?, thumbnail = ?, image_width = ?, image_height = ? WHERE id = ?',
+    [filePath, thumbnail, image_width, image_height, clip.id]
   );
 
-  return { ...clip, image_path: filePath, thumbnail };
+  return { ...clip, image_path: filePath, thumbnail, image_width, image_height };
 }
 
 // Dynamic sensitive-app filter read from settings DB (privacy_apps JSON)
@@ -305,6 +309,8 @@ export async function startMonitoring(onNewClip: (clip: any) => void) {
       let has_color = 0;
       let color_hex = '';
       let color_rgb = '';
+      let image_width: number | null = null;
+      let image_height: number | null = null;
       let hash = '';
 
       // File copy detection: text/uri-list = Windows CF_HDROP.
@@ -508,6 +514,8 @@ export async function startMonitoring(onNewClip: (clip: any) => void) {
 
           try {
             const jimpImage = await Jimp.read(buffer);
+            image_width = jimpImage.bitmap.width;
+            image_height = jimpImage.bitmap.height;
             const thumbBuffer = await jimpImage
               .scaleToFit(200, 200)
               .quality(80)
@@ -533,6 +541,8 @@ export async function startMonitoring(onNewClip: (clip: any) => void) {
 
               try {
                 const jimpImage = await Jimp.read(buffer);
+                image_width = jimpImage.bitmap.width;
+                image_height = jimpImage.bitmap.height;
                 const thumbBuffer = await jimpImage
                   .scaleToFit(200, 200)
                   .quality(80)
@@ -578,6 +588,8 @@ export async function startMonitoring(onNewClip: (clip: any) => void) {
         has_color,
         color_hex,
         color_rgb,
+        image_width,
+        image_height,
         content_hash: hash
       };
 
@@ -591,10 +603,10 @@ export async function startMonitoring(onNewClip: (clip: any) => void) {
           console.log(`DB Updated: ${clip.id}`);
         } else {
           dbQuery.run(`
-            INSERT INTO clip_history (id, type, content_text, content_html, image_path, thumbnail, source_app, source_icon, created_at, is_pinned, has_color, color_hex, color_rgb, content_hash)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO clip_history (id, type, content_text, content_html, image_path, thumbnail, source_app, source_icon, created_at, is_pinned, has_color, color_hex, color_rgb, image_width, image_height, content_hash)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
           `, [
-            clip.id, clip.type, clip.content_text, clip.content_html, clip.image_path, clip.thumbnail, clip.source_app, clip.source_icon, clip.created_at, clip.is_pinned, clip.has_color, clip.color_hex, clip.color_rgb, clip.content_hash
+            clip.id, clip.type, clip.content_text, clip.content_html, clip.image_path, clip.thumbnail, clip.source_app, clip.source_icon, clip.created_at, clip.is_pinned, clip.has_color, clip.color_hex, clip.color_rgb, clip.image_width, clip.image_height, clip.content_hash
           ]);
           console.log(`DB Inserted: ${clip.id}`);
         }

@@ -218,32 +218,50 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
             )
           ) : clip.type === 2 ? (
             /* Image card */
-            <div className="flex-1 flex items-center justify-center p-3 pt-8">
-              {clip.thumbnail ? (
-                <img
-                  src={clip.thumbnail}
-                  alt="thumb"
-                  className="max-w-full max-h-full object-contain rounded-lg"
-                />
-              ) : /^https?:\/\//i.test(clip.content_text || '') ? (
-                <img
-                  src={clip.content_text.trim()}
-                  alt="remote"
-                  className="max-w-full max-h-full object-contain rounded-lg"
-                />
-              ) : (
-                <div className="text-brown-muted dark:text-zinc-500 text-[10px]">No preview</div>
+            <div className="flex-1 flex flex-col pt-8">
+              <div className="flex-1 flex items-center justify-center px-3 pb-1 min-h-0">
+                {clip.thumbnail ? (
+                  <img
+                    src={clip.thumbnail}
+                    alt="thumb"
+                    className="max-w-full max-h-full object-contain rounded-lg"
+                  />
+                ) : /^https?:\/\//i.test(clip.content_text || '') ? (
+                  <img
+                    src={clip.content_text.trim()}
+                    alt="remote"
+                    className="max-w-full max-h-full object-contain rounded-lg"
+                  />
+                ) : (
+                  <div className="text-brown-muted dark:text-zinc-500 text-[10px]">No preview</div>
+                )}
+              </div>
+              {clip.image_width && clip.image_height && (
+                <div className="px-3 pb-2 text-center">
+                  <span className="text-[11px] font-mono text-brown-muted dark:text-zinc-500">
+                    {clip.image_width} × {clip.image_height}
+                  </span>
+                </div>
               )}
             </div>
           ) : imageUrl && !imageUrlError ? (
             /* Image URL card */
-            <div className="flex-1 flex items-center justify-center p-3 pt-8">
-              <img
-                src={imageUrl}
-                alt="preview"
-                className="max-w-full max-h-full object-contain rounded-lg"
-                onError={() => setImageUrlError(true)}
-              />
+            <div className="flex-1 flex flex-col pt-8">
+              <div className="flex-1 flex items-center justify-center px-3 pb-1 min-h-0">
+                <img
+                  src={imageUrl}
+                  alt="preview"
+                  className="max-w-full max-h-full object-contain rounded-lg"
+                  onError={() => setImageUrlError(true)}
+                />
+              </div>
+              {clip.image_width && clip.image_height && (
+                <div className="px-3 pb-2 text-center">
+                  <span className="text-[11px] font-mono text-brown-muted dark:text-zinc-500">
+                    {clip.image_width} × {clip.image_height}
+                  </span>
+                </div>
+              )}
             </div>
           ) : clip.has_color ? (
             /* Color card */

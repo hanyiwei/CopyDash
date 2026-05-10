@@ -9,6 +9,17 @@ let dbPath: string;
 let imagesPath: string;
 let db: any;
 
+function migrateAddColumn(column: string, definition: string) {
+  try {
+    db.run(`ALTER TABLE clip_history ADD COLUMN ${column} ${definition}`);
+  } catch { /* column already exists */ }
+}
+
+function migrateSchema() {
+  migrateAddColumn('image_width', 'INTEGER DEFAULT NULL');
+  migrateAddColumn('image_height', 'INTEGER DEFAULT NULL');
+}
+
 function updatePaths() {
   dbPath = path.join(app.getPath('userData'), 'copydash.db');
   imagesPath = path.join(app.getPath('userData'), 'images');
@@ -28,6 +39,7 @@ async function initDB() {
         const fileBuffer = fs.readFileSync(dbPath);
         db = new SQL.Database(fileBuffer);
         console.log('Database loaded from:', dbPath);
+        migrateSchema();
       } catch (err) {
         console.error('Failed to load database, creating new one:', err);
         db = new SQL.Database();
@@ -55,9 +67,11 @@ function initSchema() {
         thumbnail     TEXT,                     
         source_app    TEXT,                     
         source_icon   TEXT,                     
-        has_color     INTEGER DEFAULT 0,        
-        color_hex     TEXT,                     
-        color_rgb     TEXT,                     
+        has_color     INTEGER DEFAULT 0,
+        color_hex     TEXT,
+        color_rgb     TEXT,
+        image_width   INTEGER DEFAULT NULL,
+        image_height  INTEGER DEFAULT NULL,
         is_pinned     INTEGER DEFAULT 0,        
         created_at    TEXT NOT NULL,            
         content_hash  TEXT NOT NULL UNIQUE      
