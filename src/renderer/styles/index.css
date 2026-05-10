@@ -63,8 +63,8 @@
 
   --l-page:      232 222 204;
   --l-page-dim:  218 206 186;
-  --l-card:      245 238 228;
-  --l-card-hover: 252 248 242;
+  --l-card:      250 246 240;
+  --l-card-hover: 253 251 247;
   --l-badge:     198 180 155;
   --l-text:      55 42 28;
   --l-text-secondary: 90 72 52;
@@ -97,8 +97,8 @@
 
   --l-page:      218 230 218;
   --l-page-dim:  200 215 200;
-  --l-card:      235 245 234;
-  --l-card-hover: 248 253 248;
+  --l-card:      245 250 245;
+  --l-card-hover: 250 253 250;
   --l-badge:     190 208 192;
   --l-text:      48 60 48;
   --l-text-secondary: 78 92 78;
@@ -131,7 +131,7 @@
 
   --l-page:      238 232 245;
   --l-page-dim:  225 216 235;
-  --l-card:      248 245 252;
+  --l-card:      250 248 253;
   --l-card-hover: 255 255 255;
   --l-badge:     210 196 228;
   --l-text:      42 30 58;
