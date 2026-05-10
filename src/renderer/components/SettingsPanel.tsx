@@ -46,6 +46,10 @@ const L: Record<string, Record<Locale, string>> = {
   upToDate:       { en: 'Up to date', zh: '已是最新' },
   updateAvailable:{ en: 'Update found!', zh: '发现更新！' },
   updateFailed:   { en: 'Check failed', zh: '检查失败' },
+  updateDownloading: { en: 'Downloading', zh: '下载中' },
+  updateReady:    { en: 'Click to restart', zh: '点击重启' },
+  updateRetry:    { en: 'Check failed · Retry', zh: '检查失败 · 重试' },
+  updateManual:   { en: 'Download manually', zh: '去官网下载' },
 };
 
 const ipc = () => (window as any).electron.ipcRenderer;
@@ -59,14 +63,15 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   const setShortcut = useStore(s => s.setShortcut);
   const autoLaunch = useStore(s => s.autoLaunch);
   const setAutoLaunch = useStore(s => s.setAutoLaunch);
-  const setUpdateStatus = useStore(s => s.setUpdateStatus);
+  const updateStatus = useStore(s => s.updateStatus);
+  const updateCheckedAt = useStore(s => s.updateCheckedAt);
+  const setUpdateCheckedAt = useStore(s => s.setUpdateCheckedAt);
   const clipsCount = useStore(s => s.clips.length);
   const [tab, setTab] = useState<TabType>('general');
   const [subView, setSubView] = useState<SubView>(null);
   const [maxHistory, setMaxHistory] = useState(200);
   const [appVersion, setAppVersion] = useState('');
-  const [checkingUpdate, setCheckingUpdate] = useState(false);
-  const [updateResult, setUpdateResult] = useState<string | null>(null);
+  const [checking, setChecking] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [privacyApps, setPrivacyApps] = useState<Record<string, boolean>>({});
   const [recording, setRecording] = useState(false);
@@ -74,7 +79,6 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   const [shortcutSaved, setShortcutSaved] = useState(false);
   const recordingRef = useRef(false);
   const savedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const updateResultTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasModifiedShortcut = useRef(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -84,7 +88,6 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   useEffect(() => {
     return () => {
       if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
-      if (updateResultTimerRef.current) clearTimeout(updateResultTimerRef.current);
     };
   }, []);
 
@@ -174,6 +177,10 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   }, []);
 
   useEffect(() => {
+    return () => { setUpdateCheckedAt(null); };
+  }, []);
+
+  useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
         onClose();
@@ -197,31 +204,31 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
     await ipc().invoke('db:settings:set', 'privacy_apps', JSON.stringify(next));
   };
 
-  const flashUpdateResult = (key: string) => {
-    setUpdateResult(t(key));
-    if (updateResultTimerRef.current) clearTimeout(updateResultTimerRef.current);
-    updateResultTimerRef.current = setTimeout(() => setUpdateResult(null), 1500);
-  };
-
-  const doCheckUpdate = async () => {
-    if (checkingUpdate) return;
-    setCheckingUpdate(true);
-    try {
-      const result = await ipc().invoke('update:check');
-      if (result?.updateAvailable) {
-        flashUpdateResult('updateAvailable');
-      } else if (result?.error) {
-        console.error('[Settings] Update check error:', result.error);
-        flashUpdateResult('updateFailed');
-      } else {
-        flashUpdateResult('upToDate');
-        // Clear any lingering error badge from the title bar
-        setUpdateStatus(null);
+  const handleUpdateClick = async () => {
+    if (checking || updateStatus?.status === 'downloading') return;
+    if (updateStatus?.status === 'available') {
+      ipc().invoke('update:download');
+    } else if (updateStatus?.status === 'downloaded') {
+      ipc().invoke('update:quit-and-install');
+    } else if (updateStatus?.status === 'error') {
+      setChecking(true);
+      try {
+        await ipc().invoke('update:check');
+      } finally {
+        setChecking(false);
       }
-    } catch {
-      flashUpdateResult('updateFailed');
-    } finally {
-      setCheckingUpdate(false);
+    } else if (updateStatus?.status === 'fallback') {
+      ipc().invoke('shell:openExternal', 'https://github.com/hanyiwei/CopyDash/releases');
+    } else {
+      setChecking(true);
+      try {
+        const result = await ipc().invoke('update:check');
+        if (result && !result.updateAvailable && !result.error) {
+          setUpdateCheckedAt(Date.now());
+        }
+      } finally {
+        setChecking(false);
+      }
     }
   };
 
@@ -367,11 +374,38 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                     {t('version')} v{appVersion}
                   </button>
                   <button
-                    onClick={doCheckUpdate}
-                    disabled={checkingUpdate}
-                    className={`text-[11px] font-medium transition-colors ${checkingUpdate ? 'text-brown-muted dark:text-zinc-500 cursor-default' : updateResult ? 'text-green-600 dark:text-green-400' : 'text-brown-muted dark:text-zinc-500 hover:text-brown dark:hover:text-zinc-300 cursor-pointer'}`}
+                    onClick={handleUpdateClick}
+                    disabled={checking || updateStatus?.status === 'downloading' || (!updateStatus && !!updateCheckedAt)}
+                    className={`text-[11px] font-medium transition-colors ${
+                      checking || updateStatus?.status === 'downloading'
+                        ? 'text-brown-muted dark:text-zinc-500 cursor-default'
+                        : !updateStatus && updateCheckedAt
+                          ? 'text-brown-muted dark:text-zinc-500 cursor-default'
+                          : updateStatus?.status === 'error'
+                            ? 'text-red-600 dark:text-red-400 cursor-pointer'
+                            : updateStatus?.status === 'fallback'
+                              ? 'text-amber-600 dark:text-amber-400 cursor-pointer'
+                              : updateStatus?.status === 'downloaded' || updateStatus?.status === 'available'
+                                ? 'text-green-600 dark:text-green-400 cursor-pointer'
+                                : 'text-brown-muted dark:text-zinc-500 hover:text-brown dark:hover:text-zinc-300 cursor-pointer'
+                    }`}
                   >
-                    {checkingUpdate ? t('checkingUpdate') : updateResult ?? t('checkUpdate')}
+                    {checking
+                      ? t('checkingUpdate')
+                      : updateStatus?.status === 'downloading'
+                        ? `${t('updateDownloading')} ${updateStatus.percent ?? 0}%`
+                        : updateStatus?.status === 'downloaded'
+                          ? t('updateReady')
+                          : updateStatus?.status === 'error'
+                            ? t('updateRetry')
+                            : updateStatus?.status === 'fallback'
+                              ? t('updateManual')
+                              : updateStatus?.status === 'available'
+                                ? t('updateAvailable')
+                                : updateCheckedAt
+                                  ? t('upToDate')
+                                  : t('checkUpdate')
+                    }
                   </button>
                 </div>
               )}

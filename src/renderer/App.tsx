@@ -151,6 +151,9 @@ const App: React.FC = () => {
           {updateStatus && (
             <button
               onClick={() => {
+                if (updateStatus.status === 'downloading') {
+                  return;
+                }
                 if (updateStatus.status === 'downloaded') {
                   (window as any).electron.ipcRenderer.invoke('update:quit-and-install');
                 } else if (updateStatus.status === 'available') {
