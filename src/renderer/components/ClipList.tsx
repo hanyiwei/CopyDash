@@ -28,20 +28,20 @@ const ClipList: React.FC = () => {
   useEffect(() => {
     const handleAction = async ({ action, clip }: any) => {
       if (action === 'paste') {
-        const ok = await (window as any).electron.ipcRenderer.invoke('clipboard:writeAndPaste', clip, false);
+        const ok = await window.electronAPI.invoke('clipboard:writeAndPaste', clip, false);
         if (!ok) showToast('粘贴失败');
       }
       if (action === 'paste-plain') {
-        const ok = await (window as any).electron.ipcRenderer.invoke('clipboard:writeAndPaste', clip, true);
+        const ok = await window.electronAPI.invoke('clipboard:writeAndPaste', clip, true);
         if (!ok) showToast('粘贴失败');
       }
       if (action === 'toggle-pin') {
         const newPinStatus = clip.is_pinned ? 0 : 1;
-        await (window as any).electron.ipcRenderer.invoke('db:updatePin', clip.id, newPinStatus);
+        await window.electronAPI.invoke('db:updatePin', clip.id, newPinStatus);
         togglePin(clip.id);
       }
       if (action === 'delete') {
-        await (window as any).electron.ipcRenderer.invoke('db:deleteById', clip.id);
+        await window.electronAPI.invoke('db:deleteById', clip.id);
         setRemovingIds(prev => new Set(prev).add(clip.id));
         // Timeout fallback in case animation end event doesn't fire (e.g. filter change)
         setTimeout(() => {
@@ -55,7 +55,7 @@ const ClipList: React.FC = () => {
       }
     };
 
-    const unsubscribe = (window as any).electron.ipcRenderer.on('menu-action', handleAction);
+    const unsubscribe = window.electronAPI.on('menu-action', handleAction);
 
     return () => unsubscribe();
   }, [togglePin, removeClip]);
@@ -80,13 +80,13 @@ const ClipList: React.FC = () => {
 
   const handleDoubleClick = async (clip: any, e: React.MouseEvent) => {
     const isShiftPressed = e.shiftKey;
-    const ok = await (window as any).electron.ipcRenderer.invoke('clipboard:writeAndPaste', clip, isShiftPressed);
+    const ok = await window.electronAPI.invoke('clipboard:writeAndPaste', clip, isShiftPressed);
     if (!ok) showToast('粘贴失败');
   };
 
   const handleContextMenu = (clip: any) => {
     const { locale } = useStore.getState();
-    (window as any).electron.ipcRenderer.invoke('menu:showContext', clip, locale);
+    window.electronAPI.invoke('menu:showContext', clip, locale);
   };
 
   const handleAnimationEnd = (clipId: string) => {

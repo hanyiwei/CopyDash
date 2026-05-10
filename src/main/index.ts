@@ -202,6 +202,10 @@ app.whenReady().then(async () => {
 
 // Open URL in system default browser
 ipcMain.handle('shell:openExternal', (_, url: string) => {
+  try {
+    const protocol = new URL(url).protocol;
+    if (protocol !== 'http:' && protocol !== 'https:') return;
+  } catch { return; }
   shell.openExternal(url);
 });
 

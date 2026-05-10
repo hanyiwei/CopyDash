@@ -42,7 +42,7 @@ const App: React.FC = () => {
 
     const fetchClips = async () => {
       try {
-        const ipcRenderer = (window as any).electron.ipcRenderer;
+        const ipcRenderer = window.electronAPI;
         const result = await ipcRenderer.invoke('db:getAll');
         if (result && mountedRef.current) setClips(result);
         // Load theme, migrate 'system' to 'dark'
@@ -80,7 +80,7 @@ const App: React.FC = () => {
       // 180ms allows the CSS exit animation (150ms) to finish before hiding the window
       hideTimer.current = setTimeout(() => {
         if (mountedRef.current) {
-          (window as any).electron.ipcRenderer.send('window:hide');
+          window.electronAPI.send('window:hide');
         }
         hideTimer.current = null;
       }, 180);
@@ -95,15 +95,15 @@ const App: React.FC = () => {
 
     const handleUpdateStatus = (payload: UpdateStatus) => setUpdateStatus(payload);
 
-    const unsubNew = (window as any).electron.ipcRenderer.on('new-clip', handleNewClip);
-    const unsubShown = (window as any).electron.ipcRenderer.on('window-shown', handleWindowShown);
-    const unsubHide = (window as any).electron.ipcRenderer.on('window-hide-start', handleWindowHideStart);
-    const unsubFocus = (window as any).electron.ipcRenderer.on('window-focus', handleWindowFocus);
-    const unsubSc = (window as any).electron.ipcRenderer.on('shortcut-changed', handleShortcutChanged);
-    const unsubUpdate = (window as any).electron.ipcRenderer.on('update:status', handleUpdateStatus);
+    const unsubNew = window.electronAPI.on('new-clip', handleNewClip);
+    const unsubShown = window.electronAPI.on('window-shown', handleWindowShown);
+    const unsubHide = window.electronAPI.on('window-hide-start', handleWindowHideStart);
+    const unsubFocus = window.electronAPI.on('window-focus', handleWindowFocus);
+    const unsubSc = window.electronAPI.on('shortcut-changed', handleShortcutChanged);
+    const unsubUpdate = window.electronAPI.on('update:status', handleUpdateStatus);
 
     // Replay any status that arrived before the listener was attached
-    (window as any).electron.ipcRenderer.invoke('update:getStatus').then((s: any) => {
+    window.electronAPI.invoke('update:getStatus').then((s: any) => {
       if (s && mountedRef.current) setUpdateStatus(s);
     });
 
@@ -136,7 +136,7 @@ const App: React.FC = () => {
         <div className="flex-shrink-0 flex items-center relative">
           {/* Logo — opens GitHub in system default browser */}
           <button
-            onClick={() => (window as any).electron.ipcRenderer.invoke('shell:openExternal', 'https://github.com/hanyiwei/CopyDash')}
+            onClick={() => window.electronAPI.invoke('shell:openExternal', 'https://github.com/hanyiwei/CopyDash')}
             className="flex-shrink-0 pl-5 pr-6 text-brown dark:text-d-white hover:text-accent dark:hover:text-accent transition-colors cursor-pointer select-none flex items-center gap-1 group"
             title="CopyDash on GitHub"
           >
@@ -159,13 +159,13 @@ const App: React.FC = () => {
                   return;
                 }
                 if (updateStatus.status === 'downloaded') {
-                  (window as any).electron.ipcRenderer.invoke('update:quit-and-install');
+                  window.electronAPI.invoke('update:quit-and-install');
                 } else if (updateStatus.status === 'available') {
-                  (window as any).electron.ipcRenderer.invoke('update:download');
+                  window.electronAPI.invoke('update:download');
                 } else if (updateStatus.status === 'error') {
-                  (window as any).electron.ipcRenderer.invoke('update:check');
+                  window.electronAPI.invoke('update:check');
                 } else if (updateStatus.status === 'fallback') {
-                  (window as any).electron.ipcRenderer.invoke('shell:openExternal', 'https://github.com/hanyiwei/CopyDash/releases');
+                  window.electronAPI.invoke('shell:openExternal', 'https://github.com/hanyiwei/CopyDash/releases');
                 }
               }}
               className={`flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold transition-all ${
@@ -210,7 +210,7 @@ const App: React.FC = () => {
               <Settings className="w-4 h-4" />
             </button>
             <button
-              onClick={() => (window as any).electron.ipcRenderer.send('window:hide')}
+              onClick={() => window.electronAPI.send('window:hide')}
               className="p-1.5 hover:bg-page-dim/50 dark:hover:bg-d-white/10 rounded-xl text-brown-faint/60 dark:text-d-text-faint hover:text-brown dark:hover:text-d-white transition-colors"
             >
               <X className="w-4 h-4" />
@@ -239,7 +239,7 @@ const App: React.FC = () => {
             )}
           </div>
           <button
-            onClick={() => (window as any).electron.ipcRenderer.invoke('shell:openExternal', 'https://github.com/hanyiwei/CopyDash')}
+            onClick={() => window.electronAPI.invoke('shell:openExternal', 'https://github.com/hanyiwei/CopyDash')}
             className="hover:text-brown dark:hover:text-d-white transition-colors cursor-pointer flex items-center gap-2 text-brown-faint/60 dark:text-d-text-faint"
           >
             <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>

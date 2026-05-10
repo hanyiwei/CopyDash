@@ -195,15 +195,56 @@ function extractRemoteImageUrl(text: string, html: string): string | null {
   return null;
 }
 
+// Validate remote image URL before download
+function validateRemoteImageUrl(raw: string): boolean {
+  try {
+    const u = new URL(raw);
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return false;
+    const host = u.hostname;
+    if (host === 'localhost' || host === '127.0.0.1' || host === '[::1]') return false;
+    if (/^10\./.test(host) || /^172\.(1[6-9]|2\d|3[01])\./.test(host) || /^192\.168\./.test(host)) return false;
+    return true;
+  } catch { return false; }
+}
+
 // Background download of remote image (e.g. browser copy-as-image, design tools)
 async function downloadRemoteImage(clip: any): Promise<any> {
   const url = clip.content_text.trim();
-  const response = await fetch(url);
+
+  if (!validateRemoteImageUrl(url)) {
+    console.log('[Monitor] Remote image blocked by validation:', url.substring(0, 80));
+    return clip;
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+  let response: Response;
+  try {
+    response = await fetch(url, { signal: controller.signal });
+  } finally {
+    clearTimeout(timeout);
+  }
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  const arrayBuffer = await response.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
 
   const ct = (response.headers.get('content-type') || '').toLowerCase();
+  if (!ct.startsWith('image/')) {
+    console.log('[Monitor] Remote image blocked — not an image:', ct);
+    return clip;
+  }
+
+  const contentLength = response.headers.get('content-length');
+  if (contentLength && parseInt(contentLength, 10) > 50 * 1024 * 1024) {
+    console.log('[Monitor] Remote image blocked — too large:', contentLength);
+    return clip;
+  }
+
+  const arrayBuffer = await response.arrayBuffer();
+  if (arrayBuffer.byteLength > 50 * 1024 * 1024) {
+    console.log('[Monitor] Remote image blocked — too large after fetch:', arrayBuffer.byteLength);
+    return clip;
+  }
+  const buffer = Buffer.from(arrayBuffer);
+
   const ext = ct.includes('png') ? 'png' : ct.includes('gif') ? 'gif' : ct.includes('webp') ? 'webp' : ct.includes('bmp') ? 'bmp' : 'jpg';
   const fileName = `${Date.now()}.${ext}`;
   const filePath = path.join(imagesPath, fileName);

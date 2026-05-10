@@ -56,7 +56,7 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
     e.stopPropagation();
     const newPinStatus = clip.is_pinned ? 0 : 1;
     try {
-      await (window as any).electron.ipcRenderer.invoke('db:updatePin', clip.id, newPinStatus);
+      await window.electronAPI.invoke('db:updatePin', clip.id, newPinStatus);
       togglePin(clip.id);
     } catch (err) {
       console.error('[ClipItem] Pin update failed:', err);

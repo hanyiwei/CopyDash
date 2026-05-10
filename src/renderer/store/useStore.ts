@@ -64,7 +64,7 @@ interface State {
   clearClips: () => void;
 }
 
-const ipc = () => (window as any).electron.ipcRenderer;
+const api = () => window.electronAPI;
 
 let toastTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -108,16 +108,16 @@ export const useStore = create<State>((set) => ({
   setTheme: (theme) => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
     set({ theme });
-    ipc().invoke('db:settings:set', 'theme', theme).catch((err: unknown) => console.error('[Store] setTheme persist failed:', err));
+    api().invoke('db:settings:set', 'theme', theme).catch((err: unknown) => console.error('[Store] setTheme persist failed:', err));
   },
   setColorScheme: (scheme) => {
     document.documentElement.setAttribute('data-theme', scheme);
     set({ colorScheme: scheme });
-    ipc().invoke('db:settings:set', 'color_scheme', scheme).catch((err: unknown) => console.error('[Store] setColorScheme persist failed:', err));
+    api().invoke('db:settings:set', 'color_scheme', scheme).catch((err: unknown) => console.error('[Store] setColorScheme persist failed:', err));
   },
   setLocale: (locale) => {
     set({ locale });
-    ipc().invoke('db:settings:set', 'locale', locale).catch((err: unknown) => console.error('[Store] setLocale persist failed:', err));
+    api().invoke('db:settings:set', 'locale', locale).catch((err: unknown) => console.error('[Store] setLocale persist failed:', err));
   },
   setMaxHistory: (n) => set({ maxHistory: n }),
   showToast: (message) => {

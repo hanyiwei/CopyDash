@@ -60,7 +60,7 @@ const L: Record<string, Record<Locale, string>> = {
   updateManual:   { en: 'Download manually', zh: '去官网下载' },
 };
 
-const ipc = () => (window as any).electron.ipcRenderer;
+const api = () => window.electronAPI;
 
 const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   const theme = useStore(s => s.theme);
@@ -102,7 +102,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   }, []);
 
   const confirmShortcut = async (keys: string) => {
-    const result = await ipc().invoke('shortcut:update', keys);
+    const result = await api().invoke('shortcut:update', keys);
     if (result.ok) {
       setShortcut(keys);
       setRecording(false);
@@ -161,16 +161,16 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
 
   useEffect(() => {
     const load = async () => {
-      const ver = await ipc().invoke('app:getVersion');
+      const ver = await api().invoke('app:getVersion');
       if (ver) setAppVersion(ver);
-      const val = await ipc().invoke('db:settings:get', 'max_history');
+      const val = await api().invoke('db:settings:get', 'max_history');
       if (val) setMaxHistory(parseInt(val, 10) || 200);
-      const t = await ipc().invoke('db:settings:get', 'theme');
+      const t = await api().invoke('db:settings:get', 'theme');
       if (t && t !== theme) setTheme(t as 'dark' | 'light');
-      const l = await ipc().invoke('db:settings:get', 'locale');
+      const l = await api().invoke('db:settings:get', 'locale');
       if (l && l !== locale) setLocale(l as 'en' | 'zh');
-      const pv = await ipc().invoke('db:settings:get', 'privacy_apps');
-      const al = await ipc().invoke('db:settings:get', 'auto_launch');
+      const pv = await api().invoke('db:settings:get', 'privacy_apps');
+      const al = await api().invoke('db:settings:get', 'auto_launch');
       if (al !== null) setAutoLaunch(al === '1');
       const defaults: Record<string, boolean> = {};
       PRIVACY_APPS.forEach(a => { defaults[a.key] = false; });
@@ -202,7 +202,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
 
   const handleHistory = async (n: number) => {
     setMaxHistory(n);
-    await ipc().invoke('db:settings:set', 'max_history', String(n));
+    await api().invoke('db:settings:set', 'max_history', String(n));
     setSubView(null);
   };
 
@@ -211,28 +211,28 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   const handlePrivacyToggle = async (key: string, value: boolean) => {
     const next = { ...privacyApps, [key]: value };
     setPrivacyApps(next);
-    await ipc().invoke('db:settings:set', 'privacy_apps', JSON.stringify(next));
+    await api().invoke('db:settings:set', 'privacy_apps', JSON.stringify(next));
   };
 
   const handleUpdateClick = async () => {
     if (checking || updateStatus?.status === 'downloading') return;
     if (updateStatus?.status === 'available') {
-      ipc().invoke('update:download');
+      api().invoke('update:download');
     } else if (updateStatus?.status === 'downloaded') {
-      ipc().invoke('update:quit-and-install');
+      api().invoke('update:quit-and-install');
     } else if (updateStatus?.status === 'error') {
       setChecking(true);
       try {
-        await ipc().invoke('update:check');
+        await api().invoke('update:check');
       } finally {
         setChecking(false);
       }
     } else if (updateStatus?.status === 'fallback') {
-      ipc().invoke('shell:openExternal', 'https://github.com/hanyiwei/CopyDash/releases');
+      api().invoke('shell:openExternal', 'https://github.com/hanyiwei/CopyDash/releases');
     } else {
       setChecking(true);
       try {
-        const result = await ipc().invoke('update:check');
+        const result = await api().invoke('update:check');
         if (result && !result.updateAvailable && !result.error) {
           setUpdateCheckedAt(Date.now());
         }
@@ -279,7 +279,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   const clearButton = (
     <div className="pt-2 border-t border-beige-border dark:border-d-white/5">
       <button
-        onDoubleClick={async () => { await ipc().invoke('db:clearAll'); useStore.getState().clearClips(); onClose(); }}
+        onDoubleClick={async () => { await api().invoke('db:clearAll'); useStore.getState().clearClips(); onClose(); }}
         className="w-full py-2 rounded-xl text-xs font-medium text-red-400/50 hover:text-red-400 hover:bg-red-500/10 transition-colors select-none"
       >
         {t('clearHistory')}
@@ -360,7 +360,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
               <div className={rowClass}>
                 <span className={labelClass}>{t('autoLaunch')}</span>
                 <button
-                  onClick={async () => { const next = !autoLaunch; setAutoLaunch(next); await ipc().invoke('setting:setAutoLaunch', next); }}
+                  onClick={async () => { const next = !autoLaunch; setAutoLaunch(next); await api().invoke('setting:setAutoLaunch', next); }}
                   className={`relative w-7 h-4 rounded-full transition-colors ${autoLaunch ? 'bg-accent' : 'bg-page-dim dark:bg-d-seg'}`}
                 >
                   <span className={`absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${autoLaunch ? 'translate-x-3' : 'translate-x-0'}`} />
@@ -411,7 +411,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
               {appVersion && (
                 <div className={rowClass}>
                   <button
-                    onClick={() => ipc().invoke('shell:openExternal', 'https://github.com/hanyiwei/CopyDash/releases')}
+                    onClick={() => api().invoke('shell:openExternal', 'https://github.com/hanyiwei/CopyDash/releases')}
                     className={`${labelClass} cursor-pointer`}
                   >
                     {t('version')} v{appVersion}

@@ -8,7 +8,7 @@ const originalLog = console.log;
 const originalError = console.error;
 const originalWarn = console.warn;
 
-const bridge = (window as any).electron?.ipcRenderer;
+const bridge = window.electronAPI;
 console.log = (...args) => {
   originalLog(...args);
   try { bridge?.send('renderer-log', 'INFO', ...args); } catch {}

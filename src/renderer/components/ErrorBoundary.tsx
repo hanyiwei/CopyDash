@@ -21,7 +21,7 @@ class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     try {
-      (window as any).electron?.ipcRenderer?.send('renderer-log', 'ERROR', 'ErrorBoundary:', error.message, info.componentStack);
+      window.electronAPI?.send('renderer-log', 'ERROR', 'ErrorBoundary:', error.message, info.componentStack);
     } catch {}
   }
 
