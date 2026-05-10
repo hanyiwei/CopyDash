@@ -157,7 +157,7 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
             {clip.is_pinned === 1 && (
               <button
                 onClick={handlePinClick}
-                className="text-orange-500 hover:text-orange-400 drop-shadow-md transition-colors flex-shrink-0"
+                className="text-accent hover:text-accent-hover drop-shadow-md transition-colors flex-shrink-0"
                 title="Click to unpin"
               >
                 <Pin className="w-3.5 h-3.5 fill-current" />

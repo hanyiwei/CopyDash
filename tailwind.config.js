@@ -22,6 +22,8 @@ export default {
           muted: 'rgb(var(--l-text-muted) / <alpha-value>)',
           faint: 'rgb(var(--l-text-faint) / <alpha-value>)',
         },
+        accent: 'rgb(var(--accent) / <alpha-value>)',
+        'accent-hover': 'rgb(var(--accent-hover) / <alpha-value>)',
         'beige-border': 'rgb(var(--l-border) / <alpha-value>)',
         'beige-active': 'rgb(var(--l-border-active) / <alpha-value>)',
         d: {

@@ -7,17 +7,21 @@
    Theme tokens — pure RGB, no baked alpha.
    Opacity applied in components via Tailwind's /XX modifier.
 
-   Naming: --l-* = light mode, --d-* = dark mode.
-   Default = Warm scheme.  [data-theme="..."] overrides below.
+   --l-*  = light mode      --d-*  = dark mode
+   --accent / --accent-hover = per-theme accent color
    ═══════════════════════════════════════════════════════════════ */
+
+/* ── Warm (default) ─────────────────────────────────────────── */
 
 :root {
   --background: 48 25% 92%;
   --foreground: 42 17% 15%;
 
-  /* Light-mode palette */
-  --l-page:      240 238 230;
-  --l-page-dim:  227 218 204;
+  --accent: 249 115 22;
+  --accent-hover: 251 146 60;
+
+  --l-page:      220 216 202;
+  --l-page-dim:  205 198 182;
   --l-card:      250 249 245;
   --l-card-hover: 255 255 255;
   --l-badge:     213 205 184;
@@ -29,7 +33,6 @@
   --l-border:         224 219 205;
   --l-border-active:  237 230 213;
 
-  /* Dark-mode palette (default = Warm / zinc scale) */
   --d-page:       9 9 11;
   --d-container:  24 24 27;
   --d-card:       39 39 42;
@@ -52,108 +55,111 @@
 }
 
 
-/* ═══════════════════════════════════════════
-   Cool — slate blue-gray
-   ═══════════════════════════════════════════ */
+/* ── Cool — blue-gray, crisp  ───────────────────────────────── */
 
 [data-theme="cool"] {
-  --l-page:      241 245 249;
-  --l-page-dim:  226 232 240;
-  --l-card:      248 250 252;
-  --l-card-hover: 255 255 255;
-  --l-badge:     203 213 225;
-  --l-text:      15 23 42;
-  --l-text-secondary: 51 65 85;
-  --l-text-subtle:    71 85 105;
-  --l-text-muted:     100 116 139;
-  --l-text-faint:     148 163 184;
-  --l-border:         203 213 225;
-  --l-border-active:  148 163 184;
+  --accent: 14 165 233;
+  --accent-hover: 56 189 248;
 
-  --d-page:       2 6 23;
-  --d-container:  15 23 42;
-  --d-card:       30 41 59;
-  --d-card-hover: 51 65 85;
-  --d-seg:        71 85 105;
-  --d-text-secondary:  203 213 225;
-  --d-text-subtle:     148 163 184;
-  --d-text-muted:      100 116 139;
-  --d-text-faint:      51 65 85;
-  --d-border-selected: 51 65 85;
-  --d-scrollbar-thumb:      71 85 105;
-  --d-scrollbar-thumb-hover: 100 116 139;
+  --l-page:      215 225 238;
+  --l-page-dim:  198 210 225;
+  --l-card:      248 251 254;
+  --l-card-hover: 255 255 255;
+  --l-badge:     186 205 222;
+  --l-text:      12 28 48;
+  --l-text-secondary: 42 62 90;
+  --l-text-subtle:    65 90 120;
+  --l-text-muted:     92 120 150;
+  --l-text-faint:     140 165 190;
+  --l-border:         195 215 230;
+  --l-border-active:  152 180 205;
+
+  --d-page:       3 10 22;
+  --d-container:  12 24 42;
+  --d-card:       20 38 62;
+  --d-card-hover: 32 52 82;
+  --d-seg:        52 75 110;
+  --d-text-secondary:  190 215 235;
+  --d-text-subtle:     148 178 205;
+  --d-text-muted:      100 130 160;
+  --d-text-faint:      52 72 98;
+  --d-border-selected: 52 72 98;
+  --d-scrollbar-thumb:      52 75 110;
+  --d-scrollbar-thumb-hover: 100 130 160;
 }
 
 
-/* ═══════════════════════════════════════════
-   Forest — muted green-gray
-   ═══════════════════════════════════════════ */
+/* ── Forest — green-gray, calm  ──────────────────────────────── */
 
 [data-theme="forest"] {
-  --l-page:      240 246 240;
-  --l-page-dim:  222 234 222;
-  --l-card:      248 252 248;
-  --l-card-hover: 255 255 255;
-  --l-badge:     196 220 196;
-  --l-text:      28 48 34;
-  --l-text-secondary: 48 68 54;
-  --l-text-subtle:    68 88 74;
-  --l-text-muted:     108 128 114;
-  --l-text-faint:     158 174 160;
-  --l-border:         208 224 208;
-  --l-border-active:  176 198 176;
+  --accent: 16 185 129;
+  --accent-hover: 52 211 153;
 
-  --d-page:       8 16 12;
-  --d-container:  15 28 22;
-  --d-card:       24 40 32;
-  --d-card-hover: 35 55 45;
-  --d-seg:        50 72 60;
-  --d-text-secondary:  195 215 200;
-  --d-text-subtle:     145 170 150;
-  --d-text-muted:      100 125 108;
-  --d-text-faint:      48 64 54;
-  --d-border-selected: 48 64 54;
-  --d-scrollbar-thumb:      50 72 60;
-  --d-scrollbar-thumb-hover: 100 125 108;
+  --l-page:      210 228 214;
+  --l-page-dim:  192 214 198;
+  --l-card:      246 252 247;
+  --l-card-hover: 255 255 255;
+  --l-badge:     178 212 182;
+  --l-text:      20 42 28;
+  --l-text-secondary: 38 62 48;
+  --l-text-subtle:    55 82 65;
+  --l-text-muted:     80 112 92;
+  --l-text-faint:     135 168 145;
+  --l-border:         195 222 198;
+  --l-border-active:  155 195 162;
+
+  --d-page:       6 14 10;
+  --d-container:  12 26 18;
+  --d-card:       20 38 28;
+  --d-card-hover: 30 52 40;
+  --d-seg:        48 72 58;
+  --d-text-secondary:  185 212 190;
+  --d-text-subtle:     138 172 145;
+  --d-text-muted:      90 125 100;
+  --d-text-faint:      45 62 50;
+  --d-border-selected: 45 62 50;
+  --d-scrollbar-thumb:      48 72 58;
+  --d-scrollbar-thumb-hover: 90 125 100;
 }
 
 
-/* ═══════════════════════════════════════════
-   Mauve — muted purple-gray
-   ═══════════════════════════════════════════ */
+/* ── Mauve — purple-gray, elegant  ───────────────────────────── */
 
 [data-theme="mauve"] {
-  --l-page:      246 243 248;
-  --l-page-dim:  234 228 240;
-  --l-card:      250 249 252;
-  --l-card-hover: 255 255 255;
-  --l-badge:     216 208 230;
-  --l-text:      44 34 54;
-  --l-text-secondary: 64 48 80;
-  --l-text-subtle:    88 68 104;
-  --l-text-muted:     130 114 146;
-  --l-text-faint:     176 164 186;
-  --l-border:         226 218 236;
-  --l-border-active:  200 188 216;
+  --accent: 139 92 246;
+  --accent-hover: 167 139 250;
 
-  --d-page:       14 10 20;
-  --d-container:  22 16 32;
-  --d-card:       34 25 48;
-  --d-card-hover: 48 36 64;
-  --d-seg:        66 50 88;
-  --d-text-secondary:  216 206 230;
-  --d-text-subtle:     176 158 196;
-  --d-text-muted:      130 114 156;
-  --d-text-faint:      64 48 86;
-  --d-border-selected: 64 48 86;
-  --d-scrollbar-thumb:      66 50 88;
-  --d-scrollbar-thumb-hover: 130 114 156;
+  --l-page:      220 214 230;
+  --l-page-dim:  205 196 218;
+  --l-card:      250 248 253;
+  --l-card-hover: 255 255 255;
+  --l-badge:     210 198 228;
+  --l-text:      38 28 52;
+  --l-text-secondary: 58 42 78;
+  --l-text-subtle:    80 60 105;
+  --l-text-muted:     118 98 142;
+  --l-text-faint:     165 148 185;
+  --l-border:         222 212 238;
+  --l-border-active:  190 175 215;
+
+  --d-page:       16 8 22;
+  --d-container:  26 14 36;
+  --d-card:       38 22 52;
+  --d-card-hover: 52 32 70;
+  --d-seg:        72 48 95;
+  --d-text-secondary:  210 198 228;
+  --d-text-subtle:     170 150 198;
+  --d-text-muted:      125 105 155;
+  --d-text-faint:      62 42 88;
+  --d-border-selected: 62 42 88;
+  --d-scrollbar-thumb:      72 48 95;
+  --d-scrollbar-thumb-hover: 125 105 155;
 }
 
 
-/* ═══════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    Base styles
-   ═══════════════════════════════════════════ */
+   ═══════════════════════════════════════════════════════════════ */
 
 body {
   @apply bg-transparent text-foreground antialiased overflow-hidden;

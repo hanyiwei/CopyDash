@@ -115,10 +115,10 @@ const SearchBar: React.FC = () => {
                 }`}
               >
                 <Icon className={`w-3.5 h-3.5 flex-shrink-0 transition-all duration-300 ${
-                  active ? 'text-orange-500 dark:text-orange-400 mr-0 group-hover:mr-1.5' : 'text-brown-muted dark:text-d-text-muted group-hover:text-brown dark:group-hover:text-d-white mr-1.5'
+                  active ? 'text-accent dark:text-accent mr-0 group-hover:mr-1.5' : 'text-brown-muted dark:text-d-text-muted group-hover:text-brown dark:group-hover:text-d-white mr-1.5'
                 }`} />
                 <span className={`text-xs font-medium whitespace-nowrap overflow-hidden transition-all duration-300 max-w-0 group-hover:max-w-20 opacity-0 group-hover:opacity-100 ${
-                  active ? 'text-orange-500 dark:text-orange-400' : 'text-brown-muted dark:text-d-text-muted group-hover:text-brown dark:group-hover:text-d-white'
+                  active ? 'text-accent dark:text-accent' : 'text-brown-muted dark:text-d-text-muted group-hover:text-brown dark:group-hover:text-d-white'
                 }`}>{label}</span>
               </button>
             );
@@ -135,10 +135,10 @@ const SearchBar: React.FC = () => {
           }`}
         >
           <Pin className={`w-3.5 h-3.5 flex-shrink-0 transition-all duration-300 ${
-            filterPinned ? 'text-orange-500 dark:text-orange-400 mr-0 group-hover:mr-1.5' : 'text-brown-muted dark:text-d-text-muted group-hover:text-brown dark:group-hover:text-d-white mr-1.5'
+            filterPinned ? 'text-accent dark:text-accent mr-0 group-hover:mr-1.5' : 'text-brown-muted dark:text-d-text-muted group-hover:text-brown dark:group-hover:text-d-white mr-1.5'
           }`} />
           <span className={`text-xs font-medium whitespace-nowrap overflow-hidden transition-all duration-300 max-w-0 group-hover:max-w-20 opacity-0 group-hover:opacity-100 ${
-            filterPinned ? 'text-orange-500 dark:text-orange-400' : 'text-brown-muted dark:text-d-text-muted group-hover:text-brown dark:group-hover:text-d-white'
+            filterPinned ? 'text-accent dark:text-accent' : 'text-brown-muted dark:text-d-text-muted group-hover:text-brown dark:group-hover:text-d-white'
           }`}>Pinned</span>
         </button>
       )}

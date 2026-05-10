@@ -137,7 +137,7 @@ const App: React.FC = () => {
           {/* Logo — opens GitHub in system default browser */}
           <button
             onClick={() => (window as any).electron.ipcRenderer.invoke('shell:openExternal', 'https://github.com/hanyiwei/CopyDash')}
-            className="flex-shrink-0 pl-5 pr-6 text-brown dark:text-d-white hover:text-orange-400 dark:hover:text-orange-400 transition-colors cursor-pointer select-none flex items-center gap-1 group"
+            className="flex-shrink-0 pl-5 pr-6 text-brown dark:text-d-white hover:text-accent dark:hover:text-accent transition-colors cursor-pointer select-none flex items-center gap-1 group"
             title="CopyDash on GitHub"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" className="group-hover:animate-spin-fast">

@@ -312,7 +312,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
               {HISTORY_OPTIONS.map(n => (
                 <button key={n} onClick={() => handleHistory(n)} className="flex items-center justify-between w-full py-2 px-3 rounded-md hover:bg-card/50 dark:hover:bg-d-white/5 transition-colors">
                   <span className={labelClass}>{n}</span>
-                  {maxHistory === n && <Check className="w-3.5 h-3.5 text-orange-500" />}
+                  {maxHistory === n && <Check className="w-3.5 h-3.5 text-accent" />}
                 </button>
               ))}
               </div>
@@ -335,10 +335,10 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                     <span className={`w-3 h-3 rounded-full ${swatch}`} />
                     <span className={labelClass}>{t(label)}</span>
                     {rec && (
-                      <span className="text-[9px] text-orange-500 font-medium">{t('colorRec')}</span>
+                      <span className="text-[9px] text-accent font-medium">{t('colorRec')}</span>
                     )}
                   </div>
-                  {colorScheme === key && <Check className="w-3.5 h-3.5 text-orange-500" />}
+                  {colorScheme === key && <Check className="w-3.5 h-3.5 text-accent" />}
                 </button>
               ))}
             </div>
@@ -361,7 +361,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                 <span className={labelClass}>{t('autoLaunch')}</span>
                 <button
                   onClick={async () => { const next = !autoLaunch; setAutoLaunch(next); await ipc().invoke('setting:setAutoLaunch', next); }}
-                  className={`relative w-7 h-4 rounded-full transition-colors ${autoLaunch ? 'bg-orange-500' : 'bg-page-dim dark:bg-d-seg'}`}
+                  className={`relative w-7 h-4 rounded-full transition-colors ${autoLaunch ? 'bg-accent' : 'bg-page-dim dark:bg-d-seg'}`}
                 >
                   <span className={`absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${autoLaunch ? 'translate-x-3' : 'translate-x-0'}`} />
                 </button>
@@ -466,7 +466,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                     <span className={labelClass}>{app.label}</span>
                     <button
                       onClick={() => handlePrivacyToggle(app.key, !privacyApps[app.key])}
-                      className={`relative w-7 h-4 rounded-full transition-colors ${privacyApps[app.key] ? 'bg-orange-500' : 'bg-page-dim dark:bg-d-seg'}`}
+                      className={`relative w-7 h-4 rounded-full transition-colors ${privacyApps[app.key] ? 'bg-accent' : 'bg-page-dim dark:bg-d-seg'}`}
                     >
                       <span className={`absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${privacyApps[app.key] ? 'translate-x-3' : 'translate-x-0'}`} />
                     </button>
@@ -491,7 +491,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                     </button>
                   )}
                   {recording ? (
-                    <span className="text-[11px] font-mono text-orange-500 animate-pulse">{t('pressKeys')}</span>
+                    <span className="text-[11px] font-mono text-accent animate-pulse">{t('pressKeys')}</span>
                   ) : (
                     <button
                       onClick={() => { setRecording(true); setShortcutError(''); }}
