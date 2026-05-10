@@ -233,8 +233,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   };
 
   const rowClass = "flex items-center justify-between w-full min-h-[30px] px-2";
-  const labelClass = "text-xs font-bold text-brown-secondary dark:text-zinc-300";
-  const mutedClass = "text-[11px] text-brown-muted dark:text-zinc-500";
+  const labelClass = "text-xs font-bold text-brown-secondary dark:text-d-text-secondary";
+  const mutedClass = "text-[11px] text-brown-muted dark:text-d-text-muted";
 
   const tabs: { key: TabType; label: string }[] = [
     { key: 'general', label: t('tabGeneral') },
@@ -245,21 +245,21 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   const showSubView = tab === 'general' && subView !== null;
 
   const header = (
-    <div className="px-5 py-3 border-b border-beige-border dark:border-white/5 flex items-center gap-2">
+    <div className="px-5 py-3 border-b border-beige-border dark:border-d-white/5 flex items-center gap-2">
       {showSubView && (
         <button
           onClick={() => setSubView(null)}
-          className="p-0.5 hover:bg-card/50 dark:hover:bg-white/10 rounded-lg text-brown-muted dark:text-zinc-500 hover:text-brown dark:hover:text-white transition-colors"
+          className="p-0.5 hover:bg-card/50 dark:hover:bg-d-white/10 rounded-lg text-brown-muted dark:text-d-text-muted hover:text-brown dark:hover:text-d-white transition-colors"
         >
           <ChevronLeft className="w-3.5 h-3.5" />
         </button>
       )}
-      <h3 className="text-xs font-bold text-brown dark:text-white uppercase tracking-wider flex-1">
+      <h3 className="text-xs font-bold text-brown dark:text-d-white uppercase tracking-wider flex-1">
         {showSubView ? t(subView!) : t('settings')}
       </h3>
       <button
         onClick={onClose}
-        className="p-0.5 hover:bg-card/50 dark:hover:bg-white/10 rounded-lg text-brown-muted dark:text-zinc-500 hover:text-brown dark:hover:text-white transition-colors"
+        className="p-0.5 hover:bg-card/50 dark:hover:bg-d-white/10 rounded-lg text-brown-muted dark:text-d-text-muted hover:text-brown dark:hover:text-d-white transition-colors"
       >
         <X className="w-3.5 h-3.5" />
       </button>
@@ -267,7 +267,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   );
 
   const clearButton = (
-    <div className="pt-2 border-t border-beige-border dark:border-white/5">
+    <div className="pt-2 border-t border-beige-border dark:border-d-white/5">
       <button
         onDoubleClick={async () => { await ipc().invoke('db:clearAll'); useStore.getState().clearClips(); onClose(); }}
         className="w-full py-2 rounded-xl text-xs font-medium text-red-400/50 hover:text-red-400 hover:bg-red-500/10 transition-colors select-none"
@@ -279,28 +279,28 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
 
   const segBtn = (active: boolean) =>
     `flex-1 py-1 text-[10px] font-bold rounded-md transition-colors ${
-      active ? 'bg-page-dim dark:bg-zinc-600 text-brown dark:text-white' : 'text-brown-muted dark:text-zinc-500 hover:text-brown dark:hover:text-zinc-300'
+      active ? 'bg-page-dim dark:bg-d-seg text-brown dark:text-d-white' : 'text-brown-muted dark:text-d-text-muted hover:text-brown dark:hover:text-d-text-secondary'
     }`;
 
   // ── Render ──
   return (
     <div
       ref={panelRef}
-      className="absolute right-2 top-12 z-50 w-72 bg-page dark:bg-zinc-800 border border-beige-border dark:border-white/10 rounded-xl shadow-lg dark:shadow-2xl overflow-hidden overflow-y-auto max-h-[calc(100vh-4rem)] custom-scrollbar"
+      className="absolute right-2 top-12 z-50 w-72 bg-page dark:bg-d-card border border-beige-border dark:border-d-white/10 rounded-xl shadow-lg dark:shadow-2xl overflow-hidden overflow-y-auto max-h-[calc(100vh-4rem)] custom-scrollbar"
     >
       {header}
 
       {!loaded ? (
-        <div className="px-4 py-6 text-center text-brown-muted dark:text-zinc-500 text-xs">{t('loading')}</div>
+        <div className="px-4 py-6 text-center text-brown-muted dark:text-d-text-muted text-xs">{t('loading')}</div>
       ) : showSubView ? (
         /* ── Sub-view: Language / History ── */
         <div className="px-5 py-4 space-y-1">
           {subView === 'history' ? (
             <div className="space-y-3">
-              <p className="text-[10px] text-brown-muted dark:text-zinc-500">{t('historyDesc')}</p>
+              <p className="text-[10px] text-brown-muted dark:text-d-text-muted">{t('historyDesc')}</p>
               <div className="space-y-1">
               {HISTORY_OPTIONS.map(n => (
-                <button key={n} onClick={() => handleHistory(n)} className="flex items-center justify-between w-full py-2 px-3 rounded-md hover:bg-card/50 dark:hover:bg-white/5 transition-colors">
+                <button key={n} onClick={() => handleHistory(n)} className="flex items-center justify-between w-full py-2 px-3 rounded-md hover:bg-card/50 dark:hover:bg-d-white/5 transition-colors">
                   <span className={labelClass}>{n}</span>
                   {maxHistory === n && <Check className="w-3.5 h-3.5 text-orange-500" />}
                 </button>
@@ -313,7 +313,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
       ) : (
         <div className="px-5 py-4">
           {/* Tab bar — hidden in sub-view, but we don't reach here when showSubView */}
-          <div className="flex bg-card dark:bg-zinc-900 rounded-lg p-0.5 mb-4">
+          <div className="flex bg-card dark:bg-d-container rounded-lg p-0.5 mb-4">
             {tabs.map(({ key, label }) => (
               <button key={key} onClick={() => setTab(key)} className={segBtn(tab === key)}>{label}</button>
             ))}
@@ -327,7 +327,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                 <span className={labelClass}>{t('autoLaunch')}</span>
                 <button
                   onClick={async () => { const next = !autoLaunch; setAutoLaunch(next); await ipc().invoke('setting:setAutoLaunch', next); }}
-                  className={`relative w-7 h-4 rounded-full transition-colors ${autoLaunch ? 'bg-orange-500' : 'bg-page-dim dark:bg-zinc-600'}`}
+                  className={`relative w-7 h-4 rounded-full transition-colors ${autoLaunch ? 'bg-orange-500' : 'bg-page-dim dark:bg-d-seg'}`}
                 >
                   <span className={`absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${autoLaunch ? 'translate-x-3' : 'translate-x-0'}`} />
                 </button>
@@ -336,11 +336,11 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
               {/* Theme */}
               <div className={rowClass}>
                 <span className={labelClass}>{t('theme')}</span>
-                <div className="flex bg-card dark:bg-zinc-900 rounded-lg p-0.5 gap-0.5">
-                  <button onClick={() => handleTheme('dark')} className={`p-1 rounded-md transition-colors ${theme === 'dark' ? 'bg-page-dim dark:bg-zinc-600 text-brown dark:text-white' : 'text-brown-muted dark:text-zinc-500 hover:text-brown dark:hover:text-zinc-300'}`}>
+                <div className="flex bg-card dark:bg-d-container rounded-lg p-0.5 gap-0.5">
+                  <button onClick={() => handleTheme('dark')} className={`p-1 rounded-md transition-colors ${theme === 'dark' ? 'bg-page-dim dark:bg-d-seg text-brown dark:text-d-white' : 'text-brown-muted dark:text-d-text-muted hover:text-brown dark:hover:text-d-text-secondary'}`}>
                     <Moon className="w-3 h-3" />
                   </button>
-                  <button onClick={() => handleTheme('light')} className={`p-1 rounded-md transition-colors ${theme === 'light' ? 'bg-page-dim dark:bg-zinc-600 text-brown dark:text-white' : 'text-brown-muted dark:text-zinc-500 hover:text-brown dark:hover:text-zinc-300'}`}>
+                  <button onClick={() => handleTheme('light')} className={`p-1 rounded-md transition-colors ${theme === 'light' ? 'bg-page-dim dark:bg-d-seg text-brown dark:text-d-white' : 'text-brown-muted dark:text-d-text-muted hover:text-brown dark:hover:text-d-text-secondary'}`}>
                     <Sun className="w-3 h-3" />
                   </button>
                 </div>
@@ -349,17 +349,17 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
               {/* Language */}
               <div className={rowClass}>
                 <span className={labelClass}>{t('language')}</span>
-                <div className="flex bg-card dark:bg-zinc-900 rounded-lg p-0.5 gap-0.5">
-                  <button onClick={() => setLocale('en')} className={`w-5 h-5 p-1 rounded-md transition-colors flex items-center justify-center text-[10px] font-medium ${locale === 'en' ? 'bg-page-dim dark:bg-zinc-600 text-brown dark:text-white' : 'text-brown-muted dark:text-zinc-500 hover:text-brown dark:hover:text-zinc-300'}`}>EN</button>
-                  <button onClick={() => setLocale('zh')} className={`w-5 h-5 p-1 rounded-md transition-colors flex items-center justify-center text-[10px] font-medium ${locale === 'zh' ? 'bg-page-dim dark:bg-zinc-600 text-brown dark:text-white' : 'text-brown-muted dark:text-zinc-500 hover:text-brown dark:hover:text-zinc-300'}`}>中</button>
+                <div className="flex bg-card dark:bg-d-container rounded-lg p-0.5 gap-0.5">
+                  <button onClick={() => setLocale('en')} className={`w-5 h-5 p-1 rounded-md transition-colors flex items-center justify-center text-[10px] font-medium ${locale === 'en' ? 'bg-page-dim dark:bg-d-seg text-brown dark:text-d-white' : 'text-brown-muted dark:text-d-text-muted hover:text-brown dark:hover:text-d-text-secondary'}`}>EN</button>
+                  <button onClick={() => setLocale('zh')} className={`w-5 h-5 p-1 rounded-md transition-colors flex items-center justify-center text-[10px] font-medium ${locale === 'zh' ? 'bg-page-dim dark:bg-d-seg text-brown dark:text-d-white' : 'text-brown-muted dark:text-d-text-muted hover:text-brown dark:hover:text-d-text-secondary'}`}>中</button>
                 </div>
               </div>
 
               {/* History */}
               <button onClick={() => setSubView('history')} className={`${rowClass} group`}>
                 <span className={labelClass}>{t('history')}</span>
-                <div className="flex items-center gap-0.5 text-brown-muted dark:text-zinc-500 group-hover:text-brown-secondary dark:group-hover:text-zinc-300 transition-colors">
-                  <span className={`${mutedClass} group-hover:text-brown-secondary dark:group-hover:text-zinc-300 transition-colors`}>{clipsCount}/{maxHistory}</span>
+                <div className="flex items-center gap-0.5 text-brown-muted dark:text-d-text-muted group-hover:text-brown-secondary dark:group-hover:text-d-text-secondary transition-colors">
+                  <span className={`${mutedClass} group-hover:text-brown-secondary dark:group-hover:text-d-text-secondary transition-colors`}>{clipsCount}/{maxHistory}</span>
                   <ChevronRight className="w-3 h-3" />
                 </div>
               </button>
@@ -378,16 +378,16 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                     disabled={checking || updateStatus?.status === 'downloading' || (!updateStatus && !!updateCheckedAt)}
                     className={`text-[11px] font-medium transition-colors ${
                       checking || updateStatus?.status === 'downloading'
-                        ? 'text-brown-muted dark:text-zinc-500 cursor-default'
+                        ? 'text-brown-muted dark:text-d-text-muted cursor-default'
                         : !updateStatus && updateCheckedAt
-                          ? 'text-brown-muted dark:text-zinc-500 cursor-default'
+                          ? 'text-brown-muted dark:text-d-text-muted cursor-default'
                           : updateStatus?.status === 'error'
                             ? 'text-red-600 dark:text-red-400 cursor-pointer'
                             : updateStatus?.status === 'fallback'
                               ? 'text-amber-600 dark:text-amber-400 cursor-pointer'
                               : updateStatus?.status === 'downloaded' || updateStatus?.status === 'available'
                                 ? 'text-green-600 dark:text-green-400 cursor-pointer'
-                                : 'text-brown-muted dark:text-zinc-500 hover:text-brown dark:hover:text-zinc-300 cursor-pointer'
+                                : 'text-brown-muted dark:text-d-text-muted hover:text-brown dark:hover:text-d-text-secondary cursor-pointer'
                     }`}
                   >
                     {checking
@@ -416,14 +416,14 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
           {/* Tab: Privacy */}
           {tab === 'privacy' && (
             <div className="space-y-3">
-              <p className="text-[10px] text-brown-muted dark:text-zinc-500">{t('privacyDesc')}</p>
+              <p className="text-[10px] text-brown-muted dark:text-d-text-muted">{t('privacyDesc')}</p>
               <div className="space-y-0.5">
                 {PRIVACY_APPS.map(app => (
                   <div key={app.key} className={rowClass}>
                     <span className={labelClass}>{app.label}</span>
                     <button
                       onClick={() => handlePrivacyToggle(app.key, !privacyApps[app.key])}
-                      className={`relative w-7 h-4 rounded-full transition-colors ${privacyApps[app.key] ? 'bg-orange-500' : 'bg-page-dim dark:bg-zinc-600'}`}
+                      className={`relative w-7 h-4 rounded-full transition-colors ${privacyApps[app.key] ? 'bg-orange-500' : 'bg-page-dim dark:bg-d-seg'}`}
                     >
                       <span className={`absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${privacyApps[app.key] ? 'translate-x-3' : 'translate-x-0'}`} />
                     </button>
@@ -436,13 +436,13 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
           {/* Tab: Shortcuts */}
           {tab === 'shortcuts' && (
             <div className="space-y-3">
-              <div className={`${rowClass} group rounded-md hover:bg-card/50 dark:hover:bg-white/5 transition-colors`}>
+              <div className={`${rowClass} group rounded-md hover:bg-card/50 dark:hover:bg-d-white/5 transition-colors`}>
                 <span className={labelClass}>{t('toggleWindow')}</span>
                 <div className="flex items-center gap-1.5">
                   {!recording && !hasModifiedShortcut.current && (
                     <button
                       onClick={() => { setRecording(true); setShortcutError(''); }}
-                      className="text-[10px] text-brown-secondary dark:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                      className="text-[10px] text-brown-secondary dark:text-d-text-subtle opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                     >
                       {t('shortcutHint')}
                     </button>
@@ -455,7 +455,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                       className={`text-[11px] font-mono transition-colors cursor-pointer flex items-center gap-1 ${
                         shortcutSaved
                           ? 'text-green-500 dark:text-green-400'
-                          : 'text-brown-muted dark:text-zinc-500 group-hover:text-brown-secondary dark:group-hover:text-zinc-300'
+                          : 'text-brown-muted dark:text-d-text-muted group-hover:text-brown-secondary dark:group-hover:text-d-text-secondary'
                       }`}
                       title="Click to change shortcut"
                     >
@@ -467,11 +467,11 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
               {shortcutError && <p className="text-[10px] text-red-500 dark:text-red-400 pb-1">{shortcutError}</p>}
               <div className={rowClass}>
                 <span className={labelClass}>{t('pastePlain')}</span>
-                <span className="text-[11px] text-brown-muted dark:text-zinc-500 font-mono group-hover:text-brown-secondary dark:group-hover:text-zinc-300 transition-colors">Shift+Click</span>
+                <span className="text-[11px] text-brown-muted dark:text-d-text-muted font-mono group-hover:text-brown-secondary dark:group-hover:text-d-text-secondary transition-colors">Shift+Click</span>
               </div>
               <div className={rowClass}>
                 <span className={labelClass}>{t('paste')}</span>
-                <span className="text-[11px] text-brown-muted dark:text-zinc-500 font-mono group-hover:text-brown-secondary dark:group-hover:text-zinc-300 transition-colors">Double-click</span>
+                <span className="text-[11px] text-brown-muted dark:text-d-text-muted font-mono group-hover:text-brown-secondary dark:group-hover:text-d-text-secondary transition-colors">Double-click</span>
               </div>
             </div>
           )}

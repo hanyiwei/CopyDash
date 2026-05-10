@@ -106,10 +106,10 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
       <div
         onDoubleClick={(e) => onDoubleClick(clip, e)}
         onClick={() => setSelectedClipId(clip.id)}
-        className={`group relative w-[240px] h-[280px] bg-card dark:bg-zinc-800/90 hover:bg-card-hover dark:hover:bg-zinc-700/90 rounded-2xl transition-[background-color] duration-300 flex flex-col overflow-hidden cursor-default ${
+        className={`group relative w-[240px] h-[280px] bg-card dark:bg-d-card/90 hover:bg-card-hover dark:hover:bg-d-card-hover/90 rounded-2xl transition-[background-color] duration-300 flex flex-col overflow-hidden cursor-default ${
           selectedClipId === clip.id
-            ? 'border-2 border-brown-muted/50 dark:border-zinc-700'
-            : 'border border-beige-border dark:border-white/5'
+            ? 'border-2 border-brown-muted/50 dark:border-d-border-selected'
+            : 'border border-beige-border dark:border-d-white/5'
         } ${isHovering ? 'z-10' : ''}`}
       >
         <div className={`flex flex-col h-full transition-transform duration-300 ${isHovering ? 'scale-[1.02]' : ''}`}>
@@ -118,40 +118,40 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
           <div className="flex items-center gap-1.5 min-w-0">
             {clip.type === 4 ? (
               isAllFolders ? (
-                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-zinc-700/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-zinc-400">
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-d-card-hover/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-d-text-subtle">
                   <Folder className="w-3 h-3" />
                   Folder
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-zinc-700/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-zinc-400">
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-d-card-hover/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-d-text-subtle">
                   {(() => { const Icon = fileNames.length === 1 ? getFileIcon(fileNames[0]) : Files; return <Icon className="w-3 h-3" />; })()}
                   {fileNames.length === 1 ? getFileLabel(fileNames[0]) : 'Files'}
                 </span>
               )
             ) : clip.type === 2 ? (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-zinc-700/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-zinc-400">
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-d-card-hover/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-d-text-subtle">
                 <Image className="w-3 h-3" />
                 Image
               </span>
             ) : isLink || imageUrl ? (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-zinc-700/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-zinc-400">
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-d-card-hover/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-d-text-subtle">
                 <Link className="w-3 h-3" />
                 Link
               </span>
             ) : clip.has_color ? (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-zinc-700/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-zinc-400">
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-d-card-hover/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-d-text-subtle">
                 <Palette className="w-3 h-3" />
                 Color
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-zinc-700/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-zinc-400">
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-badge/30 dark:bg-d-card-hover/50 rounded-md text-[10px] font-medium text-brown-subtle dark:text-d-text-subtle">
                 <FileText className="w-3 h-3" />
                 Text
               </span>
             )}
           </div>
           <div className="flex items-center gap-1.5 ml-auto">
-            <span className="text-[10px] font-normal text-brown-muted dark:text-zinc-500 tracking-tight opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+            <span className="text-[10px] font-normal text-brown-muted dark:text-d-text-muted tracking-tight opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
               {formatTime(clip.created_at)}
             </span>
             {clip.is_pinned === 1 && (
@@ -177,19 +177,19 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
                 </div>
                 <div className="text-center space-y-0.5">
                   {fileNames.slice(0, 2).map((name, i) => (
-                    <p key={i} className="text-[12px] text-brown-secondary dark:text-zinc-300 truncate leading-tight">{name}</p>
+                    <p key={i} className="text-[12px] text-brown-secondary dark:text-d-text-secondary truncate leading-tight">{name}</p>
                   ))}
                   {fileNames.length > 2 && (
-                    <p className="text-[12px] text-brown-muted dark:text-zinc-500">+{fileNames.length - 2} more</p>
+                    <p className="text-[12px] text-brown-muted dark:text-d-text-muted">+{fileNames.length - 2} more</p>
                   )}
                 </div>
                 <div className="mt-1.5 text-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="text-[10px] text-brown-muted dark:text-zinc-500">
+                  <span className="text-[10px] text-brown-muted dark:text-d-text-muted">
                     Pastes as path (use in File Explorer)
                   </span>
                 </div>
                 <div className="mt-2 text-center">
-                  <span className="text-[9px] text-brown-muted dark:text-zinc-600">
+                  <span className="text-[9px] text-brown-muted dark:text-d-text-faint">
                     {filePaths.length} folder{filePaths.length !== 1 ? 's' : ''}
                   </span>
                 </div>
@@ -198,25 +198,25 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
               /* File card */
               <div className="flex-1 flex flex-col pt-8 px-3 pb-3 justify-center">
                 <div className="flex items-center justify-center mb-2">
-                  {(() => { const Icon = fileNames[0] ? getFileIcon(fileNames[0]) : Files; return <Icon className="w-8 h-8 text-brown-muted dark:text-zinc-500" />; })()}
+                  {(() => { const Icon = fileNames[0] ? getFileIcon(fileNames[0]) : Files; return <Icon className="w-8 h-8 text-brown-muted dark:text-d-text-muted" />; })()}
                 </div>
                 <div className="text-center space-y-0.5">
                   {fileNames.slice(0, 2).map((name, i) => (
-                    <p key={i} className="text-[12px] text-brown-secondary dark:text-zinc-300 truncate leading-tight">{name}</p>
+                    <p key={i} className="text-[12px] text-brown-secondary dark:text-d-text-secondary truncate leading-tight">{name}</p>
                   ))}
                   {fileNames.length > 2 && (
-                    <p className="text-[12px] text-brown-muted dark:text-zinc-500">+{fileNames.length - 2} more</p>
+                    <p className="text-[12px] text-brown-muted dark:text-d-text-muted">+{fileNames.length - 2} more</p>
                   )}
                 </div>
                 {filePaths.length === 1 && (
                   <div className="mt-1.5 text-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <p className="text-[10px] text-brown-muted dark:text-zinc-500 truncate leading-tight" title={filePaths[0]}>
+                    <p className="text-[10px] text-brown-muted dark:text-d-text-muted truncate leading-tight" title={filePaths[0]}>
                       {filePaths[0]}
                     </p>
                   </div>
                 )}
                 <div className="mt-2 text-center">
-                  <span className="text-[9px] text-brown-muted dark:text-zinc-600">
+                  <span className="text-[9px] text-brown-muted dark:text-d-text-faint">
                     {filePaths.length} file{filePaths.length !== 1 ? 's' : ''}
                   </span>
                 </div>
@@ -239,12 +239,12 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
                     className="max-w-full max-h-full object-contain rounded-lg"
                   />
                 ) : (
-                  <div className="text-brown-muted dark:text-zinc-500 text-[10px]">No preview</div>
+                  <div className="text-brown-muted dark:text-d-text-muted text-[10px]">No preview</div>
                 )}
               </div>
               {clip.image_width && clip.image_height && (
                 <div className="px-3 pb-2 text-center">
-                  <span className="text-[11px] font-mono text-brown-muted dark:text-zinc-500">
+                  <span className="text-[11px] font-mono text-brown-muted dark:text-d-text-muted">
                     {clip.image_width} × {clip.image_height}{clip.image_format ? ` · ${clip.image_format}` : ''}{clip.image_size ? ` · ${formatSize(clip.image_size)}` : ''}
                   </span>
                 </div>
@@ -263,7 +263,7 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
               </div>
               {clip.image_width && clip.image_height && (
                 <div className="px-3 pb-2 text-center">
-                  <span className="text-[11px] font-mono text-brown-muted dark:text-zinc-500">
+                  <span className="text-[11px] font-mono text-brown-muted dark:text-d-text-muted">
                     {clip.image_width} × {clip.image_height}{clip.image_format ? ` · ${clip.image_format}` : ''}{clip.image_size ? ` · ${formatSize(clip.image_size)}` : ''}
                   </span>
                 </div>
@@ -273,13 +273,13 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
             /* Color card */
             <div className="flex-1 flex flex-col pt-8">
               <div
-                className="flex-1 mx-3 my-2 rounded-lg border border-beige-border dark:border-white/5 shadow-inner"
+                className="flex-1 mx-3 my-2 rounded-lg border border-beige-border dark:border-d-white/5 shadow-inner"
                 style={{ backgroundColor: clip.color_hex }}
               />
               <div className="px-3 py-2 text-center">
-                <span className="text-[14px] font-mono font-bold text-brown-secondary dark:text-zinc-300">{clip.color_hex}</span>
+                <span className="text-[14px] font-mono font-bold text-brown-secondary dark:text-d-text-secondary">{clip.color_hex}</span>
                 {clip.color_rgb && (
-                  <span className="text-[14px] font-mono text-brown-muted dark:text-zinc-500 ml-2">{clip.color_rgb}</span>
+                  <span className="text-[14px] font-mono text-brown-muted dark:text-d-text-muted ml-2">{clip.color_rgb}</span>
                 )}
               </div>
             </div>
@@ -302,7 +302,7 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
                 }
                 return (
                   <div
-                    className={`flex-1 px-4 py-1.5 overflow-hidden text-[14px] leading-[1.6] text-brown-secondary dark:text-zinc-300 whitespace-pre-wrap ${isLink ? 'break-all' : 'break-words'}`}
+                    className={`flex-1 px-4 py-1.5 overflow-hidden text-[14px] leading-[1.6] text-brown-secondary dark:text-d-text-secondary whitespace-pre-wrap ${isLink ? 'break-all' : 'break-words'}`}
                   >
                     {txt}
                   </div>

@@ -8,6 +8,26 @@
   --foreground: 42 17% 15%;
 }
 
+/* Dark-mode semantic tokens — pure RGB, no baked alpha.
+   Opacity is applied in components via Tailwind's /XX modifier.
+   To swap themes, only change the values below. */
+:root {
+  --d-page: 9 9 11;                /* zinc-950 */
+  --d-container: 24 24 27;         /* zinc-900 */
+  --d-card: 39 39 42;              /* zinc-800 */
+  --d-card-hover: 63 63 70;        /* zinc-700 */
+  --d-seg: 82 82 91;               /* zinc-600 */
+  --d-footer: 0 0 0;               /* black */
+  --d-white: 255 255 255;          /* white */
+  --d-text-secondary: 212 212 216; /* zinc-300 */
+  --d-text-subtle: 161 161 170;    /* zinc-400 */
+  --d-text-muted: 113 113 122;     /* zinc-500 */
+  --d-text-faint: 63 63 70;        /* zinc-700 */
+  --d-border-selected: 63 63 70;   /* zinc-700 */
+  --d-scrollbar-thumb: 82 82 91;   /* zinc-600 */
+  --d-scrollbar-thumb-hover: 113 113 122; /* zinc-500 */
+}
+
 .dark {
   --background: 240 10% 3.9%;
   --foreground: 0 0% 98%;
@@ -54,10 +74,10 @@ body {
   background: #a0988580;
 }
 .dark .thin-scrollbar::-webkit-scrollbar-thumb {
-  background: #52525b80;
+  background: rgb(var(--d-scrollbar-thumb) / 0.5);
 }
 .dark .thin-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #71717a80;
+  background: rgb(var(--d-scrollbar-thumb-hover) / 0.5);
 }
 
 /* Card exit animation — GPU-only properties (no reflow) */

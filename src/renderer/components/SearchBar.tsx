@@ -65,14 +65,14 @@ const SearchBar: React.FC = () => {
         {!isSearchOpen ? (
           <button
             onClick={handleSearchToggle}
-            className="group flex items-center gap-1.5 px-2 py-1.5 rounded-xl hover:bg-page-dim/50 dark:hover:bg-white/10 transition-all duration-300"
+            className="group flex items-center gap-1.5 px-2 py-1.5 rounded-xl hover:bg-page-dim/50 dark:hover:bg-d-white/10 transition-all duration-300"
           >
-            <Search className="w-3.5 h-3.5 text-brown-muted dark:text-zinc-500 group-hover:text-brown dark:group-hover:text-white transition-colors" />
-            <span className="text-xs font-medium whitespace-nowrap overflow-hidden transition-all duration-300 max-w-0 group-hover:max-w-20 opacity-0 group-hover:opacity-100 text-brown-muted dark:text-zinc-500 group-hover:text-brown dark:group-hover:text-white">Search</span>
+            <Search className="w-3.5 h-3.5 text-brown-muted dark:text-d-text-muted group-hover:text-brown dark:group-hover:text-d-white transition-colors" />
+            <span className="text-xs font-medium whitespace-nowrap overflow-hidden transition-all duration-300 max-w-0 group-hover:max-w-20 opacity-0 group-hover:opacity-100 text-brown-muted dark:text-d-text-muted group-hover:text-brown dark:group-hover:text-d-white">Search</span>
           </button>
         ) : (
           <div className="relative w-44">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-brown-muted dark:text-zinc-500 pointer-events-none" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-brown-muted dark:text-d-text-muted pointer-events-none" />
             <input
               ref={inputRef}
               type="text"
@@ -80,19 +80,19 @@ const SearchBar: React.FC = () => {
               onChange={e => setSearchQuery(e.target.value)}
               onKeyDown={e => { if (e.key === 'Escape') { setIsSearchOpen(false); setSearchQuery(''); } }}
               placeholder="Search..."
-              className="w-full bg-card dark:bg-zinc-800/80 border border-beige-border dark:border-white/10 rounded-lg py-1 pl-8 pr-7 text-xs text-brown dark:text-zinc-200 placeholder:text-brown-muted dark:placeholder:text-zinc-500 focus:outline-none focus:border-brown-subtle/50 dark:focus:border-white/20"
+              className="w-full bg-card dark:bg-d-card/80 border border-beige-border dark:border-d-white/10 rounded-lg py-1 pl-8 pr-7 text-xs text-brown dark:text-d-white placeholder:text-brown-muted dark:placeholder:text-d-text-muted focus:outline-none focus:border-brown-subtle/50 dark:focus:border-d-white/20"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-1.5 top-1/2 -translate-y-1/2 p-0.5 hover:bg-page-dim/50 dark:hover:bg-white/10 rounded text-brown-muted dark:text-zinc-500 hover:text-brown dark:hover:text-white transition-colors"
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 p-0.5 hover:bg-page-dim/50 dark:hover:bg-d-white/10 rounded text-brown-muted dark:text-d-text-muted hover:text-brown dark:hover:text-d-white transition-colors"
               >
                 <X className="w-3 h-3" />
               </button>
             )}
             <button
               onClick={handleSearchToggle}
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 p-0.5 hover:bg-page-dim/50 dark:hover:bg-white/10 rounded text-brown-muted dark:text-zinc-500 hover:text-brown dark:hover:text-white transition-colors"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 p-0.5 hover:bg-page-dim/50 dark:hover:bg-d-white/10 rounded text-brown-muted dark:text-d-text-muted hover:text-brown dark:hover:text-d-white transition-colors"
               style={{ display: searchQuery ? 'none' : undefined }}
             >
               <X className="w-3 h-3" />
@@ -111,14 +111,14 @@ const SearchBar: React.FC = () => {
                 key={key}
                 onClick={() => handleTypeClick(key)}
                 className={`group flex items-center px-2 py-1.5 rounded-xl transition-all duration-300 ${
-                  active ? 'bg-beige-active dark:bg-white/20' : 'hover:bg-page-dim/50 dark:hover:bg-white/10'
+                  active ? 'bg-beige-active dark:bg-d-white/20' : 'hover:bg-page-dim/50 dark:hover:bg-d-white/10'
                 }`}
               >
                 <Icon className={`w-3.5 h-3.5 flex-shrink-0 transition-all duration-300 ${
-                  active ? 'text-orange-500 dark:text-orange-400 mr-0 group-hover:mr-1.5' : 'text-brown-muted dark:text-zinc-500 group-hover:text-brown dark:group-hover:text-white mr-1.5'
+                  active ? 'text-orange-500 dark:text-orange-400 mr-0 group-hover:mr-1.5' : 'text-brown-muted dark:text-d-text-muted group-hover:text-brown dark:group-hover:text-d-white mr-1.5'
                 }`} />
                 <span className={`text-xs font-medium whitespace-nowrap overflow-hidden transition-all duration-300 max-w-0 group-hover:max-w-20 opacity-0 group-hover:opacity-100 ${
-                  active ? 'text-orange-500 dark:text-orange-400' : 'text-brown-muted dark:text-zinc-500 group-hover:text-brown dark:group-hover:text-white'
+                  active ? 'text-orange-500 dark:text-orange-400' : 'text-brown-muted dark:text-d-text-muted group-hover:text-brown dark:group-hover:text-d-white'
                 }`}>{label}</span>
               </button>
             );
@@ -131,14 +131,14 @@ const SearchBar: React.FC = () => {
         <button
           onClick={() => setFilterPinned(!filterPinned)}
           className={`group flex items-center px-2 py-1.5 rounded-xl transition-all duration-300 ${
-            filterPinned ? 'bg-beige-active dark:bg-white/20' : 'hover:bg-page-dim/50 dark:hover:bg-white/10'
+            filterPinned ? 'bg-beige-active dark:bg-d-white/20' : 'hover:bg-page-dim/50 dark:hover:bg-d-white/10'
           }`}
         >
           <Pin className={`w-3.5 h-3.5 flex-shrink-0 transition-all duration-300 ${
-            filterPinned ? 'text-orange-500 dark:text-orange-400 mr-0 group-hover:mr-1.5' : 'text-brown-muted dark:text-zinc-500 group-hover:text-brown dark:group-hover:text-white mr-1.5'
+            filterPinned ? 'text-orange-500 dark:text-orange-400 mr-0 group-hover:mr-1.5' : 'text-brown-muted dark:text-d-text-muted group-hover:text-brown dark:group-hover:text-d-white mr-1.5'
           }`} />
           <span className={`text-xs font-medium whitespace-nowrap overflow-hidden transition-all duration-300 max-w-0 group-hover:max-w-20 opacity-0 group-hover:opacity-100 ${
-            filterPinned ? 'text-orange-500 dark:text-orange-400' : 'text-brown-muted dark:text-zinc-500 group-hover:text-brown dark:group-hover:text-white'
+            filterPinned ? 'text-orange-500 dark:text-orange-400' : 'text-brown-muted dark:text-d-text-muted group-hover:text-brown dark:group-hover:text-d-white'
           }`}>Pinned</span>
         </button>
       )}
