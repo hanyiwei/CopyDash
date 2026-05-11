@@ -16,6 +16,7 @@ win:
       arch: [x64]
   icon: resources/icon.ico
   signAndEditExecutable: false
+afterPack: scripts/after-pack.cjs
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
