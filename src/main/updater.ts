@@ -11,6 +11,7 @@ export interface UpdateStatus {
 let mainWindow: BrowserWindow | null = null;
 let lastStatus: UpdateStatus | null = null;
 let checkError: string | null = null;
+let silentCheck = false; // suppress error badge for automatic checks
 
 function sendStatus(s: UpdateStatus) {
   lastStatus = s;
@@ -38,7 +39,9 @@ export function initAutoUpdater(win: BrowserWindow) {
 
   autoUpdater.on('error', (err) => {
     console.error('[Updater]', err.message);
-    sendStatus({ status: 'error', message: err.message });
+    if (!silentCheck) {
+      sendStatus({ status: 'error', message: err.message });
+    }
   });
 
   // Initial check — 3s delay so renderer has time to mount its listener.
@@ -46,11 +49,14 @@ export function initAutoUpdater(win: BrowserWindow) {
   // which already sends status to the renderer. "No update" also rejects but
   // does NOT fire the error event — we handle that silently.
   setTimeout(() => {
+    silentCheck = true;
     autoUpdater.checkForUpdates().then((result) => {
+      silentCheck = false;
       if (result?.updateInfo?.version) {
         console.log('[Updater] Update available:', result.updateInfo.version);
       }
     }).catch((err) => {
+      silentCheck = false;
       if (lastStatus?.status === 'error') {
         console.error('[Updater] Check failed:', err.message);
       } else {

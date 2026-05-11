@@ -121,6 +121,19 @@ function createTray() {
 
 app.setAppUserModelId('com.copydash.app');
 
+// Prevent multiple instances — otherwise auto-launch at boot can open two copies
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.show();
+      mainWindow.focus();
+    }
+  });
+
 app.whenReady().then(async () => {
   // Protocol handler
   protocol.handle('cd-file', (request) => {
@@ -199,6 +212,7 @@ app.whenReady().then(async () => {
     safeSend('new-clip', clip);
   });
 });
+} // end single-instance else
 
 // Open URL in system default browser
 ipcMain.handle('shell:openExternal', (_, url: string) => {
