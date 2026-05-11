@@ -68,6 +68,19 @@ function extractFirstColor(text: string): { hex: string; rgb: string } | null {
   return null;
 }
 
+async function generateThumbnail(buffer: Buffer) {
+  const image = await Jimp.read(buffer);
+  const thumbBuffer = await image
+    .scaleToFit(200, 200)
+    .quality(80)
+    .getBufferAsync(Jimp.MIME_JPEG);
+  return {
+    image_width: image.bitmap.width,
+    image_height: image.bitmap.height,
+    thumbnail: `data:image/jpeg;base64,${thumbBuffer.toString('base64')}`,
+  };
+}
+
 // Minimal RTF → plain-text converter. Strips RTF tags, keeps text content
 // and basic structure (paragraphs). Full RTF parsing is too complex for a
 // clipboard manager; this handles the common case of WordPad / Outlook
@@ -195,7 +208,6 @@ function extractRemoteImageUrl(text: string, html: string): string | null {
   return null;
 }
 
-// Validate remote image URL before download
 function validateRemoteImageUrl(raw: string): boolean {
   try {
     const u = new URL(raw);
@@ -207,7 +219,6 @@ function validateRemoteImageUrl(raw: string): boolean {
   } catch { return false; }
 }
 
-// Background download of remote image (e.g. browser copy-as-image, design tools)
 async function downloadRemoteImage(clip: any): Promise<any> {
   const url = clip.content_text.trim();
 
@@ -256,14 +267,10 @@ async function downloadRemoteImage(clip: any): Promise<any> {
   let image_width: number | null = null;
   let image_height: number | null = null;
   try {
-    const jimpImage = await Jimp.read(buffer);
-    image_width = jimpImage.bitmap.width;
-    image_height = jimpImage.bitmap.height;
-    const thumbBuffer = await jimpImage
-      .scaleToFit(200, 200)
-      .quality(80)
-      .getBufferAsync(Jimp.MIME_JPEG);
-    thumbnail = `data:image/jpeg;base64,${thumbBuffer.toString('base64')}`;
+    const thumb = await generateThumbnail(buffer);
+    image_width = thumb.image_width;
+    image_height = thumb.image_height;
+    thumbnail = thumb.thumbnail;
   } catch (err) {
     console.error('[Monitor] Remote thumbnail failed:', err);
   }
@@ -315,15 +322,14 @@ function isSensitiveApp(): boolean {
 }
 
 export async function startMonitoring(onNewClip: (clip: any) => void) {
-  const { app, nativeImage } = await import('electron');
+  const { app } = await import('electron');
   console.log('Clipboard monitoring started...');
 
-  // Refresh foreground process name and privacy filter
   refreshPrivacyFilter();
   updateForegroundName();
   setInterval(() => { refreshPrivacyFilter(); updateForegroundName(); }, 5000);
 
-  // Adaptive polling: 400ms when active, 2500ms when idle > 30s
+  // Adaptive poll: 400ms when active, 2500ms when idle > 30s
   let pollInterval = 400;
   let lastActivity = Date.now();
   function resetPollSpeed() { pollInterval = 400; lastActivity = Date.now(); }
@@ -560,14 +566,10 @@ export async function startMonitoring(onNewClip: (clip: any) => void) {
           image_format = 'PNG';
 
           try {
-            const jimpImage = await Jimp.read(buffer);
-            image_width = jimpImage.bitmap.width;
-            image_height = jimpImage.bitmap.height;
-            const thumbBuffer = await jimpImage
-              .scaleToFit(200, 200)
-              .quality(80)
-              .getBufferAsync(Jimp.MIME_JPEG);
-            thumbnail = `data:image/jpeg;base64,${thumbBuffer.toString('base64')}`;
+            const thumb = await generateThumbnail(buffer);
+            image_width = thumb.image_width;
+            image_height = thumb.image_height;
+            thumbnail = thumb.thumbnail;
           } catch (err) {
             console.error('Thumbnail generation failed:', err);
           }
@@ -618,9 +620,7 @@ export async function startMonitoring(onNewClip: (clip: any) => void) {
         }
       }
 
-      // console.log('Checking DB for hash:', hash);
       const existingClip = dbQuery.get('SELECT id FROM clip_history WHERE content_hash = ?', [hash]);
-      // console.log('DB check finished, existing:', !!existingClip);
 
       // Initial clip object with placeholder app info
       const clip = {
@@ -731,7 +731,7 @@ export async function startMonitoring(onNewClip: (clip: any) => void) {
     setTimeout(poll, pollInterval);
   };
 
-  // Run cleanup every 5 minutes, reading max_history from settings
+  // Cleanup every 5 minutes, reading max_history from settings
   setInterval(() => {
     try {
       const row = dbQuery.get('SELECT value FROM settings WHERE key = ?', ['max_history']);

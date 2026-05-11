@@ -113,7 +113,6 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
         } ${isHovering ? 'z-10' : ''}`}
       >
         <div className={`flex flex-col h-full transition-transform duration-300 ${isHovering ? 'scale-[1.02]' : ''}`}>
-        {/* Top bar: type badge (left) + pin button (right) */}
         <div className="absolute top-3 left-3 right-3 z-20 flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 min-w-0">
             {clip.type === 4 ? (
@@ -170,7 +169,6 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
         <div className="flex-1 flex flex-col min-h-0">
           {clip.type === 4 ? (
             isAllFolders ? (
-              /* Folder card */
               <div className="flex-1 flex flex-col pt-8 px-3 pb-3 justify-center">
                 <div className="flex items-center justify-center mb-2">
                   <Folder className="w-8 h-8 text-amber-500/80" />
@@ -195,7 +193,6 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
                 </div>
               </div>
             ) : (
-              /* File card */
               <div className="flex-1 flex flex-col pt-8 px-3 pb-3 justify-center">
                 <div className="flex items-center justify-center mb-2">
                   {(() => { const Icon = fileNames[0] ? getFileIcon(fileNames[0]) : Files; return <Icon className="w-8 h-8 text-brown-muted dark:text-d-text-muted" />; })()}
@@ -223,7 +220,6 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
               </div>
             )
           ) : clip.type === 2 ? (
-            /* Image card */
             <div className="flex-1 flex flex-col pt-8">
               <div className="flex-1 flex items-center justify-center px-3 pb-1 min-h-0">
                 {clip.thumbnail ? (
@@ -251,7 +247,6 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
               )}
             </div>
           ) : imageUrl && !imageUrlError ? (
-            /* Image URL card */
             <div className="flex-1 flex flex-col pt-8">
               <div className="flex-1 flex items-center justify-center px-3 pb-1 min-h-0">
                 <img
@@ -270,7 +265,6 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
               )}
             </div>
           ) : clip.has_color ? (
-            /* Color card */
             <div className="flex-1 flex flex-col pt-8">
               <div
                 className="flex-1 mx-3 my-2 rounded-lg border border-beige-border dark:border-d-white/5 shadow-inner"
@@ -284,7 +278,6 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDoubleClick }) => {
               </div>
             </div>
           ) : (
-            /* Text/Code/Link card */
             <div className="flex-1 flex flex-col pt-8 pb-3 overflow-hidden">
               {(() => {
                 const raw = clip.content_text || '';

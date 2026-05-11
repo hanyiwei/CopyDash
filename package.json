@@ -15,20 +15,15 @@
     "dist": "npm run ico && electron-vite build && electron-builder"
   },
   "dependencies": {
-    "highlight.js": "^11.9.0",
-    "clsx": "^2.1.1",
-
     "electron-updater": "^6.1.7",
-
+    "highlight.js": "^11.9.0",
     "jimp": "^0.22.12",
     "lucide-react": "^0.378.0",
     "sql.js": "^1.10.3",
-    "tailwind-merge": "^2.3.0",
     "uuid": "^9.0.1",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
-    "@electron-toolkit/preload": "^3.0.0",
     "@electron-toolkit/utils": "^3.0.0",
     "@types/node": "^20.12.7",
     "@types/react": "^18.2.79",

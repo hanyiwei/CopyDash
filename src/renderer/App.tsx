@@ -45,19 +45,14 @@ const App: React.FC = () => {
         const ipcRenderer = window.electronAPI;
         const result = await ipcRenderer.invoke('db:getAll');
         if (result && mountedRef.current) setClips(result);
-        // Load theme, migrate 'system' to 'dark'
         const t = await ipcRenderer.invoke('db:settings:get', 'theme');
-        // Migrate 'system' (old default) to 'dark'
-        setTheme((!t || t === 'system') ? 'dark' : t as 'dark' | 'light');
-        // Load maxHistory
+        setTheme((!t || t === 'dark') ? 'dark' : 'light');
         const mh = await ipcRenderer.invoke('db:settings:get', 'max_history');
         if (mh) {
           useStore.getState().setMaxHistory(parseInt(mh, 10) || 200);
         }
-        // Load color scheme
         const cs = await ipcRenderer.invoke('db:settings:get', 'color_scheme');
         if (cs) setColorScheme(cs as 'default' | 'earth' | 'sage' | 'violet');
-        // Load shortcut
         const sc = await ipcRenderer.invoke('db:settings:get', 'shortcut_toggle');
         if (sc) setShortcut(sc);
       } catch (err) {
@@ -134,7 +129,6 @@ const App: React.FC = () => {
     >
       <div className="flex-1 bg-page dark:bg-d-page text-brown dark:text-d-white flex flex-col overflow-hidden border border-beige-border dark:border-d-white/10 dark:shadow-2xl rounded-3xl m-2 relative">
         <div className="flex-shrink-0 flex items-center relative">
-          {/* Logo — opens GitHub in system default browser */}
           <button
             onClick={() => window.electronAPI.invoke('shell:openExternal', 'https://github.com/hanyiwei/CopyDash')}
             className="flex-shrink-0 pl-5 pr-6 text-brown dark:text-d-white hover:text-accent dark:hover:text-accent transition-colors cursor-pointer select-none flex items-center gap-1 group"
@@ -151,7 +145,6 @@ const App: React.FC = () => {
             <SearchBar />
           </div>
 
-          {/* Update prompt */}
           {updateStatus && (
             <button
               onClick={() => {
@@ -193,7 +186,6 @@ const App: React.FC = () => {
             </button>
           )}
 
-          {/* Settings + close on the right */}
           <div className="flex-shrink-0 flex items-center gap-0.5 pr-2">
             <button
               onClick={() => setShowSettings(v => !v)}
@@ -209,7 +201,6 @@ const App: React.FC = () => {
             </button>
           </div>
 
-          {/* Settings popover */}
           {showSettings && (
             <SettingsPanel onClose={() => setShowSettings(false)} />
           )}

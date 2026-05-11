@@ -39,7 +39,6 @@ function captureForeground(): void {
   });
 }
 
-// Register custom protocol for local images
 protocol.registerSchemesAsPrivileged([
   { scheme: 'cd-file', privileges: { bypassCSP: true, secure: true, supportFetchAPI: true } }
 ]);
@@ -48,8 +47,7 @@ async function createWindow() {
   const primaryDisplay = screen.getPrimaryDisplay();
   const { width: screenWidth, height: screenHeight, x: screenX, y: screenY } = primaryDisplay.workArea;
   
-  // Paste-like panel usually takes a good portion of the width, but not necessarily full
-  const winWidth = Math.floor(screenWidth * 0.9); 
+  const winWidth = Math.floor(screenWidth * 0.9);
   const winHeight = Math.min(420, Math.floor(screenHeight * 0.55));
 
   mainWindow = new BrowserWindow({
@@ -63,7 +61,7 @@ async function createWindow() {
     skipTaskbar: true,
     resizable: false,
     movable: false,
-    backgroundColor: '#00000000', // Fully transparent
+    backgroundColor: '#00000000',
     icon: path.join(__dirname, '../../resources/icon.png'),
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.mjs'),
@@ -78,7 +76,6 @@ async function createWindow() {
     mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));
   }
 
-  // Prevent default Electron context menu on the window
   mainWindow.webContents.on('context-menu', (e) => {
     e.preventDefault();
   });
@@ -195,7 +192,6 @@ app.whenReady().then(async () => {
       console.error(`[Main] Failed to register shortcut: ${shortcutAccelerator}. It may be in use by another app.`);
     }
 
-  // Tray click
   tray?.on('click', () => {
     if (mainWindow?.isVisible()) {
       safeSend('window-hide-start');
@@ -206,7 +202,6 @@ app.whenReady().then(async () => {
     }
   });
 
-  // Start Monitoring
   startMonitoring((clip) => {
     console.log('[Main] Sending new-clip to renderer:', clip.id, 'Type:', clip.type);
     safeSend('new-clip', clip);
@@ -214,7 +209,6 @@ app.whenReady().then(async () => {
 });
 } // end single-instance else
 
-// Open URL in system default browser
 ipcMain.handle('shell:openExternal', (_, url: string) => {
   try {
     const protocol = new URL(url).protocol;
@@ -223,7 +217,6 @@ ipcMain.handle('shell:openExternal', (_, url: string) => {
   shell.openExternal(url);
 });
 
-// Settings handlers
 ipcMain.handle('db:settings:get', (_, key: string) => {
   const row = dbQuery.get('SELECT value FROM settings WHERE key = ?', [key]);
   return row?.value ?? null;
@@ -261,7 +254,6 @@ app.on('window-all-closed', () => {
   }
 });
 
-// IPC Handlers
 ipcMain.handle('db:getAll', () => {
     const row = dbQuery.get('SELECT value FROM settings WHERE key = ?', ['max_history']);
     const limit = row ? parseInt(row.value, 10) || 200 : 200;

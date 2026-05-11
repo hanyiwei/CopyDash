@@ -105,7 +105,6 @@ function saveDB() {
   }
 }
 
-// Helper to run queries with persistence
 export const dbQuery = {
   run: (sql: string, params: any[] = []) => {
     if (!db) {

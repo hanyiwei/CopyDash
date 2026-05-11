@@ -283,7 +283,6 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
       active ? 'bg-page-dim dark:bg-d-seg text-brown dark:text-d-white' : 'text-brown-muted dark:text-d-text-muted hover:text-brown dark:hover:text-d-text-secondary'
     }`;
 
-  // ── Render ──
   return (
     <div
       ref={panelRef}
@@ -337,7 +336,6 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
         </div>
       ) : (
         <div className="px-5 py-4">
-          {/* Tab bar — hidden in sub-view, but we don't reach here when showSubView */}
           <div className="flex bg-card dark:bg-d-container rounded-lg p-0.5 mb-4">
             {tabs.map(({ key, label }) => (
               <button key={key} onClick={() => setTab(key)} className={segBtn(tab === key)}>{label}</button>
